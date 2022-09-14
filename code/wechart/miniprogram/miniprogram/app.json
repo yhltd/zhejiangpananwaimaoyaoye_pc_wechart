@@ -1,0 +1,34 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/peizhi/peizhi",
+    "pages/caiwu/caiwu",
+    "pages/jinxiaocun/jinxiaocun",
+    "pages/general/general",
+    "pages/product/product",
+    "pages/payment/payment",
+    "pages/invoice/invoice",
+    "pages/customer/customer",
+    "pages/file_table/file_table",
+    "pages/ruku/ruku",
+    "pages/sale/sale",
+    "pages/kucun/kucun",
+    "pages/customer_kanban/customer_kanban",
+    "pages/tongji/tongji",
+    "pages/anyuetongji/anyuetongji",
+    "pages/shenhe/shenhe",
+    "pages/shenhe_item/shenhe_item",
+    "pages/yonghu/yonghu",
+    "pages/user_info/user_info",
+    "pages/user_power/user_power",
+    "pages/assay/assay"
+  ],
+  "window": {
+    "backgroundColor": "#393D49",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#393D49",
+    "navigationBarTitleText": "管理系统",
+    "navigationBarTextStyle": "white"
+  },
+  "sitemapLocation": "sitemap.json"
+}

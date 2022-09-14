@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>入库</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/sweetalert.css">
+    <script type="text/javascript" src="../js/sweetalert-dev.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/ruku.js"></script>
+</head>
+<body class="pt-2">
+<div class="top-toolbar row">
+    <div class="col-md-3 mb-2">
+        <input id="ks" type="date" class="form-control">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="js" type="date" class="form-control">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="product" type="text" class="form-control" placeholder="产品名称" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-search icon"></i>
+            查询
+        </button>
+    </div>
+</div>
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <button id="refresh-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            刷新
+        </button>
+        <button id="add-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            新增
+        </button>
+        <button id="update-btn" class="btn btn-primary">
+            <i class="bi bi-pencil-square icon"></i>
+            修改
+        </button>
+        <button id="delete-btn" class="btn btn-primary">
+            <i class="bi bi-trash icon"></i>
+            删除
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：入库</a>
+    </div>
+</div>
+
+<div class="table-div border-top">
+    <table id="rukuTable"></table>
+</div>
+
+<div id="add-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-form" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-riqi">日期</label>
+                        <input id="add-riqi" name="riqi" type="date" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-warehouse">仓库</label>
+                        <select id="add-warehouse" name="warehouse" class="form-control" autocomplete="off" data-required="1">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input id="add-productId" name="productId" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-productName">产品名称</label>
+                        <input id="add-productName" type="text" class="form-control" autocomplete="off"
+                               readonly="readonly">
+                        <div class="invalid-feedback">
+                            请选择产品！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-spec">规格</label>
+                        <input id="add-spec" type="text" class="form-control" autocomplete="off"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-unit">单位</label>
+                        <input id="add-unit" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-pihao">批号</label>
+                        <input id="add-pihao" name="pihao" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-num">数量</label>
+                        <input id="add-num" name="num" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-remarks">备注</label>
+                        <input id="add-remarks" name="remarks" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="add-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-form" class="needs-validation">
+                    <div class="form-group">
+                        <input id="id" name="id" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-riqi">日期</label>
+                        <input id="update-riqi" name="riqi" type="date" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-warehouse">仓库</label>
+                        <select id="update-warehouse" name="warehouse" class="form-control" autocomplete="off" data-required="1">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input id="update-productId" name="productId" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-productName">产品名称</label>
+                        <input id="update-productName" type="text" class="form-control" autocomplete="off"
+                               readonly="readonly">
+                        <div class="invalid-feedback">
+                            请选择产品！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-spec">规格</label>
+                        <input id="update-spec" type="text" class="form-control" autocomplete="off"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-unit">单位</label>
+                        <input id="update-unit" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-pihao">批号</label>
+                        <input id="update-pihao" name="pihao" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-num">数量</label>
+                        <input id="update-num" name="num" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-remarks">备注</label>
+                        <input id="update-remarks" name="remarks" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="update-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="update-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">提示</div>
+            </div>
+            <div id="delete-modal-body" class="modal-body">
+                确定删除吗？
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="delete-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="delete-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询客户窗体-->
+<div id="show-product-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择产品</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-table-product"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="product-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="product-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>化验明细</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/sweetalert.css">
+    <script type="text/javascript" src="../js/sweetalert-dev.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/approval.js"></script>
+</head>
+<body class="pt-2">
+<div class="top-toolbar row">
+    <div class="col-md-3 mb-2">
+        <input id="type" type="text" class="form-control" placeholder="类别" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-search icon"></i>
+            查询
+        </button>
+    </div>
+</div>
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <button id="refresh-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            刷新
+        </button>
+        <button id="add-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            新增
+        </button>
+        <button id="update-btn" class="btn btn-primary">
+            <i class="bi bi-pencil-square icon"></i>
+            修改
+        </button>
+        <button id="delete-btn" class="btn btn-primary">
+            <i class="bi bi-trash icon"></i>
+            删除
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：化验明细</a>
+    </div>
+</div>
+<input type="file" id="file" hidden="hidden">
+
+<div class="table-div border-top">
+    <table id="approvalTable"></table>
+</div>
+
+<div id="add-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-form" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-type">类别</label>
+                        <input id="add-type" name="type" type="text" class="form-control" autocomplete="off">
+                        <div class="invalid-feedback">
+                            请输入类别！
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="add-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-form" class="needs-validation">
+                    <div class="form-group">
+                        <input id="id" name="id" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-type">类别</label>
+                        <input id="update-type" name="type" type="text" class="form-control" autocomplete="off">
+                        <div class="invalid-feedback">
+                            请输入类别！
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="update-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="update-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">提示</div>
+            </div>
+            <div id="delete-modal-body" class="modal-body">
+                确定删除吗？
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="delete-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="delete-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询窗体-->
+<div id="show-file-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">文件操作</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-table-file"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="file-up-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    上传
+                </button>
+                <button id="file-down-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-arrow-bar-down"></i>
+                    下载
+                </button>
+                <button id="file-delete-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-trash icon"></i>
+                    删除
+                </button>
+                <button id="file-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询窗体-->
+<div id="show-approval-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">审批</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-table-approval"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="approval-up-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    新增
+                </button>
+                <button id="approval-delete-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-trash icon"></i>
+                    删除
+                </button>
+                <button id="approval-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="add-modal2" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-form2" class="needs-validation">
+                    <div class="form-group">
+                        <label for="userId">类别</label>
+                        <select id="userId" name="userId" class="form-control"></select>
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="add-submit-btn2" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn2" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

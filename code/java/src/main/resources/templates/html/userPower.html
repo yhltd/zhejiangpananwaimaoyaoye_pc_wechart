@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/sweetalert.css">
+    <script type="text/javascript" src="../js/sweetalert-dev.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/userPower.js"></script>
+</head>
+
+<body class="pt-2">
+<div class="top-toolbar row">
+    <div class="col-md-3 mb-2">
+        <input id="name" type="text" class="form-control" placeholder="姓名" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-search icon"></i>
+            查询
+        </button>
+    </div>
+</div>
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <button id="refresh-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            刷新
+        </button>
+        <button id="add-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            新增
+        </button>
+        <button id="update-btn" class="btn btn-primary">
+            <i class="bi bi-pencil-square icon"></i>
+            修改
+        </button>
+        <button id="delete-btn" class="btn btn-primary">
+            <i class="bi bi-trash icon"></i>
+            删除
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：权限管理</a>
+    </div>
+</div>
+
+<div class="table-div border-top">
+    <table id="userPowerTable"></table>
+</div>
+
+<div id="add-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="add-form" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-userId">姓名</label>
+                        <select id="add-userId" name="userId" class="form-control" autocomplete="off"></select>
+                        <div class="invalid-feedback">
+                            请选择姓名！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-viewName">页面名称</label>
+                        <select id="add-viewName" name="viewName" class="form-control" autocomplete="off">
+                            <option value="常规设置">常规设置</option>
+                            <option value="产品设置">产品设置</option>
+                            <option value="客户信息">客户信息</option>
+                            <option value="化验明细">化验明细</option>
+                            <option value="入库">入库</option>
+                            <option value="销售">销售</option>
+                            <option value="库存">库存</option>
+                            <option value="收付款明细">收付款明细</option>
+                            <option value="发票">发票</option>
+                            <option value="客户往来款看板">客户往来款看板</option>
+                            <option value="销售额统计">销售额统计</option>
+                            <option value="按月统计">按月统计</option>
+                            <option value="用户管理">账号管理</option>
+                            <option value="账号管理">权限管理</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            请选择页面名称！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zeng">新增</label>
+                        <select id="add-zeng" name="zeng" class="form-control" autocomplete="off" data-required="1">
+                            <option value="可操作">可操作</option>
+                            <option value="无权限">无权限</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-shan">删除</label>
+                        <select id="add-shan" name="shan" class="form-control" autocomplete="off" data-required="1">
+                            <option value="可操作">可操作</option>
+                            <option value="无权限">无权限</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-gai">修改</label>
+                        <select id="add-gai" name="gai" class="form-control" autocomplete="off" data-required="1">
+                            <option value="可操作">可操作</option>
+                            <option value="无权限">无权限</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-cha">查看</label>
+                        <select id="add-cha" name="cha" class="form-control" autocomplete="off" data-required="1">
+                            <option value="可操作">可操作</option>
+                            <option value="无权限">无权限</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="add-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-form" class="needs-validation">
+                    <div class="form-group">
+                        <input id="id" name="id" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-userId">姓名</label>
+                        <select id="update-userId" name="userId" class="form-control" autocomplete="off"></select>
+                        <div class="invalid-feedback">
+                            请选择姓名！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-viewName">页面名称</label>
+                        <select id="update-viewName" name="viewName" class="form-control" autocomplete="off">
+                            <option value="常规设置">常规设置</option>
+                            <option value="产品设置">产品设置</option>
+                            <option value="客户信息">客户信息</option>
+                            <option value="化验明细">化验明细</option>
+                            <option value="入库">入库</option>
+                            <option value="销售">销售</option>
+                            <option value="库存">库存</option>
+                            <option value="收付款明细">收付款明细</option>
+                            <option value="发票">发票</option>
+                            <option value="客户往来款看板">客户往来款看板</option>
+                            <option value="销售额统计">销售额统计</option>
+                            <option value="按月统计">按月统计</option>
+                            <option value="用户管理">账号管理</option>
+                            <option value="账号管理">权限管理</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            请选择页面名称！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zeng">新增</label>
+                        <select id="update-zeng" name="zeng" class="form-control" autocomplete="off" data-required="1">
+                            <option value="可操作">可操作</option>
+                            <option value="无权限">无权限</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-shan">删除</label>
+                        <select id="update-shan" name="shan" class="form-control" autocomplete="off" data-required="1">
+                            <option value="可操作">可操作</option>
+                            <option value="无权限">无权限</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-gai">修改</label>
+                        <select id="update-gai" name="gai" class="form-control" autocomplete="off" data-required="1">
+                            <option value="可操作">可操作</option>
+                            <option value="无权限">无权限</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-cha">查看</label>
+                        <select id="update-cha" name="cha" class="form-control" autocomplete="off" data-required="1">
+                            <option value="可操作">可操作</option>
+                            <option value="无权限">无权限</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="update-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="update-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">提示</div>
+            </div>
+            <div id="delete-modal-body" class="modal-body">
+                确定删除吗？
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="delete-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="delete-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
