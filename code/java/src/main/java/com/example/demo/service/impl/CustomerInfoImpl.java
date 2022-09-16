@@ -30,11 +30,11 @@ public class CustomerInfoImpl extends ServiceImpl<CustomerInfoMapper, CustomerIn
     }
 
     @Override
-    public List<CustomerInfo> queryList(String customerInfo, String name, String power) {
+    public List<CustomerInfo> queryList(String customerInfo,String leibie, String name, String power) {
         if (power.equals("管理员")) {
-            return customerInfoMapper.queryList(customerInfo);
+            return customerInfoMapper.queryList(customerInfo,leibie);
         } else {
-            return customerInfoMapper.queryListByName(customerInfo, name);
+            return customerInfoMapper.queryListByName(customerInfo, leibie,name);
         }
 
     }

@@ -20,6 +20,20 @@ Page({
         isupd: true
       },
       {
+        text: "客户号",
+        width: "300rpx",
+        columnName: "customer_num",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "客户类别",
+        width: "300rpx",
+        columnName: "leibie",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "客户",
         width: "300rpx",
         columnName: "customer",
@@ -104,8 +118,49 @@ Page({
       userInfo:userInfo,
       userPower:userPower
     })
-    var e = ['']
+
+    wx.cloud.callFunction({
+      name: 'sqlServer_117',
+      data: {
+        query: "select customer_type from general where customer_type != ''"
+      },
+      success: res => {
+        var list = res.result.recordset
+        console.log(list)
+        var this_list = []
+        for(var i=0; i< list.length; i++){
+          if(list[i].customer_type != ''){
+            this_list.push(list[i].customer_type)
+          }
+        }
+        _this.setData({
+          customer_type_list: this_list
+        })
+        console.log(list)
+      },
+      err: res => {
+        console.log("错误!")
+      },
+      fail: res => {
+        wx.showToast({
+          title: '请求失败！',
+          icon: 'none',
+          duration: 3000
+        })
+        console.log("请求失败！")
+      }
+    })
+
+    var e = ['','']
     _this.tableShow(e)
+  },
+
+  bindPickerChange: function(e){
+    var _this = this
+    console.log(_this.data.customer_type_list[e.detail.value])
+    _this.setData({
+      leibie: _this.data.customer_type_list[e.detail.value]
+    })
   },
 
   tableShow: function (e) {
@@ -113,7 +168,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select * from customerInfo where customer like '%" + e[0] + "%' or pinyin like '%" + e[0] + "%'"
+        query: "select * from customerInfo where (customer like '%" + e[0] + "%' or pinyin like '%" + e[0] + "%') and leibie like '%" + e[1] + "%'"
       },
       success: res => {
         var list = res.result.recordset
@@ -169,6 +224,8 @@ Page({
       remarks: _this.data.list[e.currentTarget.dataset.index].remarks,
       ghye: _this.data.list[e.currentTarget.dataset.index].ghye,
       zsye: _this.data.list[e.currentTarget.dataset.index].zsye,
+      leibie: _this.data.list[e.currentTarget.dataset.index].leibie,
+      customer_num: _this.data.list[e.currentTarget.dataset.index].customer_num,
       xgShow:true,
     })
   },
@@ -196,6 +253,8 @@ Page({
       remarks:'',
       ghye:'',
       zsye:'',
+      leibie: '',
+      customer_num: '',
     })
   },
 
@@ -204,7 +263,7 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into customerInfo(riqi,customer,pinyin,salesman,price,phone,address,ghye,zsye,remarks) values('" + _this.data.riqi + "','" + _this.data.customer + "','" + _this.data.pinyin + "','" + _this.data.salesman + "','" + _this.data.price + "','" + _this.data.phone + "','" + _this.data.address + "','" + _this.data.ghye + "','" + _this.data.zsye + "','" + _this.data.remarks + "')"
+          query: "insert into customerInfo(riqi,customer,pinyin,salesman,price,phone,address,ghye,zsye,remarks,customer_num,leibie) values('" + _this.data.riqi + "','" + _this.data.customer + "','" + _this.data.pinyin + "','" + _this.data.salesman + "','" + _this.data.price + "','" + _this.data.phone + "','" + _this.data.address + "','" + _this.data.ghye + "','" + _this.data.zsye + "','" + _this.data.remarks + "','" + _this.data.customer_num + "','" + _this.data.leibie + "')"
         },
         success: res => {
           _this.setData({
@@ -219,9 +278,11 @@ Page({
             remarks:'',
             ghye:'',
             zsye:'',
+            leibie: '',
+            customer_num: '',
           })
           _this.qxShow()
-          var e = ['']
+          var e = ['','']
           _this.tableShow(e)
           wx.showToast({
             title: '添加成功！',
@@ -254,7 +315,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update customerInfo set riqi='" + _this.data.riqi + "',customer='" + _this.data.customer + "',pinyin='" + _this.data.pinyin + "',salesman='" + _this.data.salesman + "',price='" + _this.data.price + "',phone='" + _this.data.phone + "',address='" + _this.data.address + "',remarks='" + _this.data.remarks + "',ghye='" + _this.data.ghye + "',zsye='" + _this.data.zsye + "' where id=" + _this.data.id 
+        query: "update customerInfo set riqi='" + _this.data.riqi + "',customer='" + _this.data.customer + "',pinyin='" + _this.data.pinyin + "',salesman='" + _this.data.salesman + "',price='" + _this.data.price + "',phone='" + _this.data.phone + "',address='" + _this.data.address + "',remarks='" + _this.data.remarks + "',ghye='" + _this.data.ghye + "',zsye='" + _this.data.zsye + "',leibie='" + _this.data.leibie + "',customer_num='" + _this.data.customer_num + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -269,9 +330,11 @@ Page({
             remarks:'',
             ghye:'',
             zsye:'',
+            leibie: '',
+            customer_num: '',
         })
         _this.qxShow()
-        var e = ['']
+        var e = ['','']
          _this.tableShow(e)
 
         wx.showToast({
@@ -320,9 +383,11 @@ Page({
             remarks:'',
             ghye:'',
             zsye:'',
+            leibie: '',
+            customer_num: '',
           })
           _this.qxShow()
-          var e = ['']
+          var e = ['','']
           _this.tableShow(e)
           wx.showToast({
             title: '删除成功！',
@@ -360,7 +425,7 @@ Page({
 
   sel1:function(){
     var _this = this
-    var e = [_this.data.customer]
+    var e = [_this.data.customer,_this.data.leibie]
     _this.tableShow(e)
     _this.qxShow()
   },

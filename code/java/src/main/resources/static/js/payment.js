@@ -350,6 +350,12 @@ function setCustomerTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'pinyin',
+                title: '字母代码',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
                 field: 'price',
                 title: '价格',
                 align: 'left',

@@ -45,9 +45,7 @@
       <input bindinput="onInput" data-column="riqi" class="input_text_form" value="{{riqi}}" type="date" name="riqi" disabled="disabled"></input>
     </picker>
     <view class="lables">客户名称</view>
-    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="customer" range="{{customer_picker_list}}">
-      <input bindinput="onInput" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer" disabled="disabled"></input>
-    </picker>
+    <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">付款金额</view>
     <input bindinput="onInput" data-column="f_jine" class="input_text_form" value="{{f_jine}}" type="number" name="f_jine"></input>
     <view class="lables">折扣金额</view>
@@ -76,9 +74,7 @@
       <input bindinput="onInput" data-column="riqi" class="input_text_form" value="{{riqi}}" type="date" name="riqi" disabled="disabled"></input>
     </picker>
     <view class="lables">客户名称</view>
-    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="customer" range="{{customer_picker_list}}">
-      <input bindinput="onInput" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer" disabled="disabled"></input>
-    </picker>
+    <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">付款金额</view>
     <input bindinput="onInput" data-column="f_jine" class="input_text_form" value="{{f_jine}}" type="number" name="f_jine"></input>
     <view class="lables">折扣金额</view>
@@ -103,10 +99,8 @@
 <!---------查询弹窗--------->
 <!------------------------->
 <van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 60%;" >
-	  <view class="lables1">客户名称</view>
-    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="customer" range="{{customer_picker_list}}">
-      <input bindinput="onInput" data-column="customer" class="input_text_form" value="{{customer}}" type="text" name="customer" disabled="disabled"></input>
-    </picker>
+  <view class="lables">客户名称</view>
+    <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">开始日期</view>
     <picker class="pick" mode="date" value="{{date}}" data-column_name="start_date" bindchange="choiceDate">
       <input bindinput="onInput" data-column="start_date" class="input_text_form" value="{{start_date}}" type="date" name="start_date" disabled="disabled"></input>
@@ -120,3 +114,13 @@
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="sel1">查询</button>
   </view>
 </van-popup>
+
+
+<!--客户下拉-->
+<van-action-sheet
+  show="{{ xlShow5 }}"
+  actions="{{ listKeHu }}"
+  close-on-click-overlay
+  bind:close="select5"
+  bind:select="select5" 
+/>

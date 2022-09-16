@@ -11,6 +11,7 @@ Page({
   xgShow: false,
   cxShow: false,
   xlShow4: false,
+  xlShow5: false,
   xlShow1: false,
   data: {
     list: [],
@@ -132,6 +133,13 @@ Page({
         columnName: "type",
         type: "text",
         isupd: true
+      },
+      {
+        text: "发货状态",
+        width: "200rpx",
+        columnName: "fahuo",
+        type: "text",
+        isupd: true
       }
     ],
     warehouse_list:[],
@@ -144,6 +152,7 @@ Page({
       {name:'审核未通过'}
     ],
     type_list:['销售','退货'],
+    fahuo_list:['未发货','已发货'],
   },
 
   /**
@@ -360,12 +369,20 @@ Page({
     })
   },
 
+  bindPickerChange6: function(e){
+    var _this = this
+    console.log(_this.data.fahuo_list[e.detail.value])
+    _this.setData({
+      fahuo: _this.data.fahuo_list[e.detail.value]
+    })
+  },
+
   tableShow: function (e) {
     var _this = this
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,sa.num,xiaoji,sa.remarks,warehouse,type,express,customer,salesman,product_name,spec,unit,price,p.pinyin from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,customer,salesman,pinyin from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and pihao like '%" + e[4] + "%'"
+        query: "select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,sa.num,xiaoji,sa.remarks,warehouse,type,express,customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.fahuo from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,customer,salesman,pinyin,fahuo,s.price from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and pihao like '%" + e[4] + "%'"
       },
       success: res => {
         var list = res.result.recordset
@@ -416,6 +433,7 @@ Page({
       num: '',
       remarks:'',
       type:'',
+      fahuo:'',
     })
   },
 
@@ -450,6 +468,7 @@ Page({
       num: _this.data.list[e.currentTarget.dataset.index].num,
       remarks: _this.data.list[e.currentTarget.dataset.index].remarks,
       type:_this.data.list[e.currentTarget.dataset.index].type,
+      fahuo:_this.data.list[e.currentTarget.dataset.index].fahuo,
       xgShow:true,
     })
   },
@@ -486,6 +505,7 @@ Page({
       num: '',
       remarks:'',
       type:'',
+      fahuo:'',
     })
   },
 
@@ -522,7 +542,7 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into sale(riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,remarks,warehouse,type,express) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.sh_staff + "','" + _this.data.pick + "','" + _this.data.wuliu_order + "','" + _this.data.product_id + "','" + _this.data.pihao + "','" + _this.data.num + "','" + _this.data.xiaoji + "','" + _this.data.remarks + "','" + _this.data.warehouse + "','" + _this.data.type + "','" + _this.data.express + "')"
+          query: "insert into sale(riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,remarks,warehouse,type,express,fahuo,price) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.sh_staff + "','" + _this.data.pick + "','" + _this.data.wuliu_order + "','" + _this.data.product_id + "','" + _this.data.pihao + "','" + _this.data.num + "','" + _this.data.xiaoji + "','" + _this.data.remarks + "','" + _this.data.warehouse + "','" + _this.data.type + "','" + _this.data.express + "','" + _this.data.fahuo  + "','" + _this.data.price + "')"
         },
         success: res => {
           _this.setData({
@@ -546,6 +566,7 @@ Page({
             num: '',
             remarks:'',
             type:'',
+            fahuo:'',
           })
           _this.qxShow()
           var e = ['1900-01-01','2100-12-31','','','']
@@ -602,7 +623,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update sale set riqi='" + _this.data.riqi + "',customer_id=" + _this.data.customer_id + ",sh_staff='" + _this.data.sh_staff + "',pick='" + _this.data.pick + "',wuliu_order='" + _this.data.wuliu_order + "',product_id=" + _this.data.product_id + ",pihao='" + _this.data.pihao + "',num=" + _this.data.num + ",xiaoji='" + _this.data.xiaoji + "',remarks='" + _this.data.remarks + "',warehouse='" + _this.data.warehouse + "',type='" + _this.data.type + "',express='" + _this.data.express + "' where id=" + _this.data.id 
+        query: "update sale set riqi='" + _this.data.riqi + "',customer_id=" + _this.data.customer_id + ",sh_staff='" + _this.data.sh_staff + "',pick='" + _this.data.pick + "',wuliu_order='" + _this.data.wuliu_order + "',product_id=" + _this.data.product_id + ",pihao='" + _this.data.pihao + "',num=" + _this.data.num + ",xiaoji='" + _this.data.xiaoji + "',remarks='" + _this.data.remarks + "',warehouse='" + _this.data.warehouse + "',type='" + _this.data.type + "',express='" + _this.data.express + "',fahuo='" + _this.data.fahuo + "',price='" + _this.data.price + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -626,6 +647,7 @@ Page({
           num: '',
           remarks:'',
           type:'',
+          fahuo:'',
         })
         _this.qxShow()
         var e = ['1900-01-01','2100-12-31','','','']
@@ -686,6 +708,7 @@ Page({
             num: '',
             remarks:'',
             type:'',
+            fahuo:'',
           })
           _this.qxShow()
           var e = ['1900-01-01','2100-12-31','','','']
@@ -759,6 +782,21 @@ Page({
     }
   },
 
+  select5: function (e) {
+    var _this = this
+    if (e.type == "select") {
+      _this.setData({
+        xlShow5: false,
+        customer: e.detail.customer,
+        customer_id: e.detail.id,
+      })
+    } else if (e.type == "close") {
+      _this.setData({
+        xlShow5: false,
+      })
+    }
+  },
+
   select1: function (e) {
     var _this = this
     if (e.type == "select") {
@@ -790,6 +828,7 @@ Page({
             num: '',
             remarks:'',
             type:'',
+            fahuo:'',
             xlShow1: false,
           })
           _this.qxShow()
@@ -827,6 +866,41 @@ Page({
     _this.setData({
       xlShow4: true
     })
+  },
+
+  selKH: function () {
+    var _this = this
+
+    var sql = "select customer as name,id,customer from customerInfo where customer like '%" + _this.data.customer + "%' or pinyin like'%" + _this.data.customer + "%'"
+    wx.cloud.callFunction({
+      name: 'sqlServer_117',
+      data: {
+        query: sql
+      },
+      success: res => {
+        var list = res.result.recordset
+        _this.setData({
+          listKeHu: list
+        })
+        console.log(list)
+        _this.setData({
+          xlShow5: true
+        })
+      },
+      err: res => {
+        console.log("错误!")
+      },
+      fail: res => {
+        wx.showToast({
+          title: '请求失败！',
+          icon: 'none',
+          duration: 3000
+        })
+        console.log("请求失败！")
+      }
+    })
+
+    
   },
 
   selSH: function () {

@@ -31,6 +31,11 @@
     <div class="col-md-3 mb-2">
         <input id="customer" type="text" class="form-control" placeholder="客户或字母代码" autocomplete="off">
     </div>
+    <div class="col-md-3 mb-2">
+        <select id="leibie" name="leibie" class="form-control" autocomplete="off" data-required="1">
+
+        </select>
+    </div>
     <div class="col-md-2 mb-2">
         <button id="select-btn" class="btn btn-primary">
             <i class="bi bi-search icon"></i>
@@ -78,6 +83,16 @@
 
             <div class="modal-body">
                 <form id="add-form" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-customer_num">客户号</label>
+                        <input id="add-customer_num" name="customer_num" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-leibie">客户类别</label>
+                        <select id="add-leibie" name="leibie" class="form-control" autocomplete="off" data-required="1">
+
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="add-customer">客户名称</label>
                         <input id="add-customer" name="customer" type="text" class="form-control" autocomplete="off">
@@ -146,6 +161,16 @@
                 <form id="update-form" class="needs-validation">
                     <div class="form-group">
                         <input id="id" name="id" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-customerNum">客户号</label>
+                        <input id="update-customerNum" name="customerNum" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-leibie">客户类别</label>
+                        <select id="update-leibie" name="leibie" class="form-control" autocomplete="off" data-required="1">
+
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="update-customer">客户名称</label>

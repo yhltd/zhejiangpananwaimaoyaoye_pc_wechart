@@ -57,6 +57,12 @@ Page({
         columnName: "department",
         type: "text",
         isupd: true
+      },{
+        text: "客户类别",
+        width: "275rpx",
+        columnName: "customer_type",
+        type: "text",
+        isupd: true
       },
     ],
   },
@@ -134,6 +140,7 @@ Page({
       pay: _this.data.list[e.currentTarget.dataset.index].pay,
       warehouse: _this.data.list[e.currentTarget.dataset.index].warehouse,
       department: _this.data.list[e.currentTarget.dataset.index].department,
+      customer_type: _this.data.list[e.currentTarget.dataset.index].customer_type,
       xgShow:true,
     })
   },
@@ -158,6 +165,7 @@ Page({
       pay: '',
       warehouse: '',
       department: '',
+      customer_type: '',
     })
   },
 
@@ -166,7 +174,7 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into general(sale_name,test_name,express,pick,pay,warehouse,department) values('" + _this.data.sale_name + "','" + _this.data.test_name + "','" + _this.data.express + "','" + _this.data.pick + "','" + _this.data.pay + "','" + _this.data.warehouse + "','" + _this.data.department +  "')"
+          query: "insert into general(sale_name,test_name,express,pick,pay,warehouse,department,customer_type) values('" + _this.data.sale_name + "','" + _this.data.test_name + "','" + _this.data.express + "','" + _this.data.pick + "','" + _this.data.pay + "','" + _this.data.warehouse + "','" + _this.data.department + "','" + _this.data.customer_type +  "')"
         },
         success: res => {
           _this.setData({
@@ -178,6 +186,7 @@ Page({
             pay: '',
             warehouse: '',
             department: '',
+            customer_type: '',
           })
           _this.qxShow()
           _this.tableShow()
@@ -209,11 +218,10 @@ Page({
   },
   upd1:function(){
     var _this = this
-    console.log("update general set sale_name='" + _this.data.sale_name + "',test_name='" + _this.data.test_name + "',express='" + _this.data.express + "',pick='" + _this.data.pick + "',pay='" + _this.data.pay + "',warehouse='" + _this.data.warehouse + "',department='" + _this.data.department + "' where  id=" + _this.data.id )
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update general set sale_name='" + _this.data.sale_name + "',test_name='" + _this.data.test_name + "',express='" + _this.data.express + "',pick='" + _this.data.pick + "',pay='" + _this.data.pay + "',warehouse='" + _this.data.warehouse + "',department='" + _this.data.department + "' where  id=" + _this.data.id 
+        query: "update general set sale_name='" + _this.data.sale_name + "',test_name='" + _this.data.test_name + "',express='" + _this.data.express + "',pick='" + _this.data.pick + "',pay='" + _this.data.pay + "',warehouse='" + _this.data.warehouse + "',department='" + _this.data.department + "',customer_type='" + _this.data.customer_type + "' where  id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -225,6 +233,7 @@ Page({
           pay: '',
           warehouse: '',
           department: '',
+          customer_type: '',
         })
         _this.qxShow()
         _this.tableShow()
@@ -272,6 +281,7 @@ Page({
             pay: '',
             warehouse: '',
             department: '',
+            customer_type: '',
           })
           _this.qxShow()
           _this.tableShow()

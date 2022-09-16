@@ -205,6 +205,12 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+            }, {
+                field: 'customerType',
+                title: '客户类别',
+                align: 'center',
+                sortable: true,
+                width: 100,
             }
         ],
         onClickRow: function (row, el) {

@@ -39,6 +39,7 @@ function getSelect() {
 }
 
 function getProduct() {
+
     $ajax({
         type: 'post',
         url: '/product/getSelect',
@@ -49,6 +50,8 @@ function getProduct() {
         }
         console.log(res)
     })
+
+
 }
 
 
@@ -92,28 +95,33 @@ $(function () {
     //新增弹窗里点击提交按钮
     $("#add-submit-btn").click(function () {
         let params = formToJson("#add-form");
-        if ($('#add-productName').val()!="") {
-            $ajax({
-                type: 'post',
-                url: '/ruku/add',
-                data: JSON.stringify({
-                    addInfo: params
-                }),
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8'
-            }, false, '', function (res) {
-                if (res.code == 200) {
-                    swal("", res.msg, "success");
-                    $('#add-form')[0].reset();
-                    $('#add-productName').next().css('display','none');
-                    getList();
-                    $('#add-close-btn').click();
-                } else {
-                    swal("", res.msg, "error");
-                }
-            })
-        }else{
-            $('#add-productName').next().css('display','block');
+        var add_num = $('#add-num').val();
+        if (add_num=="" ||  add_num==0){
+            alert("数量不能为空且不能为为0！");
+        }else {
+            if ($('#add-productName').val() != "") {
+                $ajax({
+                    type: 'post',
+                    url: '/ruku/add',
+                    data: JSON.stringify({
+                        addInfo: params
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8'
+                }, false, '', function (res) {
+                    if (res.code == 200) {
+                        swal("", res.msg, "success");
+                        $('#add-form')[0].reset();
+                        $('#add-productName').next().css('display', 'none');
+                        getList();
+                        $('#add-close-btn').click();
+                    } else {
+                        swal("", res.msg, "error");
+                    }
+                })
+            } else {
+                $('#add-productName').next().css('display', 'block');
+            }
         }
     });
 
@@ -147,24 +155,30 @@ $(function () {
         if (msg) {
             if ($('#update-productName').val()!="") {
                 let params = formToJson('#update-form');
-                $ajax({
-                    type: 'post',
-                    url: '/ruku/update',
-                    data: {
-                        updateJson: JSON.stringify(params)
-                    },
-                    dataType: 'json',
-                    contentType: 'application/json;charset=utf-8'
-                }, false, '', function (res) {
-                    if (res.code == 200) {
-                        swal("", res.msg, "success");
-                        $('#update-close-btn').click();
-                        $('#update-modal').modal('hide');
-                        getList();
-                    } else {
-                        swal("", res.msg, "error");
-                    }
-                })
+                var update_num = $('#update-num').val();
+                if (update_num=="" ||  update_num==0){
+                    alert("数量不能为空且不能为为0！");
+                }else {
+                    $ajax({
+                        type: 'post',
+                        url: '/ruku/update',
+                        data: {
+                            updateJson: JSON.stringify(params)
+                        },
+                        dataType: 'json',
+                        contentType: 'application/json;charset=utf-8'
+                    }, false, '', function (res) {
+                        if (res.code == 200) {
+                            swal("", res.msg, "success");
+                            $('#update-close-btn').click();
+                            $('#update-modal').modal('hide');
+                            getList();
+                        } else {
+                            swal("", res.msg, "error");
+                        }
+                    })
+                }
+
             }else{
                 $('#update-productName').next().css('display','block');
             }

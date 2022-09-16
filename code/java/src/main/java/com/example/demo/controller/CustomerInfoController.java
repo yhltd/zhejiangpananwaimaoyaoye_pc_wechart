@@ -75,7 +75,7 @@ public class CustomerInfoController {
      * @return ResultInfo
      */
     @RequestMapping("/queryList")
-    public ResultInfo queryList(String customer, HttpSession session) {
+    public ResultInfo queryList(String customer,String leibie, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
         if (!powerUtil.isSelect("客户信息") && !userInfo.getPower().equals("管理员")) {
@@ -83,7 +83,7 @@ public class CustomerInfoController {
         }
 
         try {
-            List<CustomerInfo> getList = customerInfoService.queryList(customer, userInfo.getName(), userInfo.getPower());
+            List<CustomerInfo> getList = customerInfoService.queryList(customer,leibie, userInfo.getName(), userInfo.getPower());
             return ResultInfo.success("获取成功", getList);
         } catch (Exception e) {
             e.printStackTrace();

@@ -12,6 +12,7 @@ function getList() {
                 draggingClass: "dragging",
                 resizeMode: 'fit'
             });
+
         }
     })
 }
@@ -206,6 +207,12 @@ function setTable(data) {
             }, {
                 field: 'pinyin',
                 title: '拼音简码',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'pinhao',
+                title: '品号',
                 align: 'center',
                 sortable: true,
                 width: 100,

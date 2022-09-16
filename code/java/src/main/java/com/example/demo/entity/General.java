@@ -52,4 +52,9 @@ public class General {
      * 部门
      */
     private String department;
+
+    /**
+     * 部门
+     */
+    private String customerType;
 }

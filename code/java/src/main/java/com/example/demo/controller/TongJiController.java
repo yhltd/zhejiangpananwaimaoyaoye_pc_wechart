@@ -121,14 +121,17 @@ public class TongJiController {
             List<AnYueTongJi> xs=anYueTongJiService.getXS(ks1,js1,ks2,js2,ks3,js3,ks4,js4,ks5,js5,ks6,js6,ks7,js7,ks8,js8,ks9,js9,ks10,js10,ks11,js11,ks12,js12);
             List<AnYueTongJi> th=anYueTongJiService.getTH(ks1,js1,ks2,js2,ks3,js3,ks4,js4,ks5,js5,ks6,js6,ks7,js7,ks8,js8,ks9,js9,ks10,js10,ks11,js11,ks12,js12);
             List<AnYueTongJi> fk=anYueTongJiService.getfk(ks1,js1,ks2,js2,ks3,js3,ks4,js4,ks5,js5,ks6,js6,ks7,js7,ks8,js8,ks9,js9,ks10,js10,ks11,js11,ks12,js12);
+            List<AnYueTongJi> hk=anYueTongJiService.getHK(ks1,js1,ks2,js2,ks3,js3,ks4,js4,ks5,js5,ks6,js6,ks7,js7,ks8,js8,ks9,js9,ks10,js10,ks11,js11,ks12,js12);
 
             AnYueTongJi anYueTongJi1=new AnYueTongJi();
             AnYueTongJi anYueTongJi2=new AnYueTongJi();
             AnYueTongJi anYueTongJi3=new AnYueTongJi();
+            AnYueTongJi anYueTongJi4=new AnYueTongJi();
 
-            anYueTongJi1.setType("购货金额");
+            anYueTongJi1.setType("出货金额");
             anYueTongJi2.setType("返款金额");
             anYueTongJi3.setType("退货金额");
+            anYueTongJi4.setType("回款金额");
 
             if(xs.size()>0){
                 anYueTongJi1.setYue1(xs.get(0).getYue1());
@@ -175,10 +178,26 @@ public class TongJiController {
                 anYueTongJi3.setYue11(th.get(0).getYue12());
             }
 
+            if(th.size()>0){
+                anYueTongJi4.setYue1(hk.get(0).getYue1());
+                anYueTongJi4.setYue2(hk.get(0).getYue2());
+                anYueTongJi4.setYue3(hk.get(0).getYue3());
+                anYueTongJi4.setYue4(hk.get(0).getYue4());
+                anYueTongJi4.setYue5(hk.get(0).getYue5());
+                anYueTongJi4.setYue6(hk.get(0).getYue6());
+                anYueTongJi4.setYue7(hk.get(0).getYue7());
+                anYueTongJi4.setYue8(hk.get(0).getYue8());
+                anYueTongJi4.setYue9(hk.get(0).getYue9());
+                anYueTongJi4.setYue10(hk.get(0).getYue10());
+                anYueTongJi4.setYue11(hk.get(0).getYue11());
+                anYueTongJi4.setYue11(hk.get(0).getYue12());
+            }
+
             List<AnYueTongJi> list=new ArrayList<>();
             list.add(anYueTongJi1);
             list.add(anYueTongJi2);
             list.add(anYueTongJi3);
+            list.add(anYueTongJi4);
 
             return ResultInfo.success("获取成功", list);
         }catch (Exception e){

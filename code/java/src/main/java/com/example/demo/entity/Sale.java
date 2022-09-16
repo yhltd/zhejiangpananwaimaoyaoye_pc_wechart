@@ -116,5 +116,9 @@ public class Sale {
      */
     private String price;
 
+    /**
+     *  发货状态
+     */
+    private String fahuo;
 
 }

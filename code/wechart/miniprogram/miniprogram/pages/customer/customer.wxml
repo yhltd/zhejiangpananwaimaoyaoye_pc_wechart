@@ -44,6 +44,12 @@
     <picker class="pick" mode="date" value="{{date}}" data-column_name="riqi" bindchange="choiceDate">
       <input bindinput="onInput" data-column="riqi" class="input_text_form" value="{{riqi}}" type="text" name="riqi" disabled="disabled"></input>
     </picker>
+    <view class="lables">客户号</view>
+    <input bindinput="onInput" data-column="customer_num" class="input_text_form"  value="{{customer_num}}" type="number" name="customer_num"></input>
+    <view class="lables">客户类别</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="leibie" range="{{customer_type_list}}">
+      <input bindinput="onInput" data-column="leibie" class="input_text_form"  value="{{leibie}}" type="text" name="leibie" disabled="disabled"></input>
+    </picker>
     <view class="lables">客户</view>
     <input bindinput="onInput" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">字母代码</view>
@@ -75,6 +81,12 @@
     <picker class="pick" mode="date" value="{{date}}" data-column_name="riqi" bindchange="choiceDate">
       <input bindinput="onInput" data-column="riqi" class="input_text_form" value="{{riqi}}" type="text" name="riqi" disabled="disabled"></input>
     </picker>
+    <view class="lables">客户号</view>
+    <input bindinput="onInput" data-column="customer_num" class="input_text_form"  value="{{customer_num}}" type="number" name="customer_num"></input>
+    <view class="lables">客户类别</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="leibie" range="{{customer_type_list}}">
+      <input bindinput="onInput" data-column="leibie" class="input_text_form"  value="{{leibie}}" type="text" name="leibie" disabled="disabled"></input>
+    </picker>
     <view class="lables">客户</view>
     <input bindinput="onInput" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">字母代码</view>
@@ -102,9 +114,13 @@
 <!------------------------->
 <!---------查询弹窗--------->
 <!------------------------->
-<van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 90%;" >
-	<view class="lables1">客户名称或拼音简码</view>
+<van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 50%;" >
+	  <view class="lables1">客户名称或拼音简码</view>
     <input bindinput="onInput" data-column="customer" class="input_text_form" value="{{customer}}" type="text" name="customer" ></input>
+    <view class="lables1">客户类别</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="leibie" range="{{customer_type_list}}">
+      <input bindinput="onInput" data-column="leibie" class="input_text_form"  value="{{leibie}}" type="text" name="leibie" disabled="disabled"></input>
+    </picker>
   <view class="bottom_view" style="height:10%">
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="sel1">查询</button>

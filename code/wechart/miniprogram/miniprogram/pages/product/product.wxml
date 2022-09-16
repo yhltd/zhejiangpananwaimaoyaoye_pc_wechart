@@ -40,8 +40,10 @@
 <!---------添加弹窗--------->
 <!------------------------->
 <van-popup bind:click-overlay="qxShow" show="{{ tjShow }}" position="bottom" custom-style="height: 82%;" >
-	<view class="lables">产品名称</view>
-  <input bindinput="onInput" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" ></input>
+    <view class="lables">品号</view>
+    <input bindinput="onInput" data-column="pinhao" class="input_text_form" value="{{pinhao}}" type="text" name="pinhao" ></input>
+    <view class="lables">产品名称</view>
+    <input bindinput="onInput" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" ></input>
     <view class="lables">规格型号</view>
     <input bindinput="onInput" data-column="spec" class="input_text_form"  value="{{spec}}" type="text" name="spec"></input>
     <view class="lables">单位</view>
@@ -59,8 +61,10 @@
 <!---------修改弹窗--------->
 <!------------------------->
 <van-popup bind:click-overlay="qxShow" show="{{ xgShow }}" position="bottom" custom-style="height: 82%;" >
-	<view class="lables">产品名称</view>
-  <input bindinput="onInput" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" ></input>
+    <view class="lables">品号</view>
+    <input bindinput="onInput" data-column="pinhao" class="input_text_form" value="{{pinhao}}" type="text" name="pinhao" ></input>
+    <view class="lables">产品名称</view>
+    <input bindinput="onInput" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" ></input>
     <view class="lables">规格型号</view>
     <input bindinput="onInput" data-column="spec" class="input_text_form"  value="{{spec}}" type="text" name="spec"></input>
     <view class="lables">单位</view>
@@ -78,7 +82,7 @@
 <!------------------------->
 <!---------查询弹窗--------->
 <!------------------------->
-<van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 90%;" >
+<van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 30%;" >
 	<view class="lables1">产品名称或拼音简码</view>
     <input bindinput="onInput" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" ></input>
   <view class="bottom_view" style="height:10%">

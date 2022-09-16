@@ -18,6 +18,25 @@ function getList() {
     })
 }
 
+function getSelect() {
+    $ajax({
+        type: 'post',
+        url: '/general/getSelect',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            var item = "";
+            for (var i = 0; i < res.data.length; i++) {
+                if (res.data[i].customerType != null && res.data[i].customerType != "") {
+                    item = "<option value=\"" + res.data[i].customerType + "\">" + res.data[i].customerType + "</option>"
+                    $("#add-leibie").append(item);
+                    $("#update-leibie").append(item);
+                    $("#leibie").append(item);
+                }
+            }
+        }
+    })
+}
+
 function fileShow(id) {
     $('#customer').val("");
     $ajax({
@@ -38,14 +57,16 @@ function fileShow(id) {
 
 $(function () {
     getList();
-
+    getSelect();
     $('#select-btn').click(function () {
         var customer = $('#customer').val();
+        var leibie = $('#leibie').val();
         $ajax({
             type: 'post',
             url: '/customer/queryList',
             data: {
                 customer: customer,
+                leibie:leibie
             }
         }, true, '', function (res) {
             if (res.code == 200) {
@@ -301,6 +322,18 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+            }, {
+                field: 'customerNum',
+                title: '客户号',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'leibie',
+                title: '客户类别',
+                align: 'center',
+                sortable: true,
+                width: 200,
             }, {
                 field: 'customer',
                 title: '客户',

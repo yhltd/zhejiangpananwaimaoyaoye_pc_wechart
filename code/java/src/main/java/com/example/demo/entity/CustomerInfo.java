@@ -63,9 +63,21 @@ public class CustomerInfo {
      */
     private String zsye;
 
+
+    /**
+     *  客户号
+     */
+    private String customerNum;
+
+
     /**
      *  备注
      */
     private String remarks;
+
+    /**
+     *  客户类别
+     */
+    private String leibie;
 
 }

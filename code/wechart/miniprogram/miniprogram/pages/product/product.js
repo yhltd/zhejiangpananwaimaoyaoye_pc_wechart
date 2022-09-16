@@ -12,7 +12,14 @@ Page({
   cxShow: false,
   data: {
     list: [],
-    title: [{
+    title: [
+      {
+      text: "品号",
+      width: "275rpx",
+      columnName: "pinhao",
+      type: "text",
+      isupd: true
+    },{
         text: "产品名称",
         width: "275rpx",
         columnName: "product_name",
@@ -121,6 +128,7 @@ Page({
       unit: _this.data.list[e.currentTarget.dataset.index].unit,
       price: _this.data.list[e.currentTarget.dataset.index].price,
       pinyin: _this.data.list[e.currentTarget.dataset.index].pinyin,
+      pinhao: _this.data.list[e.currentTarget.dataset.index].pinhao,
       xgShow:true,
     })
   },
@@ -143,6 +151,7 @@ Page({
       unit: '',
       price:'',
       pinyin:'',
+      pinhao:'',
     })
   },
 
@@ -151,7 +160,7 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into product(product_name,spec,unit,price,pinyin) values('" + _this.data.product_name + "','" + _this.data.spec + "','" + _this.data.unit + "','" + _this.data.price + "','" + _this.data.pinyin + "')"
+          query: "insert into product(product_name,spec,unit,price,pinyin,pinhao) values('" + _this.data.product_name + "','" + _this.data.spec + "','" + _this.data.unit + "','" + _this.data.price + "','" + _this.data.pinyin + "','" + _this.data.pinhao + "')"
         },
         success: res => {
           _this.setData({
@@ -161,6 +170,7 @@ Page({
             unit: '',
             price:'',
             pinyin:'',
+            pinhao:'',
           })
           _this.qxShow()
           var e = ['']
@@ -196,7 +206,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update product set product_name='" + _this.data.product_name + "',spec='" + _this.data.spec + "',unit='" + _this.data.unit + "',price='" + _this.data.price + "',pinyin='" + _this.data.pinyin + "' where id=" + _this.data.id 
+        query: "update product set product_name='" + _this.data.product_name + "',spec='" + _this.data.spec + "',unit='" + _this.data.unit + "',price='" + _this.data.price + "',pinyin='" + _this.data.pinyin + "',pinhao='" + _this.data.pinhao + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -206,6 +216,7 @@ Page({
           unit: '',
           price:'',
           pinyin:'',
+          pinhao:'',
         })
         _this.qxShow()
         var e = ['']
@@ -252,6 +263,7 @@ Page({
             unit: '',
             price:'',
             pinyin:'',
+            pinhao:'',
           })
           _this.qxShow()
           var e = ['']

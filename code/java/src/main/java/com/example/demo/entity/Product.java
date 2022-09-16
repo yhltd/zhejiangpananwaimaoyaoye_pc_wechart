@@ -47,4 +47,9 @@ public class Product {
      *  数量
      * */
     private double num;
+
+    /**
+     *  品号
+     * */
+    private String pinhao;
 }

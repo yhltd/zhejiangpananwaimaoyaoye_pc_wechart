@@ -41,9 +41,7 @@
       <input bindinput="onInput" data-column="riqi" class="input_text_form" value="{{riqi}}" type="text" name="riqi" disabled="disabled"></input>
     </picker>
     <view class="lables">客户名称</view>
-    <picker bindchange="bindPickerChange2" value="{{index}}" data-column_name="customer" range="{{customer_picker_list}}">
-      <input bindinput="onInput" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer" disabled="disabled"></input>
-    </picker>
+    <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">收货人员</view>
     <input bindinput="onInput" data-column="sh_staff" class="input_text_form" value="{{sh_staff}}" type="text" name="sh_staff"></input>
     <view class="lables">快递公司</view>
@@ -79,6 +77,10 @@
     <view class="lables">类型</view>
     <picker bindchange="bindPickerChange5" value="{{index}}" data-column_name="type" range="{{type_list}}">
       <input bindinput="onInput" data-column="type" class="input_text_form"  value="{{type}}" type="text" name="type" disabled="disabled"></input>
+    </picker>
+    <view class="lables">发货状态</view>
+    <picker bindchange="bindPickerChange6" value="{{index}}" data-column_name="fahuo" range="{{fahuo_list}}">
+      <input bindinput="onInput" data-column="fahuo" class="input_text_form"  value="{{fahuo}}" type="text" name="fahuo" disabled="disabled"></input>
     </picker>
   <view class="bottom_view" style="height:10%">
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>
@@ -94,9 +96,7 @@
       <input bindinput="onInput" data-column="riqi" class="input_text_form" value="{{riqi}}" type="text" name="riqi" disabled="disabled"></input>
     </picker>
     <view class="lables">客户名称</view>
-    <picker bindchange="bindPickerChange2" value="{{index}}" data-column_name="customer" range="{{customer_picker_list}}">
-      <input bindinput="onInput" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer" disabled="disabled"></input>
-    </picker>
+    <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">收货人员</view>
     <input bindinput="onInput" data-column="sh_staff" class="input_text_form" value="{{sh_staff}}" type="text" name="sh_staff"></input>
     <view class="lables">快递公司</view>
@@ -133,6 +133,10 @@
     <picker bindchange="bindPickerChange5" value="{{index}}" data-column_name="type" range="{{type_list}}">
       <input bindinput="onInput" data-column="type" class="input_text_form"  value="{{type}}" type="text" name="type" disabled="disabled"></input>
     </picker>
+    <view class="lables">发货状态</view>
+    <picker bindchange="bindPickerChange6" value="{{index}}" data-column_name="fahuo" range="{{fahuo_list}}">
+      <input bindinput="onInput" data-column="fahuo" class="input_text_form"  value="{{fahuo}}" type="text" name="fahuo" disabled="disabled"></input>
+    </picker>
   <view class="bottom_view" style="height:10%">
     <!-- <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="selSH">审核</button> -->
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="del1">删除</button>
@@ -142,7 +146,7 @@
 <!------------------------->
 <!---------查询弹窗--------->
 <!------------------------->
-<van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 30%;" >
+<van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 70%;" >
     <view class="lables1">开始日期</view>
     <picker class="pick" mode="date" value="{{date}}" data-column_name="start_date" bindchange="choiceDate">
       <input bindinput="onInput" data-column="start_date" class="input_text_form" value="{{start_date}}" type="text" name="start_date" disabled="disabled"></input>
@@ -152,9 +156,7 @@
       <input bindinput="onInput" data-column="stop_date" class="input_text_form" value="{{stop_date}}" type="text" name="stop_date" disabled="disabled"></input>
     </picker>
     <view class="lables">客户名称</view>
-    <picker bindchange="bindPickerChange2" value="{{index}}" data-column_name="customer" range="{{customer_picker_list}}">
-      <input bindinput="onInput" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer" disabled="disabled"></input>
-    </picker>
+    <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">产品名称</view>
     <input bindinput="onInput" bindtap="selCD" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" disabled="disabled"></input>
 	  <view class="lables1">批号</view>
@@ -172,6 +174,15 @@
   close-on-click-overlay
   bind:close="select4"
   bind:select="select4" 
+/>
+
+<!--客户下拉-->
+<van-action-sheet
+  show="{{ xlShow5 }}"
+  actions="{{ listKeHu }}"
+  close-on-click-overlay
+  bind:close="select5"
+  bind:select="select5" 
 />
 
 <!--审核下拉-->

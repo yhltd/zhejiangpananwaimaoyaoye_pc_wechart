@@ -10,6 +10,7 @@ Page({
   rqxzShow1: false,
   xgShow: false,
   cxShow: false,
+  xlShow5: false,
   data: {
     list: [],
     title: [{
@@ -453,6 +454,53 @@ Page({
       [e.target.dataset.column_name]: e.detail.value 
     })
     console.log(e.detail.value)
+  },
+
+  selKH: function () {
+    var _this = this
+    var sql = "select customer as name,id,customer from customerInfo where customer like '%" + _this.data.customer + "%' or pinyin like'%" + _this.data.customer + "%'"
+    wx.cloud.callFunction({
+      name: 'sqlServer_117',
+      data: {
+        query: sql
+      },
+      success: res => {
+        var list = res.result.recordset
+        _this.setData({
+          listKeHu: list
+        })
+        console.log(list)
+        _this.setData({
+          xlShow5: true
+        })
+      },
+      err: res => {
+        console.log("错误!")
+      },
+      fail: res => {
+        wx.showToast({
+          title: '请求失败！',
+          icon: 'none',
+          duration: 3000
+        })
+        console.log("请求失败！")
+      }
+    })
+  },
+
+  select5: function (e) {
+    var _this = this
+    if (e.type == "select") {
+      _this.setData({
+        xlShow5: false,
+        customer: e.detail.customer,
+        customer_id: e.detail.id,
+      })
+    } else if (e.type == "close") {
+      _this.setData({
+        xlShow5: false,
+      })
+    }
   },
 
   /**

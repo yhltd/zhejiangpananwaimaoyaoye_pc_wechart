@@ -45,12 +45,14 @@ function getSelect() {
                     $("#add-express").append(item);
                     $("#update-express").append(item);
                 }
+
             }
         }
     })
 }
 
 function getProduct() {
+
     $ajax({
         type: 'post',
         url: '/product/getSelect',
@@ -61,6 +63,8 @@ function getProduct() {
         }
         console.log(res)
     })
+
+
 }
 
 function getCustomer() {
@@ -140,27 +144,40 @@ $(function () {
         }else{
             $('#add-type').next().css('display','none');
         }
-        $ajax({
-            type: 'post',
-            url: '/sale/add',
-            data: JSON.stringify({
-                addInfo: params
-            }),
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8'
-        }, false, '', function (res) {
-            if (res.code == 200) {
-                swal("", res.msg, "success");
-                $('#add-form')[0].reset();
-                $('#add-productName').next().css('display','none');
-                $('#add-type').next().css('display','none');
-                $('#add-customer').next().css('display','none');
-                getList();
-                $('#add-close-btn').click();
-            } else {
-                swal("", res.msg, "error");
-            }
-        })
+        if ($('#add-fahuo').val()=="") {
+            $('#add-fahuo').next().css('display','block');
+            return;
+        }else{
+            $('#add-fahuo').next().css('display','none');
+        }
+        var add_num = $('#add-num').val();
+        if (add_num=="" ||  add_num==0){
+            alert("数量不能为空且不能为为0！");
+        }else{
+            $ajax({
+                type: 'post',
+                url: '/sale/add',
+                data: JSON.stringify({
+                    addInfo: params
+                }),
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8'
+            }, false, '', function (res) {
+                if (res.code == 200) {
+                    swal("", res.msg, "success");
+                    $('#add-form')[0].reset();
+                    $('#add-productName').next().css('display','none');
+                    $('#add-type').next().css('display','none');
+                    $('#add-customer').next().css('display','none');
+                    $('#add-fahuo').next().css('display','none');
+                    getList();
+                    $('#add-close-btn').click();
+                } else {
+                    swal("", res.msg, "error");
+                }
+            })
+        }
+
     });
 
     //点击修改按钮显示弹窗
@@ -214,26 +231,38 @@ $(function () {
             }else{
                 $('#update-type').next().css('display','none');
             }
+            if ($('#update-fahuo').val()=="") {
+                $('#update-fahuo').next().css('display','block');
+                return;
+            }else{
+                $('#update-fahuo').next().css('display','none');
+            }
 
             let params = formToJson('#update-form');
-            $ajax({
-                type: 'post',
-                url: '/sale/update',
-                data: {
-                    updateJson: JSON.stringify(params)
-                },
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8'
-            }, false, '', function (res) {
-                if (res.code == 200) {
-                    swal("", res.msg, "success");
-                    $('#update-close-btn').click();
-                    $('#update-modal').modal('hide');
-                    getList();
-                } else {
-                    swal("", res.msg, "error");
-                }
-            })
+            var update_num = $('#update-num').val();
+            if (update_num=="" ||  update_num==0){
+                alert("数量不能为空且不能为为0！");
+            }else {
+                $ajax({
+                    type: 'post',
+                    url: '/sale/update',
+                    data: {
+                        updateJson: JSON.stringify(params)
+                    },
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8'
+                }, false, '', function (res) {
+                    if (res.code == 200) {
+                        swal("", res.msg, "success");
+                        $('#update-close-btn').click();
+                        $('#update-modal').modal('hide');
+                        getList();
+                    } else {
+                        swal("", res.msg, "error");
+                    }
+                })
+            }
+
         }
     });
 
@@ -501,6 +530,12 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+            }, {
+                field: 'fahuo',
+                title: '发货状态',
+                align: 'center',
+                sortable: true,
+                width: 100,
             }
         ],
         onClickRow: function (row, el) {
@@ -606,6 +641,12 @@ function setCustomerTable(data) {
             }, {
                 field: 'customer',
                 title: '客户',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'pinyin',
+                title: '字母代码',
                 align: 'center',
                 sortable: true,
                 width: 100,

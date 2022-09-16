@@ -78,7 +78,7 @@ public class ProductController {
      *
      * @return ResultInfo
      */
-    @RequestMapping("/geSelect")
+    @RequestMapping("/getSelect")
     public ResultInfo geSelect(HttpSession session) {
         try {
             List<Product> getList = productService.getList();

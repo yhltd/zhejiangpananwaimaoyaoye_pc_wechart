@@ -15,36 +15,32 @@ import java.util.List;
 @Mapper
 @Repository
 public interface SaleMapper extends BaseMapper<Sale> {
-    @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,sa.remarks," +
-            "warehouse,type,express,customer,salesman,product_name,spec,unit,price,p.pinyin from (select s.id,s.riqi," +
-            "customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express," +
-            "customer,salesman,pinyin from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product " +
-            "p on sa.product_id=p.id")
+    @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,sa.num,xiaoji,sa.remarks,warehouse,type" +
+            ",express,customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.fahuo from (select s.id,s.riqi,customer_id,sh_staff," +
+            "pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,fahuo,express,customer,salesman,pinyin," +
+            "s.price from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id")
     List<Sale> getList();
 
-    @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,sa.remarks," +
-            "warehouse,type,express,customer,salesman,product_name,spec,unit,price,p.pinyin from (select s.id,s.riqi," +
-            "customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express," +
-            "customer,salesman,pinyin from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product " +
-            "p on sa.product_id=p.id where salesman=#{name}")
+    @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,sa.num,xiaoji,sa.remarks,warehouse,type," +
+            "express,customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.fahuo from (select s.id,s.riqi,customer_id,sh_staff," +
+            "pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,fahuo,express,customer,salesman,pinyin,s.price from " +
+            "sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where salesman=#{name}")
     List<Sale> getListByName(String name);
 
-    @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,sa.remarks," +
-            "warehouse,type,express,customer,salesman,product_name,spec,unit,price,p.pinyin from (select s.id,s.riqi," +
-            "customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express," +
-            "customer,salesman,pinyin from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product " +
-            "p on sa.product_id=p.id where convert(date,sa.riqi)>=#{ks} and convert(date,sa.riqi)<=#{js} and (customer " +
-            "like '%'+#{customer}+'%' or sa.pinyin like '%'+#{customer}+'%') and (product_name like '%'+#{product}+'%' or " +
-            "p.pinyin like '%'+#{product}+'%') and pihao like '%'+#{pihao}+'%' ")
+    @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,sa.num,xiaoji,sa.remarks,warehouse,type," +
+            "express,customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.fahuo from (select s.id,s.riqi,customer_id,sh_staff," +
+            "pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,fahuo,express,customer,salesman,pinyin,s.price from sale " +
+            "s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=#{ks}" +
+            " and convert(date,sa.riqi)<=#{js} and (customer like '%'+#{customer}+'%' or sa.pinyin like '%'+#{customer}+'%') and (product_name " +
+            "like '%'+#{product}+'%' or p.pinyin like '%'+#{product}+'%') and pihao like '%'+#{pihao}+'%' ")
     List<Sale> queryList(String ks, String js, String customer, String product, String pihao);
 
-    @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,sa.remarks," +
-            "warehouse,type,express,customer,salesman,product_name,spec,unit,price,p.pinyin from (select s.id,s.riqi," +
-            "customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express," +
-            "customer,salesman,pinyin from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product " +
-            "p on sa.product_id=p.id where convert(date,sa.riqi)>=#{ks} and convert(date,sa.riqi)<=#{js} and (customer " +
-            "like '%'+#{customer}+'%' or sa.pinyin like '%'+#{customer}+'%') and (product_name like '%'+#{product}+'%' or " +
-            "p.pinyin like '%'+#{product}+'%') and pihao like '%'+#{pihao}+'%' and salesman=#{name} ")
+    @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,sa.num,xiaoji,sa.remarks,warehouse,type,express," +
+            "customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.fahuo from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order," +
+            "product_id,pihao,num,xiaoji,s.remarks,warehouse,type,fahuo,express,customer,salesman,pinyin,s.price from sale s left join customerInfo " +
+            "c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=#{ks} and convert(date,sa.riqi)<=#{js} " +
+            "and (customer like '%'+#{customer}+'%' or sa.pinyin like '%'+#{customer}+'%') and (product_name like '%'+#{product}+'%' or p.pinyin " +
+            "like '%'+#{product}+'%') and pihao like '%'+#{pihao}+'%' and salesman=#{name} ")
     List<Sale> queryListByName(String ks, String js, String customer, String product, String pihao, String name);
 
 
