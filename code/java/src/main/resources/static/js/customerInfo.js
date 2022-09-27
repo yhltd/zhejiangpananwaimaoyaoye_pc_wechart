@@ -32,6 +32,12 @@ function getSelect() {
                     $("#update-leibie").append(item);
                     $("#leibie").append(item);
                 }
+                if (res.data[i].area != null && res.data[i].area != "") {
+                    item = "<option value=\"" + res.data[i].area + "\">" + res.data[i].area + "</option>"
+                    $("#add-area").append(item);
+                    $("#update-area").append(item);
+                    $("#area").append(item);
+                }
             }
         }
     })
@@ -61,12 +67,14 @@ $(function () {
     $('#select-btn').click(function () {
         var customer = $('#customer').val();
         var leibie = $('#leibie').val();
+        var area = $('#area').val();
         $ajax({
             type: 'post',
             url: '/customer/queryList',
             data: {
                 customer: customer,
-                leibie:leibie
+                leibie:leibie,
+                area:area,
             }
         }, true, '', function (res) {
             if (res.code == 200) {
@@ -124,6 +132,8 @@ $(function () {
         }
         $('#update-modal').modal('show');
         setForm(rows[0].data, '#update-form');
+        $('#update-leibie').val(rows[0].data.leibie)
+        $('#update-area').val(rows[0].data.area)
     });
 
     //修改弹窗点击关闭按钮
@@ -287,6 +297,42 @@ $(function () {
         customerId = 0;
     });
 
+    //上传excel
+    $('#import-btn').click(function () {
+        $('#file2').trigger('click');
+    });
+
+    //判断文件名改变
+    $('#file2').change(function () {
+        var url = null;
+        if ($('#file2').val() != '') {
+            if ($('#file2').val().substr(-5) == '.xlsx') {
+                var excel = document.getElementById("file2").files[0]
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(excel);
+                oFReader.onloadend = function (oFRevent) {
+                    url = oFRevent.target.result;
+                    $ajax({
+                        type: 'post',
+                        url: '/customer/upload',
+                        data: {
+                            excel: url
+                        },
+                    }, false, '', function (res) {
+                        $('#file2').val('');
+                        swal(res.msg);
+                        if (res.code == 200) {
+                            getList();
+                        }
+                    })
+                }
+            } else {
+                swal("请选择正确的Excel文件！")
+                $('#file2').val('');
+            }
+        }
+    })
+
 });
 
 function setTable(data) {
@@ -334,6 +380,12 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 200,
+            }, {
+                field: 'area',
+                title: '区域',
+                align: 'center',
+                sortable: true,
+                width: 100,
             }, {
                 field: 'customer',
                 title: '客户',

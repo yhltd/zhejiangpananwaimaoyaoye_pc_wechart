@@ -34,4 +34,9 @@ public interface GeneralService extends IService<General> {
      * @return 是否删除成功
      */
     boolean delete(List<Integer> idList);
+
+    /**
+     * 即时修改
+     */
+    boolean save(String column,String value,int id);
 }

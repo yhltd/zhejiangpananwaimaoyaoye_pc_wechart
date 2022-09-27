@@ -52,4 +52,14 @@ public class Product {
      *  品号
      * */
     private String pinhao;
+
+    /**
+     *  产品属性
+     * */
+    private String attribute;
+
+    /**
+     *  整箱量
+     * */
+    private String container;
 }

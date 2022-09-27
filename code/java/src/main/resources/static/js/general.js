@@ -25,7 +25,16 @@ $(function () {
 
     //点击新增按钮显示弹窗
     $("#add-btn").click(function () {
-        $('#add-modal').modal('show');
+        // $('#add-modal').modal('show');
+
+        $ajax({
+            type: 'post',
+            url: '/general/addRow',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                swal("", res.msg, "success");
+            }
+        });
     });
 
     //新增弹窗里点击关闭按钮
@@ -144,7 +153,8 @@ function setTable(data) {
     $('#generalTable').bootstrapTable({
         data: data,
         sortStable: true,
-        classes: 'table table-hover text-nowrap table table-bordered',
+        //classes: 'table table-hover text-nowrap table table-bordered',
+        classes: 'table',
         idField: 'id',
         pagination: true,
         pageSize: 15,//单页记录数
@@ -168,58 +178,127 @@ function setTable(data) {
                 title: '销售人员姓名',
                 align: 'center',
                 sortable: true,
-                width: 120,
+                width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="sale_name' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'sale_name\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px"  >'
+                }
             }, {
                 field: 'testName',
                 title: '化验人员名称',
                 align: 'center',
                 sortable: true,
-                width: 120,
+                width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="test_name' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'test_name\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
             }, {
                 field: 'express',
                 title: '快递方式',
                 align: 'center',
                 sortable: true,
-                width: 120,
+                width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="express' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'express\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
             }, {
                 field: 'pick',
                 title: '客户拿货方式',
                 align: 'center',
                 sortable: true,
                 width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="pick' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'pick\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
             }, {
                 field: 'pay',
                 title: '付款方式',
                 align: 'center',
                 sortable: true,
                 width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="pay' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'pay\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
             }, {
                 field: 'warehouse',
                 title: '仓库',
                 align: 'center',
                 sortable: true,
                 width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="warehouse' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'warehouse\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
             }, {
                 field: 'department',
                 title: '部门',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="department' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'department\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
             }, {
                 field: 'customerType',
                 title: '客户类别',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="customer_type' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'customer_type\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
+            }, {
+                field: 'area',
+                title: '区域',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="area' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'area\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
+            }, {
+                field: 'attributes',
+                title: '产品属性',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="attributes' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'attributes\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
             }
         ],
         onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected')
+            let isSelect = $(el).hasClass('selected');
             if (isSelect) {
                 $(el).removeClass('selected')
             } else {
                 $(el).addClass('selected')
             }
+        }
+    })
+}
+
+function columnUpd(id,column){
+    var this_value = $('#' + column + id).val();
+    $ajax({
+        type: 'post',
+        url: '/general/save',
+        data: {
+            value:this_value,
+            column:column,
+            id:id,
+        },
+    }, true, '', function (res) {
+        if (res.code == 200) {
+            // swal(res.msg);
+            var obj = "";
+            if(res.msg == '修改成功'){
+                obj = document.getElementById("upd_1");
+            }else{
+                obj = document.getElementById("upd_2");
+            }
+            obj.hidden = false;
+            setTimeout(function(){
+                obj.hidden = true
+            },3000);
         }
     })
 }

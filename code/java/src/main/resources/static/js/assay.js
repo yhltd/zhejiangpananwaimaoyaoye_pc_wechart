@@ -18,9 +18,27 @@ function getList() {
     })
 }
 
+function getSelect() {
+    $ajax({
+        type: 'post',
+        url: '/product/getListByProduct',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            var item = "";
+            for (var i = 0; i < res.data.length; i++) {
+                if (res.data[i].productName != null && res.data[i].productName != "") {
+                    item = "<option value=\"" + res.data[i].productName + "\">" + res.data[i].productName + "</option>"
+                    $("#add-productName").append(item);
+                    $("#update-productName").append(item);
+                }
+            }
+        }
+    })
+}
+
 $(function () {
     getList();
-
+    getSelect();
     $('#select-btn').click(function () {
         var pihao = $('#pihao').val();
         $ajax({
@@ -85,6 +103,7 @@ $(function () {
         }
         $('#update-modal').modal('show');
         setForm(rows[0].data, '#update-form');
+        $('#update-productName').val(rows[0].data.productName)
     });
 
     //修改弹窗点击关闭按钮
@@ -249,6 +268,44 @@ $(function () {
         assayId = 0;
     });
 
+    //上传excel
+    $('#import-btn').click(function () {
+        $('#file2').trigger('click');
+    });
+
+    //判断文件名改变
+    $('#file2').change(function () {
+        var url = null;
+        if ($('#file2').val() != '') {
+            if ($('#file2').val().substr(-5) == '.xlsx') {
+                var excel = document.getElementById("file2").files[0]
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(excel);
+                oFReader.onloadend = function (oFRevent) {
+                    url = oFRevent.target.result;
+                    $ajax({
+                        type: 'post',
+                        url: '/assay/upload',
+                        data: {
+                            excel: url
+                        },
+                    }, false, '', function (res) {
+                        $('#file2').val('');
+                        swal(res.msg);
+                        if (res.code == 200) {
+                            getList();
+                        }
+                    })
+                }
+            } else {
+                swal("请选择正确的Excel文件！")
+                $('#file2').val('');
+            }
+        }
+    })
+
+
+
 });
 
 function fileShow(id) {
@@ -302,6 +359,18 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+            }, {
+                field: 'riqi',
+                title: '生产日期',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'productName',
+                title: '产品名称',
+                align: 'center',
+                sortable: true,
+                width: 150,
             }, {
                 field: 'pihao',
                 title: '批号',

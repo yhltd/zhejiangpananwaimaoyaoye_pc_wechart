@@ -20,7 +20,7 @@ public interface CustomerInfoService extends IService<CustomerInfo> {
     /**
      * 根据条件查询
      */
-    List<CustomerInfo> queryList(String customerInfo,String leibie, String name, String power);
+    List<CustomerInfo> queryList(String customerInfo,String leibie, String name, String power,String area);
 
     /**
      * 添加

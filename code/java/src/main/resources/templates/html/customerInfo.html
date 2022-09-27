@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <script type="text/javascript" src="../js/main.js"></script>
     <script type="text/javascript" src="../js/customerInfo.js"></script>
+    <script type="text/javascript" src="../js/tableExport.js"></script>
 </head>
 <body class="pt-2">
 <div class="top-toolbar row">
@@ -32,8 +33,13 @@
         <input id="customer" type="text" class="form-control" placeholder="客户或字母代码" autocomplete="off">
     </div>
     <div class="col-md-3 mb-2">
-        <select id="leibie" name="leibie" class="form-control" autocomplete="off" data-required="1">
-
+        <select id="leibie" name="leibie" class="form-control" autocomplete="off" data-required="1" >
+            <option value=""></option>
+        </select>
+    </div>
+    <div class="col-md-3 mb-2">
+        <select id="area" name="area" class="form-control" autocomplete="off" data-required="1">
+            <option value=""></option>
         </select>
     </div>
     <div class="col-md-2 mb-2">
@@ -62,10 +68,19 @@
             <i class="bi bi-trash icon"></i>
             删除
         </button>
+        <button id="import-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-bar-up"></i>
+            导入Excel
+        </button>
+        <button id="export-btn" class="btn btn-primary" onClick ="$('#customerTable').tableExport({ type: 'excel', escape: 'false' })">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+            导出Excel
+        </button>
         <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：产品设置</a>
     </div>
 </div>
 <input type="file" id="file" hidden="hidden">
+<input type="file" id="file2" hidden="hidden">
 
 <div class="table-div border-top">
     <table id="customerTable"></table>
@@ -88,6 +103,12 @@
                         <input id="add-customer_num" name="customer_num" type="text" class="form-control" autocomplete="off" data-required="1">
                     </div>
                     <div class="form-group">
+                        <label for="add-area">区域</label>
+                        <select id="add-area" name="area" class="form-control" autocomplete="off" data-required="1">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="add-leibie">客户类别</label>
                         <select id="add-leibie" name="leibie" class="form-control" autocomplete="off" data-required="1">
 
@@ -106,11 +127,17 @@
                     </div>
                     <div class="form-group">
                         <label for="add-salesman">业务员</label>
-                        <input id="add-salesman" name="salesman" type="text" class="form-control" autocomplete="off" data-required="1">
+                        <input id="add-salesman" name="salesman" type="text" class="form-control" autocomplete="off" >
+                        <div class="invalid-feedback">
+                            请输入业务员！
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="add-price">价格</label>
-                        <input id="add-price" name="price" type="text" class="form-control" autocomplete="off" data-required="1">
+                        <input id="add-price" name="price" type="text" class="form-control" autocomplete="off" >
+                        <div class="invalid-feedback">
+                            请输入价格！
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="add-phone">联系电话</label>
@@ -167,6 +194,12 @@
                         <input id="update-customerNum" name="customerNum" type="text" class="form-control" autocomplete="off" data-required="1">
                     </div>
                     <div class="form-group">
+                        <label for="update-area">区域</label>
+                        <select id="update-area" name="area" class="form-control" autocomplete="off" >
+
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="update-leibie">客户类别</label>
                         <select id="update-leibie" name="leibie" class="form-control" autocomplete="off" data-required="1">
 
@@ -185,11 +218,17 @@
                     </div>
                     <div class="form-group">
                         <label for="update-salesman">业务员</label>
-                        <input id="update-salesman" name="salesman" type="text" class="form-control" autocomplete="off" data-required="1">
+                        <input id="update-salesman" name="salesman" type="text" class="form-control" autocomplete="off">
+                        <div class="invalid-feedback">
+                            请输入业务员！
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="update-price">价格</label>
-                        <input id="update-price" name="price" type="text" class="form-control" autocomplete="off" data-required="1">
+                        <input id="update-price" name="price" type="text" class="form-control" autocomplete="off" >
+                        <div class="invalid-feedback">
+                            请输入价格！
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="update-phone">联系电话</label>

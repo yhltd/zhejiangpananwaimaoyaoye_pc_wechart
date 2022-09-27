@@ -20,4 +20,7 @@ public interface ProductMapper extends BaseMapper<Product> {
 
     @Select("select * from product where product_name like '%'+ #{query} +'%' or pinyin like '%'+ #{query} +'%' ")
     List<Product> queryList(String query);
+
+    @Select("select product_name from product group by product_name")
+    List<Product> getListByProduct();
 }

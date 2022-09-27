@@ -57,4 +57,14 @@ public class General {
      * 部门
      */
     private String customerType;
+
+    /**
+     * 区域
+     */
+    private String area;
+
+    /**
+     * 产品属性
+     */
+    private String attributes;
 }

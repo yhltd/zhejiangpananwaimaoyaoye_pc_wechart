@@ -6,13 +6,13 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.service.ProductService;
 import com.example.demo.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -82,6 +82,23 @@ public class ProductController {
     public ResultInfo geSelect(HttpSession session) {
         try {
             List<Product> getList = productService.getList();
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getListByProduct")
+    public ResultInfo getListByProduct(HttpSession session) {
+        try {
+            List<Product> getList = productService.getListByProduct();
             return ResultInfo.success("获取成功", getList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,6 +188,86 @@ public class ProductController {
             log.error("删除失败：{}", e.getMessage());
             log.error("参数：{}", idList);
             return ResultInfo.error("删除失败");
+        }
+    }
+
+    /**
+     * 上传excel
+     *
+     * @param excel excel
+     * @return ResultInfo
+     */
+    @PostMapping("/upload")
+    public ResultInfo upload(String excel) {
+        try {
+            FileInputStream fis = new FileInputStream(StringUtils.base64ToFile(excel));
+            Workbook wb = null;
+            //创建2007版本Excel工作簿对象
+            wb = new XSSFWorkbook(fis);
+            //获取基本信息工作表
+            Sheet sheet = wb.getSheet("产品设置");
+            //循环Excel文件的i=1行开始
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Product product = new Product();
+                //获取第i行
+                Row row = sheet.getRow(i);
+                //产品名称
+                Cell productName = row.getCell(0);
+                if (productName != null) {
+                    productName.setCellType(CellType.STRING);
+                    product.setProductName(productName.getStringCellValue());
+                }
+                //规格
+                Cell spec = row.getCell(1);
+                if (spec != null) {
+                    spec.setCellType(CellType.STRING);
+                    product.setSpec(spec.getStringCellValue());
+                }
+                //单位
+                Cell unit = row.getCell(2);
+                if (unit != null) {
+                    unit.setCellType(CellType.STRING);
+                    product.setUnit(unit.getStringCellValue());
+                }
+                //零售价
+                Cell price = row.getCell(3);
+                if (price != null) {
+                    price.setCellType(CellType.STRING);
+                    product.setPrice(price.getStringCellValue());
+                }
+                //拼音
+                Cell pinyin = row.getCell(4);
+                if (pinyin != null) {
+                    pinyin.setCellType(CellType.STRING);
+                    product.setPinyin(pinyin.getStringCellValue());
+                }
+                //品号
+                Cell pinhao = row.getCell(5);
+                if (pinhao != null) {
+                    pinhao.setCellType(CellType.STRING);
+                    product.setPinhao(pinhao.getStringCellValue());
+                }
+                //产品属性
+                Cell attribute = row.getCell(6);
+                if (attribute != null) {
+                    attribute.setCellType(CellType.STRING);
+                    product.setAttribute(attribute.getStringCellValue());
+                }
+                //整箱量
+                Cell container = row.getCell(7);
+                if (container != null) {
+                    container.setCellType(CellType.STRING);
+                    product.setContainer(container.getStringCellValue());
+                }
+                //保存到数据库
+                productService.add(product);
+            }
+            return ResultInfo.success("上传成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("上传失败，请查看数据是否正确：{}", e.getMessage());
+            log.error("参数：{}", excel);
+            return ResultInfo.error("上传失败，请查看数据是否正确");
         }
     }
 

@@ -19,14 +19,15 @@ public interface CustomerInfoMapper extends BaseMapper<CustomerInfo> {
     @Select("select * from customerInfo")
     List<CustomerInfo> getList();
 
-    @Select("select * from customerInfo where (customer like '%'+ #{customerInfo} +'%' or pinyin like '%'+ #{customerInfo} +'%') and leibie like '%'+ #{leibie} +'%'")
-    List<CustomerInfo> queryList(String customerInfo,String leibie);
+    @Select("select * from customerInfo where (customer like '%'+ #{customerInfo} +'%' or pinyin like '%'+ #{customerInfo} +'%') and leibie like '%'+ #{leibie} +'%' and area like '%'+ #{area} +'%' " )
+    List<CustomerInfo> queryList(String customerInfo,String leibie,String area);
+//    and area like '%'+ #{area} +'%'
 
     @Select("select * from customerInfo where salesman=#{name}")
     List<CustomerInfo> getListByName(String name);
 
-    @Select("select * from customerInfo where (customer like '%'+ #{customerInfo} +'%' or pinyin like '%'+ #{customerInfo} +'%') and salesman = #{name} and leibie like '%'+ #{leibie} +'%'")
-    List<CustomerInfo> queryListByName(String customerInfo,String leibie, String name);
+    @Select("select * from customerInfo where (customer like '%'+ #{customerInfo} +'%' or pinyin like '%'+ #{customerInfo} +'%') and salesman = #{name} and leibie like '%'+ #{leibie} +'%' and area like '%'+ #{area} +'%' ")
+    List<CustomerInfo> queryListByName(String customerInfo,String leibie,String area, String name);
 
 
 }

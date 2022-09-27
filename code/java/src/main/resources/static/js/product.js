@@ -12,7 +12,24 @@ function getList() {
                 draggingClass: "dragging",
                 resizeMode: 'fit'
             });
+        }
+    })
+}
 
+function getSelect() {
+    $ajax({
+        type: 'post',
+        url: '/general/getSelect',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            var item = "";
+            for (var i = 0; i < res.data.length; i++) {
+                if (res.data[i].attributes != null && res.data[i].attributes != "") {
+                    item = "<option value=\"" + res.data[i].attributes + "\">" + res.data[i].attributes + "</option>"
+                    $("#add-attribute").append(item);
+                    $("#update-attribute").append(item);
+                }
+            }
         }
     })
 }
@@ -84,6 +101,7 @@ $(function () {
         }
         $('#update-modal').modal('show');
         setForm(rows[0].data, '#update-form');
+        $("#update-attribute").val(rows[0].data.attribute);
     });
 
     //修改弹窗点击关闭按钮
@@ -150,6 +168,42 @@ $(function () {
                 }
             })
         }
+    });
+
+    //上传excel
+    $('#import-btn').click(function () {
+        $('#file').trigger('click');
+    });
+
+    //判断文件名改变
+    $('#file').change(function () {
+        var url = null;
+        if ($('#file').val() != '') {
+            if ($('#file').val().substr(-5) == '.xlsx') {
+                var excel = document.getElementById("file").files[0]
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(excel);
+                oFReader.onloadend = function (oFRevent) {
+                    url = oFRevent.target.result;
+                    $ajax({
+                        type: 'post',
+                        url: '/product/upload',
+                        data: {
+                            excel: url
+                        },
+                    }, false, '', function (res) {
+                        $('#file').val('');
+                        swal(res.msg);
+                        if (res.code == 200) {
+                            getList();
+                        }
+                    })
+                }
+            } else {
+                swal("请选择正确的Excel文件！")
+                $('#file').val('');
+            }
+        }
     })
 });
 
@@ -203,19 +257,31 @@ function setTable(data) {
                 title: '零售价',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 120,
             }, {
                 field: 'pinyin',
                 title: '拼音简码',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 120,
             }, {
                 field: 'pinhao',
                 title: '品号',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 150,
+            }, {
+                field: 'attribute',
+                title: '产品属性',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'container',
+                title: '整箱量',
+                align: 'center',
+                sortable: true,
+                width: 150,
             }
         ],
         onClickRow: function (row, el) {

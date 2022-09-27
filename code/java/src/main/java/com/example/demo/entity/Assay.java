@@ -28,5 +28,17 @@ public class Assay {
      */
     private String pihao;
 
+    /**
+     * 产品名称
+     */
+    private String productName;
+
+    /**
+     * 日期
+     */
+    private String riqi;
+
+
+
 
 }

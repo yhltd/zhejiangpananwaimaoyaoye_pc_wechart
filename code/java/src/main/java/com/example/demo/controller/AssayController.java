@@ -6,13 +6,13 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.service.AssayService;
 import com.example.demo.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -160,4 +160,60 @@ public class AssayController {
         }
     }
 
+    /**
+     * 上传excel
+     *
+     * @param excel excel
+     * @return ResultInfo
+     */
+    @PostMapping("/upload")
+    public ResultInfo upload(String excel) {
+        try {
+            FileInputStream fis = new FileInputStream(StringUtils.base64ToFile(excel));
+            Workbook wb = null;
+            //创建2007版本Excel工作簿对象
+            wb = new XSSFWorkbook(fis);
+            //获取基本信息工作表
+            Sheet sheet = wb.getSheet("化验明细");
+            //循环Excel文件的i=1行开始
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Assay assay = new Assay();
+                //获取第i行
+                Row row = sheet.getRow(i);
+                //化验员姓名
+                Cell testName = row.getCell(0);
+                if (testName != null) {
+                    testName.setCellType(CellType.STRING);
+                    assay.setTestName(testName.getStringCellValue());
+                }
+                //生产日期
+                Cell riqi = row.getCell(1);
+                if (riqi != null) {
+                    riqi.setCellType(CellType.STRING);
+                    assay.setRiqi(riqi.getStringCellValue());
+                }
+                //产品名称
+                Cell productName = row.getCell(2);
+                if (productName != null) {
+                    productName.setCellType(CellType.STRING);
+                    assay.setProductName(productName.getStringCellValue());
+                }
+                //批号
+                Cell pihao = row.getCell(3);
+                if (pihao != null) {
+                    pihao.setCellType(CellType.STRING);
+                    assay.setPihao(pihao.getStringCellValue());
+                }
+
+                //保存到数据库
+                assayService.add(assay);
+            }
+            return ResultInfo.success("上传成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("上传失败，请查看数据是否正确：{}", e.getMessage());
+            log.error("参数：{}", excel);
+            return ResultInfo.error("上传失败，请查看数据是否正确");
+        }
+    }
 }

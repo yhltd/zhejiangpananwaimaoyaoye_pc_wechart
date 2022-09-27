@@ -37,4 +37,9 @@ public class GeneralImpl extends ServiceImpl<GeneralMapper, General> implements 
     public boolean delete(List<Integer> idList) {
         return removeByIds(idList);
     }
+
+    @Override
+    public boolean save(String column, String value, int id) {
+        return generalMapper.save(column, value, id);
+    }
 }

@@ -40,4 +40,6 @@ public interface ProductService extends IService<Product> {
      * @return 是否删除成功
      */
     boolean delete(List<Integer> idList);
+
+    List<Product> getListByProduct();
 }

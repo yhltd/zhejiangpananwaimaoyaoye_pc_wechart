@@ -42,4 +42,9 @@ public class ProductImpl extends ServiceImpl<ProductMapper, Product> implements 
     public boolean delete(List<Integer> idList) {
         return removeByIds(idList);
     }
+
+    @Override
+    public List<Product> getListByProduct() {
+        return productMapper.getListByProduct();
+    }
 }

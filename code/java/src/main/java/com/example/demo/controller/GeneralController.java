@@ -95,6 +95,42 @@ public class GeneralController {
     }
 
     /**
+     * 添加一行
+     */
+    @RequestMapping("/addRow")
+    public ResultInfo addRow(HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+        if (!powerUtil.isAdd("常规设置") && !userInfo.getPower().equals("管理员")) {
+            return ResultInfo.error(401, "无权限");
+        }
+        General general =new General();
+        general.setCustomerType("");
+        general.setDepartment("");
+        general.setExpress("");
+        general.setPay("");
+        general.setPick("");
+        general.setSaleName("");
+        general.setTestName("");
+        general.setWarehouse("");
+        general.setArea("");
+        general.setAttributes("");
+        try {
+            general = generalService.add(general);
+            if (StringUtils.isNotNull(general)) {
+                return ResultInfo.success("添加成功", general);
+            } else {
+                return ResultInfo.success("添加失败", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("添加失败：{}", e.getMessage());
+            log.error("参数：{}", general);
+            return ResultInfo.error("添加失败");
+        }
+    }
+
+    /**
      * 修改
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -117,6 +153,31 @@ public class GeneralController {
             e.printStackTrace();
             log.error("修改失败：{}", e.getMessage());
             log.error("参数：{}", general);
+            return ResultInfo.error("修改失败");
+        }
+    }
+
+    /**
+     * 即时修改
+     */
+    @RequestMapping("/save")
+    public ResultInfo save(String column,int id,String value,HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+        if (!powerUtil.isUpdate("常规设置") && !userInfo.getPower().equals("管理员")) {
+            return ResultInfo.error(401, "无权限");
+        }
+
+        try {
+            if (generalService.save(column,value,id)) {
+                return ResultInfo.success("修改成功");
+            } else {
+                return ResultInfo.success("修改失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("修改失败：{}", e.getMessage());
+//            log.error("参数：{}");
             return ResultInfo.error("修改失败");
         }
     }

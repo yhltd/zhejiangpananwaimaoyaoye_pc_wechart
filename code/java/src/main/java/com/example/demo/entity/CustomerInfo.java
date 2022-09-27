@@ -80,4 +80,9 @@ public class CustomerInfo {
      */
     private String leibie;
 
+    /**
+     *  区域
+     */
+    private String area;
+
 }
