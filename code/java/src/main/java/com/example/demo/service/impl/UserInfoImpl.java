@@ -58,6 +58,16 @@ public class UserInfoImpl extends ServiceImpl<UserInfoMapper, UserInfo> implemen
     }
 
     @Override
+    public List<UserInfo> getListid() {
+        return userInfoMapper.getListid();
+    }
+
+    @Override
+    public List<UserInfo> getListlist(int id, String name) {
+        return userInfoMapper.getListlist(id,name);
+    }
+
+    @Override
     public List<UserInfo> queryList(String name, String department) {
         return userInfoMapper.queryList(name, department);
     }
@@ -68,6 +78,14 @@ public class UserInfoImpl extends ServiceImpl<UserInfoMapper, UserInfo> implemen
     }
 
     @Override
+    public boolean useradd(String add_username, String add_password, String add_name, String add_department) {
+        return userInfoMapper.useradd(add_username, add_password, add_name, add_department);
+    }
+
+    //    boolena useradd(String add_username, String add_password, String add_name, String add_department) {
+//        return userInfoMapper.useradd(add_username,add_password,add_name,add_department);
+//    }
+    @Override
     public boolean update(UserInfo userInfo) {
         return updateById(userInfo);
     }
@@ -75,5 +93,10 @@ public class UserInfoImpl extends ServiceImpl<UserInfoMapper, UserInfo> implemen
     @Override
     public boolean delete(List<Integer> idList) {
         return removeByIds(idList);
+    }
+
+    @Override
+    public boolean deleteid(String id) {
+        return userInfoMapper.deleteid(id);
     }
 }

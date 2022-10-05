@@ -2,8 +2,7 @@ package com.example.demo.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.demo.entity.UserPower;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,4 +24,14 @@ public interface UserPowerMapper extends BaseMapper<UserPower> {
 
     @Select("select * from userPower where user_id=#{id}")
     List<UserPower>getListById(int id);
+
+    @Update("update userPower set ${column} = #{this_value} where id=#{id}")
+    boolean update(String column,int id,String this_value);
+
+    @Insert("select * from userPower where user_id = #{id} and view_name = #{name}")
+    boolean addadd(int id,String name);
+
+    @Delete("delete from userPower where user_id=#{id}")
+    boolean deleteid(int id);
+
 }

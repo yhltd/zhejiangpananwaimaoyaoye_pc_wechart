@@ -1,3 +1,5 @@
+var idd;
+
 function getList() {
     $('#name').val("");
     $('#department').val("");
@@ -13,6 +15,9 @@ function getList() {
                 draggingClass: "dragging",
                 resizeMode: 'fit'
             });
+            for (i=0;i<=res.data.id;i++){
+                idd=i;
+            }
         }
     })
 }
@@ -73,13 +78,31 @@ $(function () {
 
     //新增弹窗里点击提交按钮
     $("#add-submit-btn").click(function () {
+        // var add_username = $('#add-username').val();
+        // var add_password = $('#add-password').val();
+        // var add_name = $('#add-name').val();
+        // var add_department = $('#add-department').val();
+        // $ajax({
+        //     type: 'post',
+        //     url: '/user/useradd',
+        //     data:{
+        //         add_username:add_username,
+        //         add_password:add_password,
+        //         add_name:add_name,
+        //         add_department:add_department
+        //     },
+        // }, false, '', function (res) {
+        //     if (res.code == 200) {
+        //         getList();
+        //     }
+        // })
         let params = formToJson("#add-form");
         if (checkForm('#add-form')) {
             $ajax({
                 type: 'post',
                 url: '/user/add',
                 data: JSON.stringify({
-                    addInfo: params
+                    addInfo: params,
                 }),
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8'
@@ -107,6 +130,7 @@ $(function () {
         setForm(rows[0].data, '#update-form');
         $('#update-power').val(rows[0].data.power);
         $('#update-department').val(rows[0].data.department);
+        $('#update-stateUpd').val(rows[0].data.stateUpd);
     });
 
     //修改弹窗点击关闭按钮
@@ -230,6 +254,12 @@ function setTable(data) {
             }, {
                 field: 'department',
                 title: '部门',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'stateUpd',
+                title: '能否修改审核通过数据',
                 align: 'center',
                 sortable: true,
                 width: 100,

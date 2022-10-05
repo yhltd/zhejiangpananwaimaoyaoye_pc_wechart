@@ -67,4 +67,9 @@ public class General {
      * 产品属性
      */
     private String attributes;
+
+    /**
+     * 发货类型
+     */
+    private String saleType;
 }

@@ -23,4 +23,8 @@ public interface ProductMapper extends BaseMapper<Product> {
 
     @Select("select product_name from product group by product_name")
     List<Product> getListByProduct();
+
+    @Select("select top 1 * from product where product_name=#{product} and spec=#{spec} and unit=#{unit}")
+    List<Product> getListByProductSpecUnit(String product, String spec, String unit);
+
 }

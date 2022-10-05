@@ -1,10 +1,11 @@
-function getList(){
-    var nian="";
+function getList() {
+    var nian = "";
     $ajax({
         type: 'post',
         url: '/tongji/getList2',
         data: {
-            nian:nian,
+            nian: nian,
+            customer:'',
         }
     }, true, '', function (res) {
         if (res.code == 200) {
@@ -22,12 +23,14 @@ function getList(){
 $(function () {
     getList();
     $('#select-btn').click(function () {
-        var nian= $('#nian').val();
+        var nian = $('#nian').val();
+        var customer = $('#customer').val();
         $ajax({
             type: 'post',
             url: '/tongji/getList2',
             data: {
-                nian:nian,
+                nian: nian,
+                customer: customer,
             }
         }, true, '', function (res) {
             if (res.code == 200) {
@@ -38,12 +41,14 @@ $(function () {
 
     $('#refresh-btn').click(function () {
         $('#nian').val("");
-        var nian= "";
+        $('#customer').val("");
+        var nian = "";
         $ajax({
             type: 'post',
             url: '/tongji/getList2',
             data: {
-                nian:nian,
+                nian: nian,
+                customer: '',
             }
         }, true, '', function (res) {
             if (res.code == 200) {

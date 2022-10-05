@@ -47,4 +47,19 @@ public class Invoice {
      * 客户
      */
     private String customer;
+
+    /**
+     * 品名
+     */
+    private String nameofarticle;
+
+    /**
+     * 单价
+     */
+    private String unitprice;
+
+    /**
+     * 发票号码
+     */
+    private String thebillingnumber;
 }

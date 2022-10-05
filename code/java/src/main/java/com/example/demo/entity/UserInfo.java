@@ -37,4 +37,8 @@ public class UserInfo {
      * 部门
      */
     private String department;
+    /**
+     * 审核后是否能修改和删除
+     */
+    private String stateUpd;
 }

@@ -53,4 +53,9 @@ public class CustomerInfoImpl extends ServiceImpl<CustomerInfoMapper, CustomerIn
     public boolean delete(List<Integer> idList) {
         return removeByIds(idList);
     }
+
+    @Override
+    public List<CustomerInfo> getListByCustomer(String customer) {
+        return customerInfoMapper.getListByCustomer(customer);
+    }
 }

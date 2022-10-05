@@ -2,9 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Invoice;
 import com.example.demo.entity.Payment;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.mapper.InvoiceMapper;
 import com.example.demo.service.InvoiceService;
+import com.example.demo.service.ProductService;
 import com.example.demo.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import java.util.List;
 public class InvoiceController {
     @Autowired
     InvoiceService invoiceService;
+
 
     /**
      * 查询所有
@@ -57,7 +60,7 @@ public class InvoiceController {
      * @return ResultInfo
      */
     @RequestMapping("/queryList")
-    public ResultInfo queryList(String customer,String unit, HttpSession session) {
+    public ResultInfo queryList(String customer,String unit, String unit1, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
         if (!powerUtil.isSelect("发票") && !userInfo.getPower().equals("管理员")) {
@@ -65,7 +68,7 @@ public class InvoiceController {
         }
 
         try {
-            List<Invoice> getList = invoiceService.queryList(customer,unit, userInfo.getName(), userInfo.getPower());
+            List<Invoice> getList = invoiceService.queryList(customer,unit,unit1, userInfo.getName(), userInfo.getPower());
             return ResultInfo.success("获取成功", getList);
         } catch (Exception e) {
             e.printStackTrace();

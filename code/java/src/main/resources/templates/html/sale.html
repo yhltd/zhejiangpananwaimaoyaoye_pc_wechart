@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>销售</title>
     <link rel="shortcut icon" href="#"/>
-
+    
     <script type="text/javascript" src="../js/Jquery.js"></script>
     <script type="text/javascript" src="../js/jquerysession.js"></script>
 
@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <script type="text/javascript" src="../js/main.js"></script>
     <script type="text/javascript" src="../js/sale.js"></script>
+    <script type="text/javascript" src="../js/tableExport.js"></script>
 </head>
 <body class="pt-2">
 <div class="top-toolbar row">
@@ -42,6 +43,9 @@
     </div>
     <div class="col-md-3 mb-2">
         <input id="pihao" type="text" class="form-control" placeholder="批号" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="saleType" type="text" class="form-control" placeholder="发货类型" autocomplete="off">
     </div>
     <div class="col-md-2 mb-2">
         <button id="select-btn" class="btn btn-primary">
@@ -68,6 +72,26 @@
         <button id="delete-btn" class="btn btn-primary">
             <i class="bi bi-trash icon"></i>
             删除
+        </button>
+        <button id="shenhezhong-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            审核中
+        </button>
+        <button id="tongguo-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            审核通过
+        </button>
+        <button id="weitongguo-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            审核未通过
+        </button>
+        <button id="import-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-bar-up"></i>
+            导入Excel
+        </button>
+        <button id="export-btn" class="btn btn-primary" onClick ="$('#saleTable').tableExport({ type: 'excel', escape: 'false' })">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+            导出Excel
         </button>
         <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：销售</a>
     </div>
@@ -105,75 +129,13 @@
                     </div>
                     <div class="form-group">
                         <label for="add-shStaff">收货人员</label>
-                        <input id="add-shStaff" name="shStaff" type="text" class="form-control" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="add-express">快递公司</label>
-                        <select id="add-express" name="express" class="form-control" autocomplete="off" data-required="1">
-
-                        </select>
+                        <input id="add-shStaff" name="shStaff" type="text" class="form-control" autocomplete="off" data-required="1">
                     </div>
                     <div class="form-group">
                         <label for="add-pick">拿货方式</label>
                         <select id="add-pick" name="pick" class="form-control" autocomplete="off" data-required="1">
 
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="add-wuliuOrder">物流单号</label>
-                        <input id="add-wuliuOrder" name="wuliuOrder" type="text" class="form-control" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="add-warehouse">仓库</label>
-                        <select id="add-warehouse" name="warehouse" class="form-control" autocomplete="off" data-required="1">
-
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <input id="add-productId" name="productId" type="hidden">
-                    </div>
-                    <div class="form-group">
-                        <label for="add-productName">产品名称</label>
-                        <input id="add-productName" type="text" class="form-control" autocomplete="off"
-                               readonly="readonly">
-                        <div class="invalid-feedback">
-                            请选择产品！
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="add-spec">规格</label>
-                        <input id="add-spec" type="text" class="form-control" autocomplete="off"
-                               readonly="readonly">
-                    </div>
-                    <div class="form-group">
-                        <label for="add-unit">单位</label>
-                        <input id="add-unit" type="text" class="form-control" autocomplete="off"
-                               data-required="1" readonly="readonly">
-                    </div>
-                    <div class="form-group">
-                        <label for="add-pihao">批号</label>
-                        <input id="add-pihao" name="pihao" type="text" class="form-control" autocomplete="off"
-                               data-required="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="add-price">销售单价</label>
-                        <input id="add-price" name="price" type="number" class="form-control" autocomplete="off"
-                               data-required="1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="add-num">数量</label>
-                        <input id="add-num" name="num" type="number" class="form-control" autocomplete="off"
-                               data-required="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="add-xiaoji">小计</label>
-                        <input id="add-xiaoji" name="xiaoji" type="number" class="form-control" autocomplete="off"
-                               data-required="1" readonly="readonly">
-                    </div>
-                    <div class="form-group">
-                        <label for="add-remarks">备注</label>
-                        <input id="add-remarks" name="remarks" type="text" class="form-control" autocomplete="off"
-                               data-required="1">
                     </div>
                     <div class="form-group">
                         <label for="add-type">类型</label>
@@ -185,19 +147,13 @@
                             请选择类型！
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="add-fahuo">发货状态</label>
-                        <select id="add-fahuo" name="fahuo" class="form-control" autocomplete="off" >
-                            <option>未发货</option>
-                            <option>已发货</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            请选择类型！
-                        </div>
-                    </div>
                 </form>
             </div>
             <div class="border-top" style="padding: 15px;">
+                <button id="select-product-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    选择产品
+                </button>
                 <button id="add-submit-btn" type="button" class="btn btn-primary">
                     <i class="bi bi-arrow-bar-up icon"></i>
                     提交
@@ -245,24 +201,14 @@
                         <input id="update-shStaff" name="shStaff" type="text" class="form-control" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="update-express">快递公司</label>
-                        <select id="update-express" name="express" class="form-control" autocomplete="off" data-required="1">
-
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="update-pick">拿货方式</label>
                         <select id="update-pick" name="pick" class="form-control" autocomplete="off" data-required="1">
 
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="update-wuliuOrder">物流单号</label>
-                        <input id="update-wuliuOrder" name="wuliuOrder" type="text" class="form-control" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="update-warehouse">仓库</label>
-                        <select id="update-warehouse" name="warehouse" class="form-control" autocomplete="off" data-required="1">
+                        <label for="update-saleType">发货类型</label>
+                        <select id="update-saleType" name="saleType" class="form-control" autocomplete="off" data-required="1">
 
                         </select>
                     </div>
@@ -286,11 +232,6 @@
                         <label for="update-unit">单位</label>
                         <input id="update-unit" type="text" class="form-control" autocomplete="off"
                                data-required="1" readonly="readonly">
-                    </div>
-                    <div class="form-group">
-                        <label for="update-pihao">批号</label>
-                        <input id="update-pihao" name="pihao" type="text" class="form-control" autocomplete="off"
-                               data-required="1">
                     </div>
                     <div class="form-group">
                         <label for="update-price">销售单价</label>
@@ -317,16 +258,6 @@
                         <select id="update-type" name="type" class="form-control" autocomplete="off" >
                             <option>销售</option>
                             <option>退货</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            请选择类型！
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="update-fahuo">发货状态</label>
-                        <select id="update-fahuo" name="fahuo" class="form-control" autocomplete="off" >
-                            <option>未发货</option>
-                            <option>已发货</option>
                         </select>
                         <div class="invalid-feedback">
                             请选择类型！
@@ -419,6 +350,35 @@
         </div>
     </div>
 </div>
+
+<!--    查询产品窗体-->
+<div id="show-product-modal-add" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择产品</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-table-product-add"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="product-submit-btn-add" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="product-close-btn-add" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 
 </body>
 </html>

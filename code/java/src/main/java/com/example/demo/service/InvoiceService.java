@@ -16,11 +16,15 @@ public interface InvoiceService extends IService<Invoice> {
      * 查询所有
      */
     List<Invoice> getList(String name, String power);
+    /**
+     * 查询所有
+     */
+    List<Invoice> getListlist();
 
     /**
      * 根据条件查询
      */
-    List<Invoice> queryList(String customer,String unit, String name, String power);
+    List<Invoice> queryList(String customer,String unit,String unit1, String name, String power);
 
     /**
      * 添加

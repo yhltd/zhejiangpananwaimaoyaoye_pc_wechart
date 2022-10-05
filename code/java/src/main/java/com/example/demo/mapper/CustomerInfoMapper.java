@@ -29,5 +29,8 @@ public interface CustomerInfoMapper extends BaseMapper<CustomerInfo> {
     @Select("select * from customerInfo where (customer like '%'+ #{customerInfo} +'%' or pinyin like '%'+ #{customerInfo} +'%') and salesman = #{name} and leibie like '%'+ #{leibie} +'%' and area like '%'+ #{area} +'%' ")
     List<CustomerInfo> queryListByName(String customerInfo,String leibie,String area, String name);
 
+    @Select("select top 1 * from customerInfo where customer=#{customer}")
+    List<CustomerInfo> getListByCustomer(String customer);
+
 
 }

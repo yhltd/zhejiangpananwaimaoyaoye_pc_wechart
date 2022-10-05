@@ -26,11 +26,11 @@ public interface KuCunService extends IService<Product> {
     /**
      *  查询
      * */
-    List<Product> querySale(String ks,String js,String product);
+    List<Product> querySale(String warehouse,String pihao,String product);
 
     /**
      *  查询
      * */
-    List<Product> queryRuku(String ks,String js,String product);
+    List<Product> queryRuku(String warehouse,String pihao,String product);
 
 }

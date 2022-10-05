@@ -73,4 +73,9 @@ public class Ruku {
      */
     private String unit;
 
+    /**
+     *  生产日期
+     */
+    private String productDate;
+
 }

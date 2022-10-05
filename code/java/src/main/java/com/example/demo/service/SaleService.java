@@ -19,9 +19,24 @@ public interface SaleService extends IService<Sale> {
     List<Sale> getList(String name, String power);
 
     /**
+     * 查询
+     */
+    List<Sale> getList_shenhezhong(String name, String power);
+
+    /**
+     * 查询
+     */
+    List<Sale> getList_tongguo(String name, String power);
+
+    /**
+     * 查询
+     */
+    List<Sale> getList_weitongguo(String name, String power);
+
+    /**
      * 条件查询
      */
-    List<Sale> queryList(String ks, String js, String customer, String product, String pihao, String name, String power);
+    List<Sale> queryList(String ks, String js, String customer, String product, String pihao , String saleType, String name, String power);
 
     /**
      * 新增

@@ -18,14 +18,17 @@ public interface InvoiceMapper extends BaseMapper<Invoice> {
     @Select("select i.*,c.customer from invoice i left join customerInfo c on i.customer_id=c.id")
     List<Invoice> getList();
 
-    @Select("select i.*,c.customer from invoice i left join customerInfo c on i.customer_id=c.id where (c.customer like '%'+ #{customer} +'%' or c.pinyin like '%'+ #{customer} +'%' ) and unit like '%'+ #{unit} +'%'  ")
-    List<Invoice> queryList(String customer, String unit);
+    @Select("select product_name from product")
+    List<Invoice> getListlist();
+
+    @Select("select i.*,c.customer from invoice i left join customerInfo c on i.customer_id=c.id where (c.customer like '%'+ #{customer} +'%' or c.pinyin like '%'+ #{customer} +'%' ) and unit like '%'+ #{unit} +'%' and thebillingnumber like '%'+ #{unit1} +'%' ")
+    List<Invoice> queryList(String customer, String unit, String unit1);
 
     @Select("select i.*,c.customer from invoice i left join customerInfo c on i.customer_id=c.id c.salesman = #{name} ")
     List<Invoice> getListByName(String name);
 
-    @Select("select i.*,c.customer from invoice i left join customerInfo c on i.customer_id=c.id where (c.customer like '%'+ #{customer} +'%' or c.pinyin like '%'+ #{customer} +'%' ) and unit like '%'+ #{unit} +'%' and c.salesman = #{name}")
-    List<Invoice> queryListByName(String customer, String unit, String name);
+    @Select("select i.*,c.customer from invoice i left join customerInfo c on i.customer_id=c.id where (c.customer like '%'+ #{customer} +'%' or c.pinyin like '%'+ #{customer} +'%' ) and thebillingnumber like '%'+ #{unit1} +'%' and unit like '%'+ #{unit} +'%' and c.salesman = #{name}")
+    List<Invoice> queryListByName(String customer, String unit,String unit1, String name);
 
 
 }

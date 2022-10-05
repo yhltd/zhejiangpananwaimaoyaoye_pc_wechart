@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>收付款明细</title>
+    <title>发票</title>
     <link rel="shortcut icon" href="#"/>
 
     <script type="text/javascript" src="../js/Jquery.js"></script>
@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <script type="text/javascript" src="../js/main.js"></script>
     <script type="text/javascript" src="../js/invoice.js"></script>
+    <script type="text/javascript" src="../js/tableExport.js"></script>
 </head>
 <body class="pt-2">
 <div class="top-toolbar row">
@@ -33,6 +34,9 @@
     </div>
     <div class="col-md-3 mb-2">
         <input id="unit" type="text" class="form-control" placeholder="开票单位" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="unit1" type="text" class="form-control" placeholder="发票号码" autocomplete="off">
     </div>
     <div class="col-md-2 mb-2">
         <button id="select-btn" class="btn btn-primary">
@@ -60,7 +64,11 @@
             <i class="bi bi-trash icon"></i>
             删除
         </button>
-        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：收付款明细</a>
+        <button id="export-btn" class="btn btn-primary" onClick ="$('#invoiceTable').tableExport({ type: 'excel', escape: 'false' })">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+            导出Excel
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：发票</a>
     </div>
 </div>
 
@@ -88,6 +96,11 @@
                         <input id="add-customerId" name="customerId" type="hidden">
                     </div>
                     <div class="form-group">
+                        <label for="add-thebillingnumber">发票号码</label>
+                        <input id="add-thebillingnumber" name="thebillingnumber" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
                         <label for="add-customer">客户</label>
                         <input id="add-customer" type="text" class="form-control" autocomplete="off"
                                readonly="readonly">
@@ -98,6 +111,20 @@
                     <div class="form-group">
                         <label for="add-unit">开票单位</label>
                         <input id="add-unit" name="unit" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-nameofarticle">品名</label>
+                        <select id="add-nameofarticle" name="nameofarticle" class="form-control">
+
+                        </select>
+
+                        <!--                        <input id="add-nameofarticle" name="nameofarticle" type="text" class="form-control" autocomplete="off"-->
+                        <!--                               data-required="1">-->
+                    </div>
+                    <div class="form-group">
+                        <label for="add-unitprice">单价</label>
+                        <input id="add-unitprice" name="unitprice" type="number" class="form-control" autocomplete="off"
                                data-required="1">
                     </div>
                     <div class="form-group">
@@ -151,6 +178,11 @@
                         <input id="update-customerId" name="customerId" type="hidden">
                     </div>
                     <div class="form-group">
+                        <label for="update-thebillingnumber">发票号码</label>
+                        <input id="update-thebillingnumber" name="thebillingnumber" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
                         <label for="update-customer">客户</label>
                         <input id="update-customer" type="text" class="form-control" autocomplete="off"
                                readonly="readonly">
@@ -161,6 +193,19 @@
                     <div class="form-group">
                         <label for="update-unit">开票单位</label>
                         <input id="update-unit" name="unit" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-nameofarticle">品名</label>
+                        <select id="update-nameofarticle" name="nameofarticle" class="form-control">
+
+                        </select>
+                        <!--                        <input id="update-nameofarticle" name="nameofarticle" type="text" class="form-control" autocomplete="off"-->
+                        <!--                               data-required="1">-->
+                    </div>
+                    <div class="form-group">
+                        <label for="update-unitprice">单价</label>
+                        <input id="update-unitprice" name="unitprice" type="number" class="form-control" autocomplete="off"
                                data-required="1">
                     </div>
                     <div class="form-group">

@@ -1,4 +1,5 @@
-let operation="";
+let operation = "";
+let opt = "";
 
 function getList() {
     $('#product').val("");
@@ -30,6 +31,7 @@ function getSelect() {
             for (var i = 0; i < res.data.length; i++) {
                 if (res.data[i].warehouse != null && res.data[i].warehouse != "") {
                     item = "<option value=\"" + res.data[i].warehouse + "\">" + res.data[i].warehouse + "</option>"
+                    opt = opt + "<option value=\"" + res.data[i].warehouse + "\">" + res.data[i].warehouse + "</option>";
                     $("#add-warehouse").append(item);
                     $("#update-warehouse").append(item);
                 }
@@ -62,13 +64,15 @@ $(function () {
         var ks = $('#ks').val();
         var js = $('#js').val();
         var product = $('#product').val();
+        var pihao = $('#pihao').val();
         $ajax({
             type: 'post',
             url: '/ruku/queryList',
             data: {
-                ks:ks,
-                js:js,
+                ks: ks,
+                js: js,
                 product: product,
+                pihao: pihao,
             }
         }, true, '', function (res) {
             if (res.code == 200) {
@@ -82,9 +86,107 @@ $(function () {
         getList();
     });
 
+    //审核中
+    $("#shenhezhong-btn").click(function () {
+        $ajax({
+            type: 'post',
+            url: '/ruku/getList_shenhezhong',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                setTable(res.data);
+                $("#rukuTable").colResizable({
+                    liveDrag: true,
+                    gripInnerHtml: "<div class='grip'></div>",
+                    draggingClass: "dragging",
+                    resizeMode: 'fit'
+                });
+            }
+        })
+    });
+
+    //审核通过
+    $("#tongguo-btn").click(function () {
+        $ajax({
+            type: 'post',
+            url: '/ruku/getList_tongguo',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                setTable(res.data);
+                $("#rukuTable").colResizable({
+                    liveDrag: true,
+                    gripInnerHtml: "<div class='grip'></div>",
+                    draggingClass: "dragging",
+                    resizeMode: 'fit'
+                });
+            }
+        })
+    });
+
+    //审核未通过
+    $("#weitongguo-btn").click(function () {
+        $ajax({
+            type: 'post',
+            url: '/ruku/getList_weitongguo',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                setTable(res.data);
+                $("#rukuTable").colResizable({
+                    liveDrag: true,
+                    gripInnerHtml: "<div class='grip'></div>",
+                    draggingClass: "dragging",
+                    resizeMode: 'fit'
+                });
+            }
+        })
+    });
+
     //点击新增按钮显示弹窗
     $("#add-btn").click(function () {
-        $('#add-modal').modal('show');
+        //$('#add-modal').modal('show');
+
+        $ajax({
+            type: 'post',
+            url: '/product/getSelect',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                setAddRuku(res.data);
+                $('#add-ruku-modal').modal('show');
+            }
+            console.log(res)
+        });
+    });
+
+    //添加窗口点击关闭
+    $('#add-ruku-close-btn').click(function () {
+        $('#add-ruku-modal').modal('hide');
+    });
+
+    //添加窗口点击添加
+    $('#add-ruku-submit-btn').click(function () {
+        let rows = getRows("#add-table-ruku");
+        if (rows.length == 0) {
+            alert('请选择要保存的数据！');
+            return;
+        }
+        $.each(rows, function (index, row) {
+            $ajax({
+                type: 'post',
+                url: '/ruku/insert',
+                data: {
+                    warehouse: row.warehouse,
+                    productDate: row.productDate,
+                    productId: row.data.id,
+                    pihao: row.pihao,
+                    num: row.num,
+                    remarks: row.remarks,
+                }
+            }, false, '', function (res) {
+
+            })
+        });
+        swal("新增成功！");
+        $('#add-ruku-modal').modal('hide');
+        getList();
     });
 
     //新增弹窗里点击关闭按钮
@@ -96,9 +198,9 @@ $(function () {
     $("#add-submit-btn").click(function () {
         let params = formToJson("#add-form");
         var add_num = $('#add-num').val();
-        if (add_num=="" ||  add_num==0){
+        if (add_num == "" || add_num == 0) {
             alert("数量不能为空且不能为为0！");
-        }else {
+        } else {
             if ($('#add-productName').val() != "") {
                 $ajax({
                     type: 'post',
@@ -153,12 +255,12 @@ $(function () {
     $('#update-submit-btn').click(function () {
         var msg = confirm("确认要修改吗？");
         if (msg) {
-            if ($('#update-productName').val()!="") {
+            if ($('#update-productName').val() != "") {
                 let params = formToJson('#update-form');
                 var update_num = $('#update-num').val();
-                if (update_num=="" ||  update_num==0){
+                if (update_num == "" || update_num == 0) {
                     alert("数量不能为空且不能为为0！");
-                }else {
+                } else {
                     $ajax({
                         type: 'post',
                         url: '/ruku/update',
@@ -179,8 +281,8 @@ $(function () {
                     })
                 }
 
-            }else{
-                $('#update-productName').next().css('display','block');
+            } else {
+                $('#update-productName').next().css('display', 'block');
             }
         }
     });
@@ -195,14 +297,17 @@ $(function () {
                 return;
             }
             let idList = [];
+            let shenhe = [];
             $.each(rows, function (index, row) {
-                idList.push(row.data.id)
+                idList.push(row.data.id);
+                shenhe.push(row.data.state);
             });
             $ajax({
                 type: 'post',
                 url: '/ruku/delete',
                 data: JSON.stringify({
-                    idList: idList
+                    idList: idList,
+                    shenhe: shenhe
                 }),
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8'
@@ -257,6 +362,42 @@ $(function () {
             }
             $('#show-product-modal').modal('hide');
         }
+    });
+
+    //上传excel
+    $('#import-btn').click(function () {
+        $('#file').trigger('click');
+    });
+
+    //判断文件名改变
+    $('#file').change(function () {
+        var url = null;
+        if ($('#file').val() != '') {
+            if ($('#file').val().substr(-5) == '.xlsx') {
+                var excel = document.getElementById("file").files[0]
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(excel);
+                oFReader.onloadend = function (oFRevent) {
+                    url = oFRevent.target.result;
+                    $ajax({
+                        type: 'post',
+                        url: '/ruku/upload',
+                        data: {
+                            excel: url
+                        },
+                    }, false, '', function (res) {
+                        $('#file').val('');
+                        swal(res.msg);
+                        if (res.code == 200) {
+                            getList();
+                        }
+                    })
+                }
+            } else {
+                swal("请选择正确的Excel文件！")
+                $('#file').val('');
+            }
+        }
     })
 });
 
@@ -310,6 +451,12 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'productDate',
+                title: '生产日期',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
                 field: 'productName',
                 title: '产品名称',
                 align: 'center',
@@ -320,7 +467,7 @@ function setTable(data) {
                 title: '规格',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 200,
             }, {
                 field: 'pihao',
                 title: '批号',
@@ -328,14 +475,14 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
-                field: 'unit',
-                title: '单位',
+                field: 'num',
+                title: '数量',
                 align: 'center',
                 sortable: true,
                 width: 100,
             }, {
-                field: 'num',
-                title: '数量',
+                field: 'unit',
+                title: '单位',
                 align: 'center',
                 sortable: true,
                 width: 100,
@@ -372,13 +519,13 @@ function setTable(data) {
     })
 }
 
-function pass(id){
+function pass(id) {
     $ajax({
         type: 'post',
         url: '/ruku/updateState',
-        data:{
-            state:"审核通过",
-            id:id,
+        data: {
+            state: "审核通过",
+            id: id,
         },
     }, false, '', function (res) {
         if (res.code == 200) {
@@ -387,19 +534,53 @@ function pass(id){
     })
 }
 
-function refuse(id){
+function refuse(id) {
     $ajax({
         type: 'post',
         url: '/ruku/updateState',
-        data:{
-            state:"审核未通过",
-            id:id,
+        data: {
+            state: "审核未通过",
+            id: id,
         },
     }, false, '', function (res) {
         if (res.code == 200) {
             getList();
         }
     })
+}
+
+function getXiaLa() {
+    var select = "<select name=\"warehouse\" class=\"form-control\" >";
+    select = select + opt;
+    select = select + "<select/>";
+    return select;
+}
+
+function getRows(tableEl) {
+    let result = [];
+    let tableData = $(tableEl).bootstrapTable('getData');
+    $(tableEl + ' tr').each(function (i, tr) {
+        let warehouse = $(tr).children().eq(2).children().val();
+        let productDate = $(tr).children().eq(3).children().val();
+        let num = $(tr).children().eq(8).children().val();
+        let pihao = $(tr).children().eq(10).children().val();
+        let remarks = $(tr).children().eq(11).children().val();
+        let index = $(tr).data('index');
+        if (index != undefined) {
+            if ($(tr).hasClass('selected')) {
+                result.push({
+                    index: index,
+                    data: tableData[index],
+                    warehouse: warehouse,
+                    productDate: productDate,
+                    num: num,
+                    pihao: pihao,
+                    remarks: remarks,
+                })
+            }
+        }
+    });
+    return result;
 }
 
 function setProductTable(data) {
@@ -465,5 +646,119 @@ function setProductTable(data) {
                 $(el).addClass('selected')
             }
         }
+    })
+}
+
+function setAddRuku(data) {
+    if ($('#add-table-ruku').html() != '') {
+        $('#add-table-ruku').bootstrapTable('load', data);
+    }
+    $('#add-table-ruku').bootstrapTable({
+        data: data,
+        sortStable: true,
+        classes: 'table table-hover',
+        idField: 'id',
+        pagination: true,
+        search: true,
+        searchAlign: 'left',
+        clickToSelect: false,
+        locale: 'zh-CN',
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: '',
+                title: '序号',
+                align: 'center',
+                width: 50,
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'warehouse',
+                title: '仓库',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return getXiaLa();
+                },
+            }, {
+                field: 'productDate',
+                title: '生产日期',
+                align: 'left',
+                sortable: true,
+                width: 180,
+                formatter: function (value, row, index) {
+                    return '<input type="date" class="form-control" name="productDate" />'
+                }
+            }, {
+                field: 'productName',
+                title: '产品名称',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'spec',
+                title: '规格',
+                align: 'left',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'unit',
+                title: '单位',
+                align: 'left',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'price',
+                title: '价格',
+                align: 'left',
+                sortable: true,
+                width: 150,
+            }, {
+                field: '',
+                title: '数量',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return '<input type="number" name="num" class="form-control" value="' + value + '" />'
+                }
+            }
+            , {
+                field: 'pinyin',
+                title: '拼音代码',
+                align: 'left',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'pihao',
+                title: '批号',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return '<input type="text" name="pihao" class="form-control" />'
+                }
+            }, {
+                field: 'remarks',
+                title: '备注',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return '<input type="text" name="remarks" class="form-control" />'
+                }
+            }
+        ],
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected')
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
     })
 }

@@ -1,4 +1,6 @@
-let operation="";
+let operation = "";
+let productList = [];
+let opt = "";
 
 function getList() {
     $('#product').val("");
@@ -6,6 +8,7 @@ function getList() {
     $('#pihao').val("");
     $('#ks').val("");
     $('#js').val("");
+
     $ajax({
         type: 'post',
         url: '/sale/getList',
@@ -40,19 +43,30 @@ function getSelect() {
                     $("#add-pick").append(item);
                     $("#update-pick").append(item);
                 }
-                if (res.data[i].express != null && res.data[i].express != "") {
-                    item = "<option value=\"" + res.data[i].express + "\">" + res.data[i].express + "</option>"
-                    $("#add-express").append(item);
-                    $("#update-express").append(item);
+                if (res.data[i].saleType != null && res.data[i].saleType != "") {
+                    item = "<option value=\"" + res.data[i].saleType + "\">" + res.data[i].saleType + "</option>"
+                    $("#add-saleType").append(item);
+                    $("#update-saleType").append(item);
+                    opt = opt + "<option value=\"" + res.data[i].saleType + "\">" + res.data[i].saleType + "</option>";
                 }
-
             }
         }
     })
 }
 
-function getProduct() {
+function getProductAdd() {
+    $ajax({
+        type: 'post',
+        url: '/product/getSelect',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            setProductTable_Add(res.data);
+        }
+        console.log(res)
+    })
+}
 
+function getProduct() {
     $ajax({
         type: 'post',
         url: '/product/getSelect',
@@ -63,8 +77,6 @@ function getProduct() {
         }
         console.log(res)
     })
-
-
 }
 
 function getCustomer() {
@@ -83,6 +95,7 @@ function getCustomer() {
 $(function () {
     getList();
     getSelect();
+    getProductAdd();
 
     $('#select-btn').click(function () {
         var ks = $('#ks').val();
@@ -90,16 +103,17 @@ $(function () {
         var customer = $('#customer').val();
         var product = $('#product').val();
         var pihao = $('#pihao').val();
-
+        var saleType = $('#saleType').val();
         $ajax({
             type: 'post',
             url: '/sale/queryList',
             data: {
-                ks:ks,
-                js:js,
-                customer:customer,
+                ks: ks,
+                js: js,
+                customer: customer,
                 product: product,
-                pihao:pihao,
+                pihao: pihao,
+                saleType: saleType,
             }
         }, true, '', function (res) {
             if (res.code == 200) {
@@ -111,10 +125,71 @@ $(function () {
     //刷新
     $("#refresh-btn").click(function () {
         getList();
+        getSelect();
+        getProductAdd();
+    });
+
+    //审核中
+    $("#shenhezhong-btn").click(function () {
+        $ajax({
+            type: 'post',
+            url: '/sale/getList_shenhezhong',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                setTable(res.data);
+                $("#rukuTable").colResizable({
+                    liveDrag: true,
+                    gripInnerHtml: "<div class='grip'></div>",
+                    draggingClass: "dragging",
+                    resizeMode: 'fit'
+                });
+            }
+        })
+    });
+
+    //审核通过
+    $("#tongguo-btn").click(function () {
+        $ajax({
+            type: 'post',
+            url: '/sale/getList_tongguo',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                setTable(res.data);
+                $("#rukuTable").colResizable({
+                    liveDrag: true,
+                    gripInnerHtml: "<div class='grip'></div>",
+                    draggingClass: "dragging",
+                    resizeMode: 'fit'
+                });
+            }
+        })
+    });
+
+    //审核未通过
+    $("#weitongguo-btn").click(function () {
+        $ajax({
+            type: 'post',
+            url: '/sale/getList_weitongguo',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                setTable(res.data);
+                $("#rukuTable").colResizable({
+                    liveDrag: true,
+                    gripInnerHtml: "<div class='grip'></div>",
+                    draggingClass: "dragging",
+                    resizeMode: 'fit'
+                });
+            }
+        })
     });
 
     //点击新增按钮显示弹窗
     $("#add-btn").click(function () {
+        var time = new Date();
+        var day = ("0" + time.getDate()).slice(-2);
+        var month = ("0" + (time.getMonth() + 1)).slice(-2);
+        var today = time.getFullYear() + "-" + (month) + "-" + (day);
+        $('#add-riqi').val(today);
         $('#add-modal').modal('show');
     });
 
@@ -126,57 +201,38 @@ $(function () {
     //新增弹窗里点击提交按钮
     $("#add-submit-btn").click(function () {
         let params = formToJson("#add-form");
-        if ($('#add-productName').val()=="") {
-            $('#add-productName').next().css('display','block');
+        if ($('#add-customer').val() == "") {
+            $('#add-customer').next().css('display', 'block');
             return;
-        }else{
-            $('#add-productName').next().css('display','none');
+        } else {
+            $('#add-customer').next().css('display', 'none');
         }
-        if ($('#add-customer').val()=="") {
-            $('#add-customer').next().css('display','block');
-            return;
-        }else{
-            $('#add-customer').next().css('display','none');
-        }
-        if ($('#add-type').val()=="") {
-            $('#add-type').next().css('display','block');
-            return;
-        }else{
-            $('#add-type').next().css('display','none');
-        }
-        if ($('#add-fahuo').val()=="") {
-            $('#add-fahuo').next().css('display','block');
-            return;
-        }else{
-            $('#add-fahuo').next().css('display','none');
-        }
-        var add_num = $('#add-num').val();
-        if (add_num=="" ||  add_num==0){
-            alert("数量不能为空且不能为为0！");
-        }else{
+
+        $.each(productList, function (index, row) {
             $ajax({
                 type: 'post',
-                url: '/sale/add',
-                data: JSON.stringify({
-                    addInfo: params
-                }),
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8'
-            }, false, '', function (res) {
-                if (res.code == 200) {
-                    swal("", res.msg, "success");
-                    $('#add-form')[0].reset();
-                    $('#add-productName').next().css('display','none');
-                    $('#add-type').next().css('display','none');
-                    $('#add-customer').next().css('display','none');
-                    $('#add-fahuo').next().css('display','none');
-                    getList();
-                    $('#add-close-btn').click();
-                } else {
-                    swal("", res.msg, "error");
-                }
-            })
-        }
+                url: '/sale/insert',
+                data: {
+                    riqi:$('#add-riqi').val(),
+                    customerId: $('#add-customerId').val(),
+                    shStaff:$('#add-shStaff').val(),
+                    pick: $('#add-pick').val(),
+                    type: $('#add-type').val(),
+                    productId: row.data.id,
+                    saleType: row.saleType,
+                    price: row.price,
+                    num: row.num,
+                    remarks: row.remarks,
+                },
+            }, false, '', function (res) {})
+        });
+
+        swal("", "新增成功！", "success");
+        $('#add-customer').next().css('display', 'none');
+
+        getList();
+        getProductAdd();
+        $('#add-close-btn').click();
 
     });
 
@@ -213,36 +269,36 @@ $(function () {
     $('#update-submit-btn').click(function () {
         var msg = confirm("确认要修改吗？");
         if (msg) {
-            if ($('#update-productName').val()=="") {
-                $('#update-productName').next().css('display','block');
+            if ($('#update-productName').val() == "") {
+                $('#update-productName').next().css('display', 'block');
                 return;
-            }else{
-                $('#update-productName').next().css('display','none');
+            } else {
+                $('#update-productName').next().css('display', 'none');
             }
-            if ($('#update-customer').val()=="") {
-                $('#update-customer').next().css('display','block');
+            if ($('#update-customer').val() == "") {
+                $('#update-customer').next().css('display', 'block');
                 return;
-            }else{
-                $('#update-customer').next().css('display','none');
+            } else {
+                $('#update-customer').next().css('display', 'none');
             }
-            if ($('#update-type').val()=="") {
-                $('#update-type').next().css('display','block');
+            if ($('#update-type').val() == "") {
+                $('#update-type').next().css('display', 'block');
                 return;
-            }else{
-                $('#update-type').next().css('display','none');
+            } else {
+                $('#update-type').next().css('display', 'none');
             }
-            if ($('#update-fahuo').val()=="") {
-                $('#update-fahuo').next().css('display','block');
+            if ($('#update-fahuo').val() == "") {
+                $('#update-fahuo').next().css('display', 'block');
                 return;
-            }else{
-                $('#update-fahuo').next().css('display','none');
+            } else {
+                $('#update-fahuo').next().css('display', 'none');
             }
 
             let params = formToJson('#update-form');
             var update_num = $('#update-num').val();
-            if (update_num=="" ||  update_num==0){
+            if (update_num == "" || update_num == 0) {
                 alert("数量不能为空且不能为为0！");
-            }else {
+            } else {
                 $ajax({
                     type: 'post',
                     url: '/sale/update',
@@ -298,11 +354,26 @@ $(function () {
         }
     });
 
-    //添加窗体点击产品名文本框
-    $("#add-productName").click(function () {
-        operation = "添加";
-        getProduct();
+    //添加窗体选择产品按钮
+    $("#select-product-btn").click(function () {
+        $('#show-product-modal-add').modal('show');
     });
+
+    //产品选择点击确定
+    $('#product-submit-btn-add').click(function () {
+        productList = getRows("#show-table-product-add");
+        if (productList.length == 0) {
+            swal('请选择要保存的数据！');
+        }else{
+            $('#show-product-modal-add').modal('hide');
+        }
+    });
+
+    //产品选择点击关闭
+    $('#product-close-btn-add').click(function () {
+        $('#show-product-modal-add').modal('hide');
+    });
+
 
     //修改窗体点击产品文本框
     $("#update-productName").click(function () {
@@ -329,7 +400,7 @@ $(function () {
                     $("#add-spec").val(row.data.spec);
                     $("#add-price").val(row.data.price);
 
-                    var xiaoji=$('#add-price').val()*$('#add-num').val();
+                    var xiaoji = $('#add-price').val() * $('#add-num').val();
                     $('#add-xiaoji').val(xiaoji)
                 });
             } else if (operation == "修改") {
@@ -340,14 +411,13 @@ $(function () {
                     $("#update-spec").val(row.data.spec);
                     $("#update-price").val(row.data.price);
 
-                    var xiaoji=$('#update-price').val()*$('#update-num').val();
+                    var xiaoji = $('#update-price').val() * $('#update-num').val();
                     $('#update-xiaoji').val(xiaoji)
                 });
             }
             $('#show-product-modal').modal('hide');
         }
     });
-
 
 
     //添加窗体点击客户文本框
@@ -390,14 +460,50 @@ $(function () {
 
     //小计自动计算
     $('#add-num').change(function () {
-        var xiaoji=$('#add-price').val()*$('#add-num').val();
+        var xiaoji = $('#add-price').val() * $('#add-num').val();
         $('#add-xiaoji').val(xiaoji)
     });
 
     $('#update-num').change(function () {
-        var xiaoji=$('#update-price').val()*$('#update-num').val();
+        var xiaoji = $('#update-price').val() * $('#update-num').val();
         $('#update-xiaoji').val(xiaoji)
     });
+
+    //上传excel
+    $('#import-btn').click(function () {
+        $('#file').trigger('click');
+    });
+
+    //判断文件名改变
+    $('#file').change(function () {
+        var url = null;
+        if ($('#file').val() != '') {
+            if ($('#file').val().substr(-5) == '.xlsx') {
+                var excel = document.getElementById("file").files[0]
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(excel);
+                oFReader.onloadend = function (oFRevent) {
+                    url = oFRevent.target.result;
+                    $ajax({
+                        type: 'post',
+                        url: '/sale/upload',
+                        data: {
+                            excel: url
+                        },
+                    }, false, '', function (res) {
+                        $('#file').val('');
+                        swal(res.msg);
+                        if (res.code == 200) {
+                            getList();
+                        }
+                    })
+                }
+            } else {
+                swal("请选择正确的Excel文件！")
+                $('#file').val('');
+            }
+        }
+    })
 
 });
 
@@ -446,13 +552,15 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
-            }, {
-                field: 'express',
-                title: '快递公司',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
+            },
+            // {
+            //     field: 'express',
+            //     title: '快递公司',
+            //     align: 'center',
+            //     sortable: true,
+            //     width: 100,
+            // },
+            {
                 field: 'salesman',
                 title: '业务员',
                 align: 'center',
@@ -464,13 +572,22 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
-            }, {
-                field: 'wuliuOrder',
-                title: '物流单号',
+            },
+            // {
+            //     field: 'wuliuOrder',
+            //     title: '物流单号',
+            //     align: 'center',
+            //     sortable: true,
+            //     width: 100,
+            // },
+            {
+                field: 'saleType',
+                title: '发货类型',
                 align: 'center',
                 sortable: true,
                 width: 100,
-            }, {
+            },
+            {
                 field: 'productName',
                 title: '产品名称',
                 align: 'center',
@@ -481,14 +598,16 @@ function setTable(data) {
                 title: '规格',
                 align: 'center',
                 sortable: true,
-                width: 100,
-            }, {
-                field: 'pihao',
-                title: '批号',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
+                width: 200,
+            },
+            // {
+            //     field: 'pihao',
+            //     title: '批号',
+            //     align: 'center',
+            //     sortable: true,
+            //     width: 100,
+            // },
+            {
                 field: 'unit',
                 title: '单位',
                 align: 'center',
@@ -512,34 +631,44 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
-            }, {
-                field: 'warehouse',
-                title: '仓库',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
+            },
+            // {
+            //     field: 'warehouse',
+            //     title: '仓库',
+            //     align: 'center',
+            //     sortable: true,
+            //     width: 100,
+            // },
+            {
                 field: 'remarks',
                 title: '备注',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 200,
             }, {
                 field: 'type',
-                title: '销售方式',
+                title: '类型',
                 align: 'center',
                 sortable: true,
                 width: 100,
-            }, {
-                field: 'fahuo',
-                title: '发货状态',
+            },
+            // {
+            //     field: 'fahuo',
+            //     title: '发货状态',
+            //     align: 'center',
+            //     sortable: true,
+            //     width: 100,
+            // }
+            {
+                field: 'saleState',
+                title: '审核状态',
                 align: 'center',
                 sortable: true,
                 width: 100,
-            }
+            },
         ],
         onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected')
+            let isSelect = $(el).hasClass('selected');
             if (isSelect) {
                 $(el).removeClass('selected')
             } else {
@@ -685,4 +814,131 @@ function setCustomerTable(data) {
             }
         }
     })
+}
+
+function setProductTable_Add(data) {
+    if ($('#show-table-product-add').html() != '') {
+        $('#show-table-product-add').bootstrapTable('load', data);
+    }
+    $('#show-table-product-add').bootstrapTable({
+        data: data,
+        sortStable: true,
+        classes: 'table table-hover',
+        idField: 'id',
+        pagination: true,
+        search: true,
+        searchAlign: 'left',
+        clickToSelect: false,
+        locale: 'zh-CN',
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: '',
+                title: '序号',
+                align: 'center',
+                width: 50,
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'saleType',
+                title: '发货类型',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return getXiaLa();
+                },
+            }, {
+                field: 'productName',
+                title: '产品名称',
+                align: 'left',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'spec',
+                title: '规格',
+                align: 'left',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'attribute',
+                title: '产品属性',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'unit',
+                title: '单位',
+                align: 'left',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'price',
+                title: '价格',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return '<input type="number" name="price" class="form-control" value="' + value + '" />'
+                }
+            }, {
+                field: '',
+                title: '数量',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return '<input type="number" name="num" class="form-control" value="' + value + '" />'
+                }
+            }, {
+                field: '',
+                title: '备注',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return '<input type="text" name="remarks" class="form-control" />'
+                }
+            }
+        ],
+    })
+}
+
+function getRows(tableEl) {
+    let result = [];
+    let tableData = $(tableEl).bootstrapTable('getData');
+    $(tableEl + ' tr').each(function (i, tr) {
+        let saleType = $(tr).children().eq(2).children().val();
+        let price = $(tr).children().eq(7).children().val();
+        let num = $(tr).children().eq(8).children().val();
+        let remarks = $(tr).children().eq(9).children().val();
+        let index = $(tr).data('index');
+        if (index != undefined) {
+            if ($(tr).hasClass('selected')) {
+                result.push({
+                    index: index,
+                    data: tableData[index],
+                    saleType:saleType,
+                    price: price,
+                    num: num,
+                    remarks: remarks,
+                    riqi:'',
+                    customerId:'',
+                    shStaff:'',
+                    pick:'',
+                    type:'',
+                })
+            }
+        }
+    });
+    return result;
+}
+
+function getXiaLa() {
+    var select = "<select name=\"saleType\" class=\"form-control\" >";
+    select = select + opt;
+    select = select + "<select/>";
+    return select;
 }

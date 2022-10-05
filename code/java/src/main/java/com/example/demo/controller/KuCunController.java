@@ -49,7 +49,7 @@ public class KuCunController {
 
             for(int i=0;i<getRuku.size();i++){
                 for(int j=0;j<getSale.size();j++){
-                    if(getRuku.get(i).getId()==getSale.get(j).getId()){
+                    if(getRuku.get(i).getId()==getSale.get(j).getId() && getRuku.get(i).getWarehouse()==getSale.get(j).getWarehouse() && getRuku.get(i).getPihao()==getSale.get(j).getPihao()){
                         getRuku.get(i).setNum(getRuku.get(i).getNum()-getSale.get(j).getNum());
                     }
                 }
@@ -68,23 +68,16 @@ public class KuCunController {
      * @return ResultInfo
      */
     @RequestMapping("/queryList")
-    public ResultInfo queryList(String ks,String js,String product,HttpSession session) {
+    public ResultInfo queryList(String warehouse,String pihao,String product,HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
         if (!powerUtil.isSelect("库存") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 
-        if(ks.equals("")){
-            ks="1900/1/1";
-        }
-        if(js.equals("")){
-            js="2200/1/1";
-        }
-
         try {
-            List<Product> getRuku = kuCunService.queryRuku(ks,js,product);
-            List<Product> getSale = kuCunService.querySale(ks,js,product);
+            List<Product> getRuku = kuCunService.queryRuku(warehouse,pihao,product);
+            List<Product> getSale = kuCunService.querySale(warehouse,pihao,product);
 
             for(int i=0;i<getRuku.size();i++){
                 for(int j=0;j<getSale.size();j++){

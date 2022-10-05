@@ -28,11 +28,14 @@ public class InvoiceImpl extends ServiceImpl<InvoiceMapper, Invoice> implements 
     }
 
     @Override
-    public List<Invoice> queryList(String customer, String unit, String name, String power) {
+    public List<Invoice> getListlist() {return invoiceMapper.getListlist(); }
+
+    @Override
+    public List<Invoice> queryList(String customer, String unit,String unit1, String name, String power) {
         if (power.equals("管理员")) {
-            return invoiceMapper.queryList(customer, unit);
+            return invoiceMapper.queryList(customer, unit, unit1);
         } else {
-            return invoiceMapper.queryListByName(customer, unit, name);
+            return invoiceMapper.queryListByName(customer, unit,unit1, name);
         }
     }
 

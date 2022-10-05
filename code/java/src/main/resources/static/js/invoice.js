@@ -38,12 +38,14 @@ $(function () {
     $('#select-btn').click(function () {
         var customer = $('#customer').val();
         var unit = $('#unit').val();
+        var unit1 = $('#unit1').val();
         $ajax({
             type: 'post',
             url: '/invoice/queryList',
             data: {
                 customer: customer,
                 unit: unit,
+                unit1: unit1,
             }
         }, true, '', function (res) {
             if (res.code == 200) {
@@ -60,6 +62,21 @@ $(function () {
     //点击新增按钮显示弹窗
     $("#add-btn").click(function () {
         $('#add-modal').modal('show');
+        var item4 = '';
+        $ajax({
+            type: 'post',
+            url: '/product/getListByProduct',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                for (var i = 0; i < res.data.length; i++) {
+                    if (res.data[i].productName != '') {
+                        item4 = " <option value=\"" + res.data[i].productName + "\">" + res.data[i].productName + "</option>"
+                        $("#add-nameofarticle").append(item4);
+                    }
+                }
+            }
+        })
+
     });
 
     //新增弹窗里点击关闭按钮
@@ -70,12 +87,14 @@ $(function () {
     //新增弹窗里点击提交按钮
     $("#add-submit-btn").click(function () {
         let params = formToJson("#add-form");
-        if ($('#add-customer').val()!="") {
+
+        if ($('#add-customer').val() != "") {
             $ajax({
                 type: 'post',
                 url: '/invoice/add',
                 data: JSON.stringify({
-                    addInfo: params
+                    addInfo: params,
+                    // add_nameofarticle:add_nameofarticle
                 }),
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8'
@@ -83,15 +102,15 @@ $(function () {
                 if (res.code == 200) {
                     swal("", res.msg, "success");
                     $('#add-form')[0].reset();
-                    $('#add-customer').next().css('display','none');
+                    $('#add-customer').next().css('display', 'none');
                     getList();
                     $('#add-close-btn').click();
                 } else {
                     swal("", res.msg, "error");
                 }
             })
-        }else{
-            $('#add-customer').next().css('display','block');
+        } else {
+            $('#add-customer').next().css('display', 'block');
         }
     });
 
@@ -105,6 +124,21 @@ $(function () {
         $('#update-modal').modal('show');
         setForm(rows[0].data, '#update-form');
         $('#update-customer').val(rows[0].data.customer);
+
+        var item4 = '';
+        $ajax({
+            type: 'post',
+            url: '/product/getListByProduct',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                for (var i = 0; i < res.data.length; i++) {
+                    if (res.data[i].productName != '') {
+                        item4 = " <option value=\"" + res.data[i].productName + "\">" + res.data[i].productName + "</option>"
+                        $("#update-nameofarticle").append(item4);
+                    }
+                }
+            }
+        })
     });
 
     //修改弹窗点击关闭按钮
@@ -248,6 +282,12 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'thebillingnumber',
+                title: '发票号码',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
                 field: 'customer',
                 title: '客户',
                 align: 'center',
@@ -259,6 +299,18 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 200,
+            }, {
+                field: 'nameofarticle',
+                title: '品名',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'unitprice',
+                title: '单价',
+                align: 'center',
+                sortable: true,
+                width: 100,
             }, {
                 field: 'jine',
                 title: '开票金额',

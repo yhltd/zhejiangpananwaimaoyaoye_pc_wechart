@@ -234,7 +234,13 @@ function setTable(data) {
                 formatter: function (value, row, index) {
                     return index + 1;
                 }
-            }, {
+            },{
+                field: 'pinhao',
+                title: '品号',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            },{
                 field: 'productName',
                 title: '产品名称',
                 align: 'center',
@@ -246,6 +252,18 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 300,
+            }, {
+                field: 'attribute',
+                title: '产品属性',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'container',
+                title: '整箱量',
+                align: 'center',
+                sortable: true,
+                width: 150,
             }, {
                 field: 'unit',
                 title: '单位',
@@ -264,25 +282,7 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 120,
-            }, {
-                field: 'pinhao',
-                title: '品号',
-                align: 'center',
-                sortable: true,
-                width: 150,
-            }, {
-                field: 'attribute',
-                title: '产品属性',
-                align: 'center',
-                sortable: true,
-                width: 150,
-            }, {
-                field: 'container',
-                title: '整箱量',
-                align: 'center',
-                sortable: true,
-                width: 150,
-            }
+            },
         ],
         onClickRow: function (row, el) {
             let isSelect = $(el).hasClass('selected')

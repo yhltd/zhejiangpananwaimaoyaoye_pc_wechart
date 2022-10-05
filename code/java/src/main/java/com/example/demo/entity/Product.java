@@ -62,4 +62,14 @@ public class Product {
      *  整箱量
      * */
     private String container;
+
+    /**
+     *  仓库
+     * */
+    private String warehouse;
+
+    /**
+     *  批号
+     * */
+    private String pihao;
 }

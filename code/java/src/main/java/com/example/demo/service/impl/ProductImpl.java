@@ -47,4 +47,9 @@ public class ProductImpl extends ServiceImpl<ProductMapper, Product> implements 
     public List<Product> getListByProduct() {
         return productMapper.getListByProduct();
     }
+
+    @Override
+    public List<Product> getListByProductSpecUnit(String product, String spec, String unit) {
+        return productMapper.getListByProductSpecUnit(product, spec, unit);
+    }
 }

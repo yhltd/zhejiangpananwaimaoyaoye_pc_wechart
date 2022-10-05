@@ -42,4 +42,6 @@ public interface ProductService extends IService<Product> {
     boolean delete(List<Integer> idList);
 
     List<Product> getListByProduct();
+
+    List<Product> getListByProductSpecUnit(String product, String spec, String unit);
 }

@@ -34,12 +34,26 @@ public class UserPowerImpl extends ServiceImpl<UserPowerMapper, UserPower> imple
     }
 
     @Override
+    public boolean addadd(int id,String name) {
+        return userPowerMapper.addadd(id,name);
+    }
+
+    @Override
     public boolean update(UserPower userPower) {
         return updateById(userPower);
     }
 
     @Override
-    public boolean delete(List<Integer> idList) {
-        return removeByIds(idList);
+    public boolean delete(int idList) {
+        return userPowerMapper.deleteid(idList);
+    }
+
+//    @Override
+//    public boolean deleteid(int id) {
+//        return removeById(id);
+//    }
+
+    public boolean update(String column,int id,String this_value) {
+        return userPowerMapper.update(column,id,this_value);
     }
 }

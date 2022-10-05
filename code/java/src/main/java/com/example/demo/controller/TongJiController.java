@@ -47,16 +47,16 @@ public class TongJiController {
             return ResultInfo.error(401, "无权限");
         }
 
-        if(nian.equals("")){
+        if (nian.equals("")) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
             Date date = new Date();
-            nian=sdf.format(date);
+            nian = sdf.format(date);
         }
-        String ks=nian+"/1/1";
-        String js=nian+"/12/31";
+        String ks = nian + "/1/1";
+        String js = nian + "/12/31";
         try {
             List<TongJi> getList = tongJiService.getList(ks, js, customer, userInfo.getName(), userInfo.getPower());
-            List<CustomerInfo> clist=customerInfoService.getList(userInfo.getName(), userInfo.getPower());
+            List<CustomerInfo> clist = customerInfoService.getList(userInfo.getName(), userInfo.getPower());
 
             for (TongJi tongJi : getList) {
                 for (CustomerInfo customerInfo : clist) {
@@ -80,7 +80,7 @@ public class TongJiController {
     }
 
     @RequestMapping("/getList2")
-    public ResultInfo getList2(String nian,HttpSession session) {
+    public ResultInfo getList2(String nian, String customer, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
         if (!powerUtil.isSelect("按月统计") && !userInfo.getPower().equals("管理员")) {
@@ -88,52 +88,62 @@ public class TongJiController {
         }
 
         try {
-            if(nian.equals("")){
+            if (nian.equals("")) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
                 Date date = new Date();
-                nian=sdf.format(date);
+                nian = sdf.format(date);
             }
-            String ks1=nian+"/1/1";
-            String js1=nian+"/1/31";
-            String ks2=nian+"/2/1";
-            String js2=nian+"/2/28";
-            String ks3=nian+"/3/1";
-            String js3=nian+"/3/31";
-            String ks4=nian+"/4/1";
-            String js4=nian+"/4/30";
-            String ks5=nian+"/5/1";
-            String js5=nian+"/5/31";
-            String ks6=nian+"/6/1";
-            String js6=nian+"/6/30";
-            String ks7=nian+"/7/1";
-            String js7=nian+"/7/31";
-            String ks8=nian+"/8/1";
-            String js8=nian+"/8/31";
-            String ks9=nian+"/9/1";
-            String js9=nian+"/9/30";
-            String ks10=nian+"/10/1";
-            String js10=nian+"/10/31";
-            String ks11=nian+"/11/1";
-            String js11=nian+"/11/30";
-            String ks12=nian+"/12/1";
-            String js12=nian+"/12/31";
+            String ks1 = nian + "/1/1";
+            String js1 = nian + "/1/31";
+            String ks2 = nian + "/2/1";
+            String js2 = nian + "/2/28";
+            String ks3 = nian + "/3/1";
+            String js3 = nian + "/3/31";
+            String ks4 = nian + "/4/1";
+            String js4 = nian + "/4/30";
+            String ks5 = nian + "/5/1";
+            String js5 = nian + "/5/31";
+            String ks6 = nian + "/6/1";
+            String js6 = nian + "/6/30";
+            String ks7 = nian + "/7/1";
+            String js7 = nian + "/7/31";
+            String ks8 = nian + "/8/1";
+            String js8 = nian + "/8/31";
+            String ks9 = nian + "/9/1";
+            String js9 = nian + "/9/30";
+            String ks10 = nian + "/10/1";
+            String js10 = nian + "/10/31";
+            String ks11 = nian + "/11/1";
+            String js11 = nian + "/11/30";
+            String ks12 = nian + "/12/1";
+            String js12 = nian + "/12/31";
+            List<AnYueTongJi> xs=new ArrayList<>();
+            List<AnYueTongJi> th=new ArrayList<>();
+            List<AnYueTongJi> fk=new ArrayList<>();
+            List<AnYueTongJi> hk=new ArrayList<>();
+            if (userInfo.getPower().equals("管理员")) {
+                xs = anYueTongJiService.getXSByAdmin(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer);
+                th = anYueTongJiService.getTHByAdmin(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer);
+                fk = anYueTongJiService.getfkByAdmin(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer);
+                hk = anYueTongJiService.getHKByAdmin(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer);
+            }else{
+                xs = anYueTongJiService.getXSByOther(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer,userInfo.getName());
+                th = anYueTongJiService.getTHByOther(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer,userInfo.getName());
+                fk = anYueTongJiService.getfkByOther(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer,userInfo.getName());
+                hk = anYueTongJiService.getHKByOther(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer,userInfo.getName());
+            }
 
-            List<AnYueTongJi> xs=anYueTongJiService.getXS(ks1,js1,ks2,js2,ks3,js3,ks4,js4,ks5,js5,ks6,js6,ks7,js7,ks8,js8,ks9,js9,ks10,js10,ks11,js11,ks12,js12);
-            List<AnYueTongJi> th=anYueTongJiService.getTH(ks1,js1,ks2,js2,ks3,js3,ks4,js4,ks5,js5,ks6,js6,ks7,js7,ks8,js8,ks9,js9,ks10,js10,ks11,js11,ks12,js12);
-            List<AnYueTongJi> fk=anYueTongJiService.getfk(ks1,js1,ks2,js2,ks3,js3,ks4,js4,ks5,js5,ks6,js6,ks7,js7,ks8,js8,ks9,js9,ks10,js10,ks11,js11,ks12,js12);
-            List<AnYueTongJi> hk=anYueTongJiService.getHK(ks1,js1,ks2,js2,ks3,js3,ks4,js4,ks5,js5,ks6,js6,ks7,js7,ks8,js8,ks9,js9,ks10,js10,ks11,js11,ks12,js12);
-
-            AnYueTongJi anYueTongJi1=new AnYueTongJi();
-            AnYueTongJi anYueTongJi2=new AnYueTongJi();
-            AnYueTongJi anYueTongJi3=new AnYueTongJi();
-            AnYueTongJi anYueTongJi4=new AnYueTongJi();
+            AnYueTongJi anYueTongJi1 = new AnYueTongJi();
+            AnYueTongJi anYueTongJi2 = new AnYueTongJi();
+            AnYueTongJi anYueTongJi3 = new AnYueTongJi();
+            AnYueTongJi anYueTongJi4 = new AnYueTongJi();
 
             anYueTongJi1.setType("出货金额");
             anYueTongJi2.setType("返款金额");
             anYueTongJi3.setType("退货金额");
             anYueTongJi4.setType("回款金额");
 
-            if(xs.size()>0){
+            if (xs.size() > 0) {
                 anYueTongJi1.setYue1(xs.get(0).getYue1());
                 anYueTongJi1.setYue2(xs.get(0).getYue2());
                 anYueTongJi1.setYue3(xs.get(0).getYue3());
@@ -148,7 +158,7 @@ public class TongJiController {
                 anYueTongJi1.setYue11(xs.get(0).getYue12());
             }
 
-            if(fk.size()>0){
+            if (fk.size() > 0) {
                 anYueTongJi2.setYue1(fk.get(0).getYue1());
                 anYueTongJi2.setYue2(fk.get(0).getYue2());
                 anYueTongJi2.setYue3(fk.get(0).getYue3());
@@ -163,7 +173,7 @@ public class TongJiController {
                 anYueTongJi2.setYue11(fk.get(0).getYue12());
             }
 
-            if(th.size()>0){
+            if (th.size() > 0) {
                 anYueTongJi3.setYue1(th.get(0).getYue1());
                 anYueTongJi3.setYue2(th.get(0).getYue2());
                 anYueTongJi3.setYue3(th.get(0).getYue3());
@@ -178,7 +188,7 @@ public class TongJiController {
                 anYueTongJi3.setYue11(th.get(0).getYue12());
             }
 
-            if(th.size()>0){
+            if (th.size() > 0) {
                 anYueTongJi4.setYue1(hk.get(0).getYue1());
                 anYueTongJi4.setYue2(hk.get(0).getYue2());
                 anYueTongJi4.setYue3(hk.get(0).getYue3());
@@ -193,14 +203,14 @@ public class TongJiController {
                 anYueTongJi4.setYue11(hk.get(0).getYue12());
             }
 
-            List<AnYueTongJi> list=new ArrayList<>();
+            List<AnYueTongJi> list = new ArrayList<>();
             list.add(anYueTongJi1);
             list.add(anYueTongJi2);
             list.add(anYueTongJi3);
             list.add(anYueTongJi4);
 
             return ResultInfo.success("获取成功", list);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             log.error("获取失败：{}", e.getMessage());
             return ResultInfo.error("错误!");

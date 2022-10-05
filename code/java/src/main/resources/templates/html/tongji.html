@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <script type="text/javascript" src="../js/main.js"></script>
     <script type="text/javascript" src="../js/tongji.js"></script>
+    <script type="text/javascript" src="../js/tableExport.js"></script>
 </head>
 <body class="pt-2">
 <div class="top-toolbar row">
@@ -47,6 +48,10 @@
         <button id="refresh-btn" class="btn btn-primary">
             <i class="bi bi-arrow-clockwise icon"></i>
             刷新
+        </button>
+        <button id="export-btn" class="btn btn-primary" onClick ="$('#tongjiTable').tableExport({ type: 'excel', escape: 'false' })">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+            导出Excel
         </button>
         <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：销售额统计</a>
     </div>

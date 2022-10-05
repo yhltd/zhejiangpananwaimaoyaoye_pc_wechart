@@ -18,7 +18,15 @@ public interface UserPowerService extends IService<UserPower> {
 
     UserPower add(UserPower userPower);
 
+    boolean addadd(int user_id, String view_name);
+
     boolean update(UserPower userPower);
 
-    boolean delete(List<Integer> idList);
+    boolean delete(int idList);
+
+//    boolean deleteid(String id);
+
+    boolean update(String column,int id,String this_value);
+
+
 }

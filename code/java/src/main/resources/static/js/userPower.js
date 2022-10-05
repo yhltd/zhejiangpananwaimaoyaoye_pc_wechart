@@ -225,34 +225,230 @@ function setTable(data) {
                 title: '新增',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 50,
+                formatter:function(value, row , index){
+                    if(value == "可操作"){
+                        return '<select id="zeng' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'zeng\'' + ')" class="form-control">' +
+                            '<option value="可操作" selected="selected">可操作</option>'+
+                            '<option value="无权限">无权限</option>'+
+                            '<option value=""></option>'+
+                            '</select> '
+                    }else if(value == "无权限"){
+                        return '<select id="zeng' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'zeng\'' + ')" class="form-control">' +
+                            '<option value="可操作" >可操作</option>'+
+                            '<option value="无权限" selected="selected">无权限</option>'+
+                            '<option value=""></option>'+
+                            '</select> '
+                    }else{
+                        return '<select id="zeng' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'zeng\'' + ')" class="form-control">' +
+                            '<option value="可操作">可操作</option>'+
+                            '<option value="无权限">无权限</option>'+
+                            '<option value="" selected="selected"></option>'+
+                            '</select> '
+                    }
+                }
             }, {
                 field: 'shan',
                 title: '删除',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 50,
+                formatter:function(value, row , index){
+                    if(value == "可操作"){
+                        return '<select id="shan' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'shan\'' + ')" class="form-control">' +
+                            '<option value="可操作" selected="selected">可操作</option>'+
+                            '<option value="无权限">无权限</option>'+
+                            '<option value=""></option>'+
+                            '</select> '
+                    }else if(value == "无权限"){
+                        return '<select id="shan' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'shan\'' + ')" class="form-control">' +
+                            '<option value="可操作" >可操作</option>'+
+                            '<option value="无权限" selected="selected">无权限</option>'+
+                            '<option value=""></option>'+
+                            '</select> '
+                    }else{
+                        return '<select id="shan' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'shan\'' + ')" class="form-control">' +
+                            '<option value="可操作">可操作</option>'+
+                            '<option value="无权限">无权限</option>'+
+                            '<option value="" selected="selected"></option>'+
+                            '</select> '
+                    }
+                }
             }, {
                 field: 'gai',
                 title: '修改',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 50,
+                formatter:function(value, row , index){
+                    if(value == "可操作"){
+                        return '<select id="gai' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'gai\'' + ')" class="form-control">' +
+                            '<option value="可操作" selected="selected">可操作</option>'+
+                            '<option value="无权限">无权限</option>'+
+                            '<option value=""></option>'+
+                            '</select> '
+                    }else if(value == "无权限"){
+                        return '<select id="gai' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'gai\'' + ')" class="form-control">' +
+                            '<option value="可操作" >可操作</option>'+
+                            '<option value="无权限" selected="selected">无权限</option>'+
+                            '<option value=""></option>'+
+                            '</select> '
+                    }else{
+                        return '<select id="gai' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'gai\'' + ')" class="form-control">' +
+                            '<option value="可操作">可操作</option>'+
+                            '<option value="无权限">无权限</option>'+
+                            '<option value="" selected="selected"></option>'+
+                            '</select> '
+                    }
+                }
             }, {
                 field: 'cha',
                 title: '查看',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 50,
+                formatter:function(value, row , index){
+                    if(value == "可操作"){
+                        return '<select id="cha' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'cha\'' + ')" class="form-control">' +
+                            '<option value="可操作" selected="selected">可操作</option>'+
+                            '<option value="无权限">无权限</option>'+
+                            '<option value=""></option>'+
+                            '</select> '
+                    }else if(value == "无权限"){
+                        return '<select id="cha' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'cha\'' + ')" class="form-control">' +
+                            '<option value="可操作" >可操作</option>'+
+                            '<option value="无权限" selected="selected">无权限</option>'+
+                            '<option value=""></option>'+
+                            '</select> '
+                    }else{
+                        return '<select id="cha' + row.id + '" onchange="javascript:columnUpd(' + row.id +',' + '\'cha\'' + ')" class="form-control">' +
+                            '<option value="可操作">可操作</option>'+
+                            '<option value="无权限">无权限</option>'+
+                            '<option value="" selected="selected"></option>'+
+                            '</select> '
+                    }
+                }
             }
         ],
-        onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected')
-            if (isSelect) {
-                $(el).removeClass('selected')
-            } else {
-                $(el).addClass('selected')
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected')
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
+    })
+
+
+
+
+
+
+    // $('#userPowerTable').bootstrapTable({
+    //     data: data,
+    //     sortStable: true,
+    //     classes: 'table table-hover text-nowrap table table-bordered',
+    //     idField: 'id',
+    //     pagination: true,
+    //     pageSize: 15,//单页记录数
+    //     clickToSelect: true,
+    //     locale: 'zh-CN',
+    //     toolbar: '#table-toolbar',
+    //     toolbarAlign: 'left',
+    //     theadClasses: "thead-light",//这里设置表头样式
+    //     style: 'table-layout:fixed',
+    //     columns: [
+    //         {
+    //             field: '',
+    //             title: '序号',
+    //             align: 'center',
+    //             width: 30,
+    //             formatter: function (value, row, index) {
+    //                 return index + 1;
+    //             }
+    //         }, {
+    //             field: 'userId',
+    //             title: 'userId',
+    //             visible: false,
+    //         }, {
+    //             field: 'name',
+    //             title: '用户名',
+    //             align: 'center',
+    //             sortable: true,
+    //             width: 100,
+    //         }, {
+    //             field: 'viewName',
+    //             title: '页面名称',
+    //             align: 'center',
+    //             sortable: true,
+    //             width: 100,
+    //         }, {
+    //             field: 'zeng',
+    //             title: '新增',
+    //             align: 'center',
+    //             sortable: true,
+    //             width: 100,
+    //         }, {
+    //             field: 'shan',
+    //             title: '删除',
+    //             align: 'center',
+    //             sortable: true,
+    //             width: 100,
+    //         }, {
+    //             field: 'gai',
+    //             title: '修改',
+    //             align: 'center',
+    //             sortable: true,
+    //             width: 100,
+    //         }, {
+    //             field: 'cha',
+    //             title: '查看',
+    //             align: 'center',
+    //             sortable: true,
+    //             width: 100,
+    //         }
+    //     ],
+    //     onClickRow: function (row, el) {
+    //         let isSelect = $(el).hasClass('selected')
+    //         if (isSelect) {
+    //             $(el).removeClass('selected')
+    //         } else {
+    //             $(el).addClass('selected')
+    //         }
+    //     }
+    // })
+}
+
+
+
+function columnUpd(id,column){
+    var this_value = $('#' + column + id).val();
+    $ajax({
+        type: 'post',
+        url: '/user_power/update',
+        data: {
+            column:column,
+            id:id,
+            this_value:this_value
+        },
+    }, false, '', function (res) {
+        // alert(res.msg);
+        if (res.code == 200) {
+            var obj = ""
+            if(res.msg == '修改成功'){
+                obj = document.getElementById("upd_1");
+            }else if(res.msg == '无权限'){
+                obj = document.getElementById("upd_3");
+            }else{
+                obj = document.getElementById("upd_2");
             }
+            obj.hidden = false
+            setTimeout(function(){
+                obj.hidden = true
+            },3000);
+
+            getList();
         }
     })
 }

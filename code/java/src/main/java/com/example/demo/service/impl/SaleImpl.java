@@ -15,6 +15,7 @@ import java.util.List;
  */
 @Service
 public class SaleImpl extends ServiceImpl<SaleMapper, Sale> implements SaleService {
+
     @Autowired
     SaleMapper saleMapper;
 
@@ -28,11 +29,38 @@ public class SaleImpl extends ServiceImpl<SaleMapper, Sale> implements SaleServi
     }
 
     @Override
-    public List<Sale> queryList(String ks, String js, String customer, String product, String pihao, String name, String power) {
+    public List<Sale> getList_shenhezhong(String name, String power) {
         if (power.equals("管理员")) {
-            return saleMapper.queryList(ks, js, customer, product, pihao);
+            return saleMapper.getList_shenhezhong();
         } else {
-            return saleMapper.queryListByName(ks, js, customer, product, pihao, name);
+            return saleMapper.getListByName_shenhezhong(name);
+        }
+    }
+
+    @Override
+    public List<Sale> getList_tongguo(String name, String power) {
+        if (power.equals("管理员")) {
+            return saleMapper.getList_tongguo();
+        } else {
+            return saleMapper.getListByName_tongguo(name);
+        }
+    }
+
+    @Override
+    public List<Sale> getList_weitongguo(String name, String power) {
+        if (power.equals("管理员")) {
+            return saleMapper.getList_weitongguo();
+        } else {
+            return saleMapper.getListByName_weitongguo(name);
+        }
+    }
+
+    @Override
+    public List<Sale> queryList(String ks, String js, String customer, String product, String pihao, String saleType, String name, String power) {
+        if (power.equals("管理员")) {
+            return saleMapper.queryList(ks, js, customer, product, pihao,saleType);
+        } else {
+            return saleMapper.queryListByName(ks, js, customer, product, pihao,saleType, name);
         }
     }
 

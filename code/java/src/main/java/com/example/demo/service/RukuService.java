@@ -18,9 +18,24 @@ public interface RukuService extends IService<Ruku> {
     List<Ruku> getList(String staff,String power);
 
     /**
+     * 查询审核中
+     */
+    List<Ruku> getList_shenhezhong(String staff,String power);
+
+    /**
+     * 查询通过审核
+     */
+    List<Ruku> getList_tongguo(String staff,String power);
+
+    /**
+     * 查询未通过审核
+     */
+    List<Ruku> getList_weitongguo(String staff,String power);
+
+    /**
      * 条件查询
      */
-    List<Ruku> queryList(String ks, String js, String product,String staff,String power);
+    List<Ruku> queryList(String ks, String js, String product, String pihao,String staff,String power);
 
     /**
      * 新增

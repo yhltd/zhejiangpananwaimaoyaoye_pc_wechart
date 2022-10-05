@@ -26,15 +26,15 @@ $(function () {
     });
 
     $('#select-btn').click(function () {
-        var ks = $('#ks').val();
-        var js = $('#js').val();
+        var warehouse = $('#warehouse').val();
+        var pihao = $('#pihao').val();
         var product = $('#product').val();
         $ajax({
             type: 'post',
             url: '/kucun/queryList',
             data: {
-                ks: ks,
-                js: js,
+                warehouse: warehouse,
+                pihao: pihao,
                 product: product,
             }
         }, true, '', function (res) {
@@ -72,6 +72,18 @@ function setTable(data) {
                 formatter: function (value, row, index) {
                     return index + 1;
                 }
+            }, {
+                field: 'warehouse',
+                title: '仓库',
+                align: 'center',
+                sortable: true,
+                width: 120,
+            }, {
+                field: 'pihao',
+                title: '批号',
+                align: 'center',
+                sortable: true,
+                width: 120,
             }, {
                 field: 'productName',
                 title: '产品名称',

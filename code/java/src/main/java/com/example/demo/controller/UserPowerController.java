@@ -100,62 +100,83 @@ public class UserPowerController {
         }
     }
 
-    /**
-     * 修改
-     */
+//    /**
+//     * 修改
+//     */
+//    @RequestMapping(value = "/update", method = RequestMethod.POST)
+//    public ResultInfo update(@RequestBody String updateJson,HttpSession session) {
+//        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+//        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+//        if (!powerUtil.isUpdate("权限管理") && !userInfo.getPower().equals("管理员")) {
+//            return ResultInfo.error(401, "无权限");
+//        }
+//
+//        UserPower userPower = null;
+//        try {
+//            userPower = DecodeUtil.decodeToJson(updateJson, UserPower.class);
+//            if (userPowerService.update(userPower)) {
+//                return ResultInfo.success("修改成功", userPower);
+//            } else {
+//                return ResultInfo.success("修改失败", userPower);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("修改失败：{}", e.getMessage());
+//            log.error("参数：{}", userPower);
+//            return ResultInfo.error("修改失败");
+//        }
+//    }
+
+
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResultInfo update(@RequestBody String updateJson,HttpSession session) {
+    public ResultInfo update(HttpSession session,String column,int id,String this_value) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isUpdate("权限管理") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isAdd("权限管理") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
-
-        UserPower userPower = null;
         try {
-            userPower = DecodeUtil.decodeToJson(updateJson, UserPower.class);
-            if (userPowerService.update(userPower)) {
-                return ResultInfo.success("修改成功", userPower);
+            if (userPowerService.update(column,id,this_value)) {
+                return ResultInfo.success("修改成功",column);
             } else {
-                return ResultInfo.success("修改失败", userPower);
+                return ResultInfo.success("修改失败",column);
             }
         } catch (Exception e) {
             e.printStackTrace();
             log.error("修改失败：{}", e.getMessage());
-            log.error("参数：{}", userPower);
             return ResultInfo.error("修改失败");
         }
     }
 
-    /**
-     * 删除
-     *
-     * @param map
-     * @return ResultInfo
-     */
-    @RequestMapping("/delete")
-    public ResultInfo delete(@RequestBody HashMap map,HttpSession session) {
-        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
-        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isDelete("权限管理") && !userInfo.getPower().equals("管理员")) {
-            return ResultInfo.error(401, "无权限");
-        }
-
-        GsonUtil gsonUtil = new GsonUtil(GsonUtil.toJson(map));
-        List<Integer> idList = GsonUtil.toList(gsonUtil.get("idList"), Integer.class);
-        try {
-            if (userPowerService.delete(idList)) {
-                return ResultInfo.success("删除成功", idList);
-            } else {
-                return ResultInfo.success("删除失败", idList);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("删除失败：{}", e.getMessage());
-            log.error("参数：{}", idList);
-            return ResultInfo.error("删除失败");
-        }
-    }
+//    /**
+//     * 删除
+//     *
+//     * @param map
+//     * @return ResultInfo
+//     */
+//    @RequestMapping("/delete")
+//    public ResultInfo delete(@RequestBody HashMap map,HttpSession session) {
+//        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+//        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+//        if (!powerUtil.isDelete("权限管理") && !userInfo.getPower().equals("管理员")) {
+//            return ResultInfo.error(401, "无权限");
+//        }
+//
+//        GsonUtil gsonUtil = new GsonUtil(GsonUtil.toJson(map));
+//        List<Integer> idList = GsonUtil.toList(gsonUtil.get("idList"), Integer.class);
+//        try {
+//            if (userPowerService.delete(idList)) {
+//                return ResultInfo.success("删除成功", idList);
+//            } else {
+//                return ResultInfo.success("删除失败", idList);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("删除失败：{}", e.getMessage());
+//            log.error("参数：{}", idList);
+//            return ResultInfo.error("删除失败");
+//        }
+//    }
 
 
 }

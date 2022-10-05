@@ -29,13 +29,13 @@ public class KuCunImpl extends ServiceImpl<KuCunMapper, Product> implements KuCu
     }
 
     @Override
-    public List<Product> querySale(String ks,String js,String product) {
-        return kuCunMapper.querySale(ks,js,product);
+    public List<Product> querySale(String warehouse,String pihao,String product) {
+        return kuCunMapper.querySale(warehouse,pihao,product);
     }
 
     @Override
-    public List<Product> queryRuku(String ks,String js,String product) {
-        return kuCunMapper.queryRuku(ks,js,product);
+    public List<Product> queryRuku(String warehouse,String pihao,String product) {
+        return kuCunMapper.queryRuku(warehouse,pihao,product);
     }
 
 }

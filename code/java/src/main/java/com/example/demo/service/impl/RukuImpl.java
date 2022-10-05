@@ -28,11 +28,38 @@ public class RukuImpl extends ServiceImpl<RukuMapper, Ruku> implements RukuServi
     }
 
     @Override
-    public List<Ruku> queryList(String ks, String js, String product, String staff, String power) {
+    public List<Ruku> getList_shenhezhong(String staff, String power) {
         if (power.equals("管理员")) {
-            return rukuMapper.queryList(ks, js, product);
+            return rukuMapper.getList_shenhezhong();
         } else {
-            return rukuMapper.queryListByName(ks, js, product, staff);
+            return rukuMapper.getListByName_shenhezhong(staff);
+        }
+    }
+
+    @Override
+    public List<Ruku> getList_tongguo(String staff, String power) {
+        if (power.equals("管理员")) {
+            return rukuMapper.getList_tongguo();
+        } else {
+            return rukuMapper.getListByName_tongguo(staff);
+        }
+    }
+
+    @Override
+    public List<Ruku> getList_weitongguo(String staff, String power) {
+        if (power.equals("管理员")) {
+            return rukuMapper.getList_weitongguo();
+        } else {
+            return rukuMapper.getListByName_weitongguo(staff);
+        }
+    }
+
+    @Override
+    public List<Ruku> queryList(String ks, String js, String product, String pihao, String staff, String power) {
+        if (power.equals("管理员")) {
+            return rukuMapper.queryList(ks, js, product, pihao);
+        } else {
+            return rukuMapper.queryListByName(ks, js, product, pihao, staff);
         }
     }
 

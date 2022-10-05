@@ -263,6 +263,15 @@ function setTable(data) {
                 formatter:function(value, row , index){
                     return '<input id="attributes' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'attributes\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
                 }
+            }, {
+                field: 'saleType',
+                title: '发货类型',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter:function(value, row , index){
+                    return '<input id="sale_type' + row.id + '" onblur="javascript:columnUpd(' + row.id +',' + '\'sale_type\'' + ')" value="'+ value +'" class="form-control" style="width: 95%;font-size:13px" >'
+                }
             }
         ],
         onClickRow: function (row, el) {

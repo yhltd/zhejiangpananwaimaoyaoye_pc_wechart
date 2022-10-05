@@ -40,4 +40,6 @@ public interface CustomerInfoService extends IService<CustomerInfo> {
      */
     boolean delete(List<Integer> idList);
 
+    List<CustomerInfo> getListByCustomer(String customer);
+
 }

@@ -121,4 +121,14 @@ public class Sale {
      */
     private String fahuo;
 
+    /**
+     *  发货类型
+     */
+    private String saleType;
+
+    /**
+     *  审核状态
+     */
+    private String saleState;
+
 }

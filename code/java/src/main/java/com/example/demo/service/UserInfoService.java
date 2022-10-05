@@ -28,6 +28,16 @@ public interface UserInfoService extends IService<UserInfo> {
     List<UserInfo> getList();
 
     /**
+     * 查询id
+     */
+    List<UserInfo> getListid();
+
+    /**
+     * 查询所有
+     */
+    List<UserInfo> getListlist(int id, String name);
+
+    /**
      * 根据姓名和部门查询
      */
     List<UserInfo> queryList(String name, String department);
@@ -36,6 +46,11 @@ public interface UserInfoService extends IService<UserInfo> {
      * 添加
      */
     UserInfo add(UserInfo userInfo);
+
+    /**
+     * 添加
+     */
+    boolean useradd(String add_username, String add_password, String add_name, String add_department);
 
     /**
      * 修改
@@ -49,4 +64,6 @@ public interface UserInfoService extends IService<UserInfo> {
      * @return 是否删除成功
      */
     boolean delete(List<Integer> idList);
+
+    boolean deleteid(String id);
 }
