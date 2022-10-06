@@ -48,6 +48,12 @@
     <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">开票单位</view>
     <input bindinput="onInput" data-column="unit" class="input_text_form" value="{{unit}}" type="text" name="unit"></input>
+    <view class="lables">发票号</view>
+    <input bindinput="onInput" data-column="thebillingnumber" class="input_text_form" value="{{thebillingnumber}}" type="text" name="thebillingnumber"></input>
+    <view class="lables">品名</view>
+    <input bindinput="onInput" data-column="nameofarticle" class="input_text_form" value="{{nameofarticle}}" type="text" name="nameofarticle"></input>
+    <view class="lables">单价</view>
+    <input bindinput="onInput" data-column="unitprice" class="input_text_form" value="{{unitprice}}" type="text" name="unitprice"></input>
     <view class="lables">开票金额</view>
     <input bindinput="onInput" data-column="jine" class="input_text_form" value="{{jine}}" type="text" name="jine"></input>
     <view class="lables">备注</view>
@@ -69,6 +75,12 @@
     <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">开票单位</view>
     <input bindinput="onInput" data-column="unit" class="input_text_form" value="{{unit}}" type="text" name="unit"></input>
+    <view class="lables">发票号</view>
+    <input bindinput="onInput" data-column="thebillingnumber" class="input_text_form" value="{{thebillingnumber}}" type="text" name="thebillingnumber"></input>
+    <view class="lables">品名</view>
+    <input bindinput="onInput" data-column="nameofarticle" class="input_text_form" value="{{nameofarticle}}" type="text" name="nameofarticle"></input>
+    <view class="lables">单价</view>
+    <input bindinput="onInput" data-column="unitprice" class="input_text_form" value="{{unitprice}}" type="text" name="unitprice"></input>
     <view class="lables">开票金额</view>
     <input bindinput="onInput" data-column="jine" class="input_text_form" value="{{jine}}" type="text" name="jine"></input>
     <view class="lables">备注</view>

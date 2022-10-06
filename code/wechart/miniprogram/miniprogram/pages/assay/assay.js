@@ -10,11 +10,27 @@ Page({
   rqxzShow1: false,
   xgShow: false,
   cxShow: false,
+  xlShow4: false,
   data: {
     list: [],
-    title: [{
-        text: "化验员姓名",
+    title: [
+      {
+        text: "产品名称",
         width: "400rpx",
+        columnName: "product_name",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "生产日期",
+        width: "400rpx",
+        columnName: "riqi",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "化验员姓名",
+        width: "200rpx",
         columnName: "test_name",
         type: "text",
         isupd: true
@@ -77,8 +93,58 @@ Page({
       }
     })
 
-    var e = ['']
+    var sql = "select '产品:' + product_name + ';规格:' + spec + ';单位:' + unit as name,id,product_name,spec,unit from product"
+    wx.cloud.callFunction({
+      name: 'sqlServer_117',
+      data: {
+        query: sql
+      },
+      success: res => {
+        var list = res.result.recordset
+        _this.setData({
+          listChanPin: list
+        })
+        console.log(list)
+      },
+      err: res => {
+        console.log("错误!")
+      },
+      fail: res => {
+        wx.showToast({
+          title: '请求失败！',
+          icon: 'none',
+          duration: 3000
+        })
+        console.log("请求失败！")
+      }
+    })
+
+    var e = ['','']
     _this.tableShow(e)
+  },
+
+  selCD: function () {
+    var _this = this
+    _this.setData({
+      xlShow4: true
+    })
+  },
+
+  select4: function (e) {
+    var _this = this
+    if (e.type == "select") {
+      _this.setData({
+        xlShow4: false,
+        product_name: e.detail.product_name,
+        spec: e.detail.spec,
+        unit: e.detail.unit,
+        product_id: e.detail.id,
+      })
+    } else if (e.type == "close") {
+      _this.setData({
+        xlShow4: false,
+      })
+    }
   },
 
   bindPickerChange: function(e){
@@ -89,12 +155,28 @@ Page({
     })
   },
 
+  bindPickerChange1: function(e){
+    var _this = this
+    console.log(_this.data.product_name_list[e.detail.value])
+    _this.setData({
+      product_name: _this.data.product_name_list[e.detail.value]
+    })
+  },
+
+  choiceDate: function (e) {
+    //e.preventDefault(); 
+    this.setData({
+      [e.target.dataset.column_name]: e.detail.value 
+    })
+    console.log(e.detail.value)
+  },
+
   tableShow: function (e) {
     var _this = this
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select * from assay where pihao like '%" + e[0] + "%'"
+        query: "select * from assay where pihao like '%" + e[0] + "%' and product_name like '%" + e[1] + "%'"
       },
       success: res => {
         var list = res.result.recordset
@@ -142,6 +224,8 @@ Page({
       id: _this.data.list[e.currentTarget.dataset.index].id,
       test_name: _this.data.list[e.currentTarget.dataset.index].test_name, 
       pihao: _this.data.list[e.currentTarget.dataset.index].pihao,
+      product_name:  _this.data.list[e.currentTarget.dataset.index].product_name,
+      riqi: _this.data.list[e.currentTarget.dataset.index].riqi,
       xgShow:true,
     })
   },
@@ -161,6 +245,8 @@ Page({
       id:'',
       test_name: '', 
       pihao: '',
+      product_name: '',
+      riqi: '',
     })
   },
 
@@ -169,16 +255,18 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into assay(test_name,pihao) values('" + _this.data.test_name + "','" + _this.data.pihao + "')"
+          query: "insert into assay(test_name,pihao,product_name,riqi) values('" + _this.data.test_name + "','" + _this.data.pihao + "','" + _this.data.product_name + "','" + _this.data.riqi + "')"
         },
         success: res => {
           _this.setData({
             id:'',
             test_name: '', 
             pihao: '',
+            product_name: '',
+            riqi: '',
           })
           _this.qxShow()
-          var e = ['']
+          var e = ['','']
           _this.tableShow(e)
           wx.showToast({
             title: '添加成功！',
@@ -211,16 +299,18 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update assay set test_name='" + _this.data.test_name + "',pihao='" + _this.data.pihao + "' where id=" + _this.data.id 
+        query: "update assay set test_name='" + _this.data.test_name + "',pihao='" + _this.data.pihao + "',product_name='" + _this.data.product_name + "',riqi='" + _this.data.riqi + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
           id:'',
           test_name: '', 
           pihao: '',
+          product_name: '',
+          riqi: '',
         })
         _this.qxShow()
-        var e = ['']
+        var e = ['','']
          _this.tableShow(e)
 
         wx.showToast({
@@ -261,9 +351,11 @@ Page({
             id:'',
             test_name: '', 
             pihao: '',
+            product_name: '',
+            riqi: '',
           })
           _this.qxShow()
-          var e = ['']
+          var e = ['','']
           _this.tableShow(e)
           wx.showToast({
             title: '删除成功！',
@@ -288,6 +380,7 @@ Page({
     _this.setData({
       cxShow:true,
       pihao:"",
+      product_name:'',
     })
   },
 
@@ -301,7 +394,7 @@ Page({
 
   sel1:function(){
     var _this = this
-    var e = [_this.data.pihao]
+    var e = [_this.data.pihao,_this.data.product_name]
     _this.tableShow(e)
     _this.qxShow()
   },
@@ -320,6 +413,63 @@ Page({
     var type = '化验'
     wx.navigateTo({
       url: '../file_table/file_table?this_id=' + this_id + '&type=' + type,
+    })
+  },
+
+  getExcel : function(){
+    var _this = this;
+    wx.showLoading({
+      title: '打开Excel中',
+      mask : 'true'
+    })
+    var list = _this.data.list;
+    var title = _this.data.title
+    var cloudList = {
+      name : '化验明细',
+      items : [],
+      header : []
+    }
+
+    for(let i=0;i<title.length;i++){
+      cloudList.header.push({
+        item:title[i].text,
+        type:title[i].type,
+        width:parseInt(title[i].width.split("r")[0])/10,
+        columnName:title[i].columnName
+      })
+    }
+    cloudList.items = list
+    console.log(cloudList)
+
+    wx.cloud.callFunction({
+      name:'getExcel',
+      data:{
+        list : cloudList
+      },
+      success: function(res){
+        console.log("获取云储存id")
+        wx.cloud.downloadFile({
+          fileID : res.result.fileID,
+          success : res=> {
+            console.log("获取临时路径")
+            wx.hideLoading({
+              success: (res) => {},
+            })
+            console.log(res.tempFilePath)
+            wx.openDocument({
+              filePath: res.tempFilePath,
+              showMenu : 'true',
+              fileType : 'xlsx',
+              success : res=> {
+                console.log("打开Excel")
+              }
+            })
+          }
+        })
+      },
+      fail : res=> {
+        console.log(res)
+      }
     })
   },
 

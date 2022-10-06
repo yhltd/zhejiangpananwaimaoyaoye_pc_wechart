@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.demo.entity.Ruku;
 import com.example.demo.entity.Sale;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +51,10 @@ public interface SaleService extends IService<Sale> {
      * 删除
      */
     boolean delete(List<Integer> idList);
+
+    /**
+     * 审核
+     */
+    boolean updateSaleState(String saleState,String warehouse, int id);
 
 }

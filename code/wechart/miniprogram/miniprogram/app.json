@@ -21,7 +21,9 @@
     "pages/yonghu/yonghu",
     "pages/user_info/user_info",
     "pages/user_power/user_power",
-    "pages/assay/assay"
+    "pages/assay/assay",
+    "pages/chuku/chuku",
+    "pages/kanban/kanban"
   ],
   "window": {
     "backgroundColor": "#393D49",

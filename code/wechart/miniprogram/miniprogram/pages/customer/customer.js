@@ -48,6 +48,13 @@ Page({
         isupd: true
       },
       {
+        text: "区域",
+        width: "200rpx",
+        columnName: "area",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "业务员",
         width: "200rpx",
         columnName: "salesman",
@@ -151,8 +158,49 @@ Page({
       }
     })
 
-    var e = ['','']
+
+    wx.cloud.callFunction({
+      name: 'sqlServer_117',
+      data: {
+        query: "select area from general where area != ''"
+      },
+      success: res => {
+        var list = res.result.recordset
+        console.log(list)
+        var this_list = []
+        for(var i=0; i< list.length; i++){
+          if(list[i].area != ''){
+            this_list.push(list[i].area)
+          }
+        }
+        _this.setData({
+          area_list: this_list
+        })
+        console.log(list)
+      },
+      err: res => {
+        console.log("错误!")
+      },
+      fail: res => {
+        wx.showToast({
+          title: '请求失败！',
+          icon: 'none',
+          duration: 3000
+        })
+        console.log("请求失败！")
+      }
+    })
+
+    var e = ['','','']
     _this.tableShow(e)
+  },
+
+  bindPickerChange1: function(e){
+    var _this = this
+    console.log(_this.data.area_list[e.detail.value])
+    _this.setData({
+      area: _this.data.area_list[e.detail.value]
+    })
   },
 
   bindPickerChange: function(e){
@@ -165,10 +213,15 @@ Page({
 
   tableShow: function (e) {
     var _this = this
+    var sql = "select * from customerInfo where (customer like '%" + e[0] + "%' or pinyin like '%" + e[0] + "%') and leibie like '%" + e[1] + "%' and area like '%" + e[2] + "%'"
+    if (_this.data.userInfo.power != '管理员'){
+      sql = sql + " and salesman ='" + _this.data.userInfo.name + "'"
+    }
+    console.log(sql)
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select * from customerInfo where (customer like '%" + e[0] + "%' or pinyin like '%" + e[0] + "%') and leibie like '%" + e[1] + "%'"
+        query: sql
       },
       success: res => {
         var list = res.result.recordset
@@ -226,6 +279,7 @@ Page({
       zsye: _this.data.list[e.currentTarget.dataset.index].zsye,
       leibie: _this.data.list[e.currentTarget.dataset.index].leibie,
       customer_num: _this.data.list[e.currentTarget.dataset.index].customer_num,
+      area: _this.data.list[e.currentTarget.dataset.index].area,
       xgShow:true,
     })
   },
@@ -255,15 +309,53 @@ Page({
       zsye:'',
       leibie: '',
       customer_num: '',
+      area:'',
     })
   },
 
   add1: function(){
     var _this = this
+
+    if(_this.data.customer == ''){
+      wx.showToast({
+        title: '请输入客户名称！',
+        icon: 'none',
+        duration: 3000
+      })
+      return;
+    }
+
+    if(_this.data.area == ''){
+      wx.showToast({
+        title: '请输入区域！',
+        icon: 'none',
+        duration: 3000
+      })
+      return;
+    }
+
+    if(_this.data.salesman == ''){
+      wx.showToast({
+        title: '请输入业务员！',
+        icon: 'none',
+        duration: 3000
+      })
+      return;
+    }
+
+    if(_this.data.price == ''){
+      wx.showToast({
+        title: '请输入价格！',
+        icon: 'none',
+        duration: 3000
+      })
+      return;
+    }
+
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into customerInfo(riqi,customer,pinyin,salesman,price,phone,address,ghye,zsye,remarks,customer_num,leibie) values('" + _this.data.riqi + "','" + _this.data.customer + "','" + _this.data.pinyin + "','" + _this.data.salesman + "','" + _this.data.price + "','" + _this.data.phone + "','" + _this.data.address + "','" + _this.data.ghye + "','" + _this.data.zsye + "','" + _this.data.remarks + "','" + _this.data.customer_num + "','" + _this.data.leibie + "')"
+          query: "insert into customerInfo(riqi,customer,pinyin,salesman,price,phone,address,ghye,zsye,remarks,customer_num,leibie,area) values('" + _this.data.riqi + "','" + _this.data.customer + "','" + _this.data.pinyin + "','" + _this.data.salesman + "','" + _this.data.price + "','" + _this.data.phone + "','" + _this.data.address + "','" + _this.data.ghye + "','" + _this.data.zsye + "','" + _this.data.remarks + "','" + _this.data.customer_num + "','" + _this.data.leibie + "','" + _this.data.area + "')"
         },
         success: res => {
           _this.setData({
@@ -280,9 +372,10 @@ Page({
             zsye:'',
             leibie: '',
             customer_num: '',
+            area:'',
           })
           _this.qxShow()
-          var e = ['','']
+          var e = ['','','']
           _this.tableShow(e)
           wx.showToast({
             title: '添加成功！',
@@ -315,7 +408,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update customerInfo set riqi='" + _this.data.riqi + "',customer='" + _this.data.customer + "',pinyin='" + _this.data.pinyin + "',salesman='" + _this.data.salesman + "',price='" + _this.data.price + "',phone='" + _this.data.phone + "',address='" + _this.data.address + "',remarks='" + _this.data.remarks + "',ghye='" + _this.data.ghye + "',zsye='" + _this.data.zsye + "',leibie='" + _this.data.leibie + "',customer_num='" + _this.data.customer_num + "' where id=" + _this.data.id 
+        query: "update customerInfo set riqi='" + _this.data.riqi + "',customer='" + _this.data.customer + "',pinyin='" + _this.data.pinyin + "',salesman='" + _this.data.salesman + "',price='" + _this.data.price + "',phone='" + _this.data.phone + "',address='" + _this.data.address + "',remarks='" + _this.data.remarks + "',ghye='" + _this.data.ghye + "',zsye='" + _this.data.zsye + "',leibie='" + _this.data.leibie + "',customer_num='" + _this.data.customer_num  + "',area='" + _this.data.area + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -332,9 +425,10 @@ Page({
             zsye:'',
             leibie: '',
             customer_num: '',
+            area:'',
         })
         _this.qxShow()
-        var e = ['','']
+        var e = ['','','']
          _this.tableShow(e)
 
         wx.showToast({
@@ -385,9 +479,10 @@ Page({
             zsye:'',
             leibie: '',
             customer_num: '',
+            area:'',
           })
           _this.qxShow()
-          var e = ['','']
+          var e = ['','','']
           _this.tableShow(e)
           wx.showToast({
             title: '删除成功！',
@@ -412,6 +507,8 @@ Page({
     _this.setData({
       cxShow:true,
       customer:"",
+      leibie:"",
+      area:"",
     })
   },
 
@@ -425,7 +522,7 @@ Page({
 
   sel1:function(){
     var _this = this
-    var e = [_this.data.customer,_this.data.leibie]
+    var e = [_this.data.customer,_this.data.leibie,_this.data.area]
     _this.tableShow(e)
     _this.qxShow()
   },
@@ -444,6 +541,63 @@ Page({
     var type = '客户信息'
     wx.navigateTo({
       url: '../file_table/file_table?this_id=' + this_id + '&type=' + type,
+    })
+  },
+
+  getExcel : function(){
+    var _this = this;
+    wx.showLoading({
+      title: '打开Excel中',
+      mask : 'true'
+    })
+    var list = _this.data.list;
+    var title = _this.data.title
+    var cloudList = {
+      name : '客户信息',
+      items : [],
+      header : []
+    }
+
+    for(let i=0;i<title.length;i++){
+      cloudList.header.push({
+        item:title[i].text,
+        type:title[i].type,
+        width:parseInt(title[i].width.split("r")[0])/10,
+        columnName:title[i].columnName
+      })
+    }
+    cloudList.items = list
+    console.log(cloudList)
+
+    wx.cloud.callFunction({
+      name:'getExcel',
+      data:{
+        list : cloudList
+      },
+      success: function(res){
+        console.log("获取云储存id")
+        wx.cloud.downloadFile({
+          fileID : res.result.fileID,
+          success : res=> {
+            console.log("获取临时路径")
+            wx.hideLoading({
+              success: (res) => {},
+            })
+            console.log(res.tempFilePath)
+            wx.openDocument({
+              filePath: res.tempFilePath,
+              showMenu : 'true',
+              fileType : 'xlsx',
+              success : res=> {
+                console.log("打开Excel")
+              }
+            })
+          }
+        })
+      },
+      fail : res=> {
+        console.log(res)
+      }
     })
   },
 

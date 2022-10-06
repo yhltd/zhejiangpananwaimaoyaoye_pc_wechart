@@ -34,6 +34,7 @@
 <view class="bottom_view">
 	<button class="bt_bottom" bindtap="inquire" >添加</button>
   <button class="bt_bottom" bindtap="entering" >查询</button>
+  <button class="bt_bottom" bindtap="getExcel" >导出</button>
 </view>
 
 <!------------------------->
@@ -46,6 +47,12 @@
     <input bindinput="onInput" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" ></input>
     <view class="lables">规格型号</view>
     <input bindinput="onInput" data-column="spec" class="input_text_form"  value="{{spec}}" type="text" name="spec"></input>
+    <view class="lables">产品属性</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="attribute" range="{{attributes_list}}">
+      <input bindinput="onInput" data-column="attribute" class="input_text_form"  value="{{attribute}}" type="text" name="attribute" disabled="disabled"></input>
+    </picker>
+    <view class="lables">整箱量</view>
+    <input bindinput="onInput" data-column="container" class="input_text_form"  value="{{container}}" type="text" name="container"></input>
     <view class="lables">单位</view>
     <input bindinput="onInput" data-column="unit" class="input_text_form" value="{{unit}}" type="text" name="unit"></input>
     <view class="lables">零售价</view>
@@ -67,6 +74,12 @@
     <input bindinput="onInput" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" ></input>
     <view class="lables">规格型号</view>
     <input bindinput="onInput" data-column="spec" class="input_text_form"  value="{{spec}}" type="text" name="spec"></input>
+    <view class="lables">产品属性</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="attribute" range="{{attributes_list}}">
+      <input bindinput="onInput" data-column="attribute" class="input_text_form"  value="{{attribute}}" type="text" name="attribute" disabled="disabled"></input>
+    </picker>
+    <view class="lables">整箱量</view>
+    <input bindinput="onInput" data-column="container" class="input_text_form"  value="{{container}}" type="text" name="container"></input>
     <view class="lables">单位</view>
     <input bindinput="onInput" data-column="unit" class="input_text_form" value="{{unit}}" type="text" name="unit"></input>
     <view class="lables">零售价</view>

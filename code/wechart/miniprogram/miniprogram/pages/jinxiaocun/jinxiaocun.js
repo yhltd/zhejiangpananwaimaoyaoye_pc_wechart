@@ -16,6 +16,10 @@ Page({
       url: "../sale/sale"
     },
     {
+      text: "出库",
+      url: "../chuku/chuku"
+    },
+    {
       text: "库存",
       url: "../kucun/kucun"
     },

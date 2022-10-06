@@ -12,6 +12,7 @@ Page({
   cxShow: false,
   xlShow4: false,
   xlShow1: false,
+  xlShow5: false,
   data: {
     list: [],
     title: [{
@@ -140,7 +141,12 @@ Page({
     _this.setData({
       year:year
     })
-    var e = [year]
+    if(userInfo.power == '管理员'){
+      var e = [year,'']
+    }else{
+      var e = [year,"where salesman ='" + userInfo.name + "' "]
+    }
+    
     _this.tableShow(e)
   },
 
@@ -157,7 +163,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-01-31') then convert(float,xiaoji) else 0 end) as yue1,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-02-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-02-28') then convert(float,xiaoji) else 0 end) as yue2,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-03-01') and convert(date,riqi) <= convert(date,'"+ e[0] +"-03-31') then convert(float,xiaoji) else 0 end) as yue3,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-04-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-04-30') then convert(float,xiaoji) else 0 end) as yue4,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-05-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-05-31') then convert(float,xiaoji) else 0 end) as yue5,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-06-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-06-30') then convert(float,xiaoji) else 0 end) as yue6,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-07-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-07-31') then convert(float,xiaoji) else 0 end) as yue7,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-08-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-08-31') then convert(float,xiaoji) else 0 end) as yue8,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-09-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-09-30') then convert(float,xiaoji) else 0 end) as yue9,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-10-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-10-31') then convert(float,xiaoji) else 0 end) as yue10,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-11-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-11-30') then convert(float,xiaoji) else 0 end) as yue11,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-12-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') then convert(float,xiaoji) else 0 end) as yue12  from sale;select sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-01-31') then convert(float,xiaoji) else 0 end) as yue1,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-02-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-02-28') then convert(float,xiaoji) else 0 end) as yue2,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-03-01') and convert(date,riqi) <= convert(date,'"+ e[0] +"-03-31') then convert(float,xiaoji) else 0 end) as yue3,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-04-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-04-30') then convert(float,xiaoji) else 0 end) as yue4,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-05-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-05-31') then convert(float,xiaoji) else 0 end) as yue5,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-06-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-06-30') then convert(float,xiaoji) else 0 end) as yue6,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-07-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-07-31') then convert(float,xiaoji) else 0 end) as yue7,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-08-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-08-31') then convert(float,xiaoji) else 0 end) as yue8,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-09-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-09-30') then convert(float,xiaoji) else 0 end) as yue9,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-10-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-10-31') then convert(float,xiaoji) else 0 end) as yue10,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-11-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-11-30') then convert(float,xiaoji) else 0 end) as yue11,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-12-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') then convert(float,xiaoji) else 0 end) as yue12  from sale;select sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-01-31') then convert(float,r_jine) else 0 end) as yue1,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-02-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-02-28') then convert(float,r_jine) else 0 end) as yue2,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-03-01') and convert(date,riqi) <= convert(date,'"+ e[0] +"-03-31') then convert(float,r_jine) else 0 end) as yue3,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-04-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-04-30') then convert(float,r_jine) else 0 end) as yue4,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-05-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-05-31') then convert(float,r_jine) else 0 end) as yue5,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-06-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-06-30') then convert(float,r_jine) else 0 end) as yue6,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-07-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-07-31') then convert(float,r_jine) else 0 end) as yue7,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-08-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-08-31') then convert(float,r_jine) else 0 end) as yue8,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-09-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-09-30') then convert(float,r_jine) else 0 end) as yue9,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-10-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-10-31') then convert(float,r_jine) else 0 end) as yue10,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-11-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-11-30') then convert(float,r_jine) else 0 end) as yue11,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-12-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') then convert(float,r_jine) else 0 end) as yue12 from payment;select sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-01-31') then convert(float,f_jine) else 0 end) as yue1,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-02-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-02-28') then convert(float,f_jine) else 0 end) as yue2,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-03-01') and convert(date,riqi) <= convert(date,'"+ e[0] +"-03-31') then convert(float,f_jine) else 0 end) as yue3,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-04-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-04-30') then convert(float,f_jine) else 0 end) as yue4,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-05-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-05-31') then convert(float,f_jine) else 0 end) as yue5,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-06-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-06-30') then convert(float,f_jine) else 0 end) as yue6,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-07-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-07-31') then convert(float,f_jine) else 0 end) as yue7,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-08-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-08-31') then convert(float,f_jine) else 0 end) as yue8,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-09-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-09-30') then convert(float,f_jine) else 0 end) as yue9,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-10-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-10-31') then convert(float,f_jine) else 0 end) as yue10,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-11-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-11-30') then convert(float,f_jine) else 0 end) as yue11,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-12-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') then convert(float,f_jine) else 0 end) as yue12 from payment"
+        query: "select sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-01-31') then convert(float,xiaoji) else 0 end) as yue1,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-02-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-02-28') then convert(float,xiaoji) else 0 end) as yue2,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-03-01') and convert(date,riqi) <= convert(date,'"+ e[0] +"-03-31') then convert(float,xiaoji) else 0 end) as yue3,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-04-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-04-30') then convert(float,xiaoji) else 0 end) as yue4,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-05-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-05-31') then convert(float,xiaoji) else 0 end) as yue5,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-06-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-06-30') then convert(float,xiaoji) else 0 end) as yue6,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-07-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-07-31') then convert(float,xiaoji) else 0 end) as yue7,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-08-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-08-31') then convert(float,xiaoji) else 0 end) as yue8,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-09-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-09-30') then convert(float,xiaoji) else 0 end) as yue9,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-10-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-10-31') then convert(float,xiaoji) else 0 end) as yue10,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-11-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-11-30') then convert(float,xiaoji) else 0 end) as yue11,sum(case when type='销售' and convert(date,riqi)>=convert(date,'"+ e[0] +"-12-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') then convert(float,xiaoji) else 0 end) as yue12  from (select s.id,s.riqi,s.customer_id,s.sh_staff,s.pick,s.wuliu_order,s.product_id,s.pihao,s.num,s.xiaoji,s.remarks,s.warehouse,s.type,s.express,s.fahuo,s.price,c.salesman,c.customer from sale as s left join customerInfo as c on s.customer_id = c.id " + e[1] + ") as s;select sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-01-31') then convert(float,xiaoji) else 0 end) as yue1,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-02-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-02-28') then convert(float,xiaoji) else 0 end) as yue2,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-03-01') and convert(date,riqi) <= convert(date,'"+ e[0] +"-03-31') then convert(float,xiaoji) else 0 end) as yue3,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-04-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-04-30') then convert(float,xiaoji) else 0 end) as yue4,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-05-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-05-31') then convert(float,xiaoji) else 0 end) as yue5,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-06-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-06-30') then convert(float,xiaoji) else 0 end) as yue6,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-07-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-07-31') then convert(float,xiaoji) else 0 end) as yue7,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-08-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-08-31') then convert(float,xiaoji) else 0 end) as yue8,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-09-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-09-30') then convert(float,xiaoji) else 0 end) as yue9,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-10-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-10-31') then convert(float,xiaoji) else 0 end) as yue10,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-11-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-11-30') then convert(float,xiaoji) else 0 end) as yue11,sum(case when type='退货' and convert(date,riqi)>=convert(date,'"+ e[0] +"-12-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') then convert(float,xiaoji) else 0 end) as yue12  from (select s.id,s.riqi,s.customer_id,s.sh_staff,s.pick,s.wuliu_order,s.product_id,s.pihao,s.num,s.xiaoji,s.remarks,s.warehouse,s.type,s.express,s.fahuo,s.price,c.salesman,c.customer from sale as s left join customerInfo as c on s.customer_id = c.id " + e[1] + ") as s ;select sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-01-31') then convert(float,r_jine) else 0 end) as yue1,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-02-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-02-28') then convert(float,r_jine) else 0 end) as yue2,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-03-01') and convert(date,riqi) <= convert(date,'"+ e[0] +"-03-31') then convert(float,r_jine) else 0 end) as yue3,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-04-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-04-30') then convert(float,r_jine) else 0 end) as yue4,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-05-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-05-31') then convert(float,r_jine) else 0 end) as yue5,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-06-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-06-30') then convert(float,r_jine) else 0 end) as yue6,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-07-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-07-31') then convert(float,r_jine) else 0 end) as yue7,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-08-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-08-31') then convert(float,r_jine) else 0 end) as yue8,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-09-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-09-30') then convert(float,r_jine) else 0 end) as yue9,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-10-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-10-31') then convert(float,r_jine) else 0 end) as yue10,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-11-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-11-30') then convert(float,r_jine) else 0 end) as yue11,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-12-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') then convert(float,r_jine) else 0 end) as yue12 from (select p.id,p.pay,p.quota,p.r_jine,p.f_jine,p.discount,p.remarks,p.riqi,p.customer_id,c.salesman,c.customer from payment as p left join customerInfo as c on p.customer_id = c.id "+ e[1] +") as p;select sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-01-31') then convert(float,f_jine) else 0 end) as yue1,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-02-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-02-28') then convert(float,f_jine) else 0 end) as yue2,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-03-01') and convert(date,riqi) <= convert(date,'"+ e[0] +"-03-31') then convert(float,f_jine) else 0 end) as yue3,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-04-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-04-30') then convert(float,f_jine) else 0 end) as yue4,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-05-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-05-31') then convert(float,f_jine) else 0 end) as yue5,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-06-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-06-30') then convert(float,f_jine) else 0 end) as yue6,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-07-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-07-31') then convert(float,f_jine) else 0 end) as yue7,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-08-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-08-31') then convert(float,f_jine) else 0 end) as yue8,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-09-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-09-30') then convert(float,f_jine) else 0 end) as yue9,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-10-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-10-31') then convert(float,f_jine) else 0 end) as yue10,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-11-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-11-30') then convert(float,f_jine) else 0 end) as yue11,sum(case when  convert(date,riqi)>=convert(date,'"+ e[0] +"-12-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') then convert(float,f_jine) else 0 end) as yue12 from (select p.id,p.pay,p.quota,p.r_jine,p.f_jine,p.discount,p.remarks,p.riqi,p.customer_id,c.salesman,c.customer from payment as p left join customerInfo as c on p.customer_id = c.id "+ e[1] +") as p"
       },
       success: res => {
         var list1 = res.result.recordsets[0]
@@ -247,6 +253,54 @@ Page({
     })
   },
 
+  selKH: function () {
+    var _this = this
+
+    var sql = "select customer as name,id,customer from customerInfo where customer like '%" + _this.data.customer + "%' or pinyin like'%" + _this.data.customer + "%'"
+    wx.cloud.callFunction({
+      name: 'sqlServer_117',
+      data: {
+        query: sql
+      },
+      success: res => {
+        var list = res.result.recordset
+        _this.setData({
+          listKeHu: list
+        })
+        console.log(list)
+        _this.setData({
+          xlShow5: true
+        })
+      },
+      err: res => {
+        console.log("错误!")
+      },
+      fail: res => {
+        wx.showToast({
+          title: '请求失败！',
+          icon: 'none',
+          duration: 3000
+        })
+        console.log("请求失败！")
+      }
+    })
+  },
+
+  select5: function (e) {
+    var _this = this
+    if (e.type == "select") {
+      _this.setData({
+        xlShow5: false,
+        customer: e.detail.customer,
+        customer_id: e.detail.id,
+      })
+    } else if (e.type == "close") {
+      _this.setData({
+        xlShow5: false,
+      })
+    }
+  },
+
   qxShow: function () {
     var _this = this
     _this.setData({
@@ -306,8 +360,12 @@ Page({
 
   inquire: function () {
     var _this = this
-    var year = _this.data.year
-    var e = [year]
+    var year = date.getFullYear();
+    if(_this.data.userInfo.power == '管理员'){
+      var e = [year,'']
+    }else{
+      var e = [year,"where salesman ='" + _this.data.userInfo.name + "' "]
+    }
     _this.tableShow(e)
   },
 
@@ -325,6 +383,7 @@ Page({
     _this.setData({
       cxShow:true,
       year:"",
+      customer:'',
     })
   },
 
@@ -343,7 +402,20 @@ Page({
       var date = new Date(); 
       year = date.getFullYear();
     }
-    var e = [year]
+    if(_this.data.userInfo.power == '管理员'){
+      if(_this.data.customer == ''){
+        var e = [year,'']
+      }else{
+        var e = [year,"where customer ='" + _this.data.customer + "'"]
+      }
+      
+    }else{
+      if(_this.data.customer == ''){
+        var e = [year,"where salesman ='" + _this.data.userInfo.name + "' "]
+      }else{
+        var e = [year,"where customer ='" + _this.data.customer + "' and salesman ='" + _this.data.userInfo.name + "' "]
+      }
+    }
     _this.tableShow(e)
     _this.qxShow()
   },
@@ -440,6 +512,63 @@ Page({
     var _this = this
     _this.setData({
       xlShow1: true
+    })
+  },
+
+  getExcel : function(){
+    var _this = this;
+    wx.showLoading({
+      title: '打开Excel中',
+      mask : 'true'
+    })
+    var list = _this.data.list;
+    var title = _this.data.title
+    var cloudList = {
+      name : '按月统计',
+      items : [],
+      header : []
+    }
+
+    for(let i=0;i<title.length;i++){
+      cloudList.header.push({
+        item:title[i].text,
+        type:title[i].type,
+        width:parseInt(title[i].width.split("r")[0])/10,
+        columnName:title[i].columnName
+      })
+    }
+    cloudList.items = list
+    console.log(cloudList)
+
+    wx.cloud.callFunction({
+      name:'getExcel',
+      data:{
+        list : cloudList
+      },
+      success: function(res){
+        console.log("获取云储存id")
+        wx.cloud.downloadFile({
+          fileID : res.result.fileID,
+          success : res=> {
+            console.log("获取临时路径")
+            wx.hideLoading({
+              success: (res) => {},
+            })
+            console.log(res.tempFilePath)
+            wx.openDocument({
+              filePath: res.tempFilePath,
+              showMenu : 'true',
+              fileType : 'xlsx',
+              success : res=> {
+                console.log("打开Excel")
+              }
+            })
+          }
+        })
+      },
+      fail : res=> {
+        console.log(res)
+      }
     })
   },
 

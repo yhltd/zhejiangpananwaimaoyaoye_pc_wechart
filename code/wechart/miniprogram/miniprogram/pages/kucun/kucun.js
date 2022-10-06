@@ -14,7 +14,22 @@ Page({
   xlShow1: false,
   data: {
     list: [],
-    title: [{
+    title: [
+      {
+        text: "仓库",
+        width: "300rpx",
+        columnName: "warehouse",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "批号",
+        width: "300rpx",
+        columnName: "pihao",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "产品名称",
         width: "300rpx",
         columnName: "product_name",
@@ -52,8 +67,9 @@ Page({
     ],
     warehouse_list:[],
     id:'',
-    warehouse: '', 
-    pihao: '',
+    warehouse:"",
+    pihao:"",
+    product_name:"",
     listChanPin:[],
     listShenHe:[
       {name:'审核通过'},
@@ -220,7 +236,7 @@ Page({
       }
     })
 
-    var e = ['1900-01-01','2100-12-31','']
+    var e = ['','','']
     _this.tableShow(e)
   },
 
@@ -278,22 +294,73 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select id,product_id,product_name,spec,unit,price,pinyin,r.num from (select product_id,sum(case when state='审核通过' then convert(float,num) else 0 end) as num from ruku  where convert(date,riqi)>=convert(date,'"+ e[0] +"') and convert(date,riqi)<=convert(date,'"+ e[1] +"')  group by product_id) as r left join product p on r.product_id=p.id where product_name like '%"+ e[2] +"%' or pinyin like '%"+ e[2] +"%';select id,product_id,product_name,spec,unit,price,pinyin,s.num from (select product_id,sum(case when type='销售' then convert(float,num) else -convert(float,num) end) as num from sale where convert(date,riqi)>=convert(date,'"+ e[0] +"') and convert(date,riqi)<=convert(date,'"+ e[1] +"') group by product_id) as s left join product p on s.product_id=p.id where product_name like '%%' or pinyin like '%"+ e[2] +"%'"
+        query : "select id,warehouse,pihao,product_id,product_name,spec,unit,price,pinyin,r.num from (select product_id,warehouse,pihao,sum(case when state='审核通过' then convert(float,num) else 0 end) as num from ruku group by product_id,warehouse,pihao) as r left join product p on r.product_id=p.id where warehouse like '%" + e[0] + "%' and pihao like '%" + e[1] + "%' and product_name like '%" + e[2] + "%';select id,warehouse,pihao,product_id,product_name,spec,unit,price,pinyin,s.num from (select product_id,warehouse,pihao,sum(case when type='销售' then convert(float,num) else -convert(float,num) end) as num from sale where sale_state = '审核通过' and chuku_state = '审核通过' group by product_id,warehouse,pihao ) as s left join product p on s.product_id=p.id where warehouse like '%" + e[0] + "%' and pihao like '%" + e[1] + "%' and product_name like '%" + e[2] + "%';"
       },
       success: res => {
+        console.log(res)
         var list1 = res.result.recordsets[0]
         var list2 = res.result.recordsets[1]
+        var this_list = []
+        for(var i=0; i<list1.length; i++){
+          this_list.push({
+            warehouse:list1[i].warehouse,
+            pihao:list1[i].pihao,
+            product_id:list1[i].product_id,
+            product_name:list1[i].product_name,
+            spec:list1[i].spec,
+            unit:list1[i].unit,
+            price:list1[i].price,
+            pinyin:list1[i].pinyin,
+            num:0,
+          })
+        }
+
+        for(var i=0; i<list2.length; i++){
+          this_list.push({
+            warehouse:list2[i].warehouse,
+            pihao:list2[i].pihao,
+            product_id:list2[i].product_id,
+            product_name:list2[i].product_name,
+            spec:list2[i].spec,
+            unit:list2[i].unit,
+            price:list2[i].price,
+            pinyin:list2[i].pinyin,
+            num:0,
+          })
+        }
         console.log(list1)
         console.log(list2)
-        for(var i=0; i<list1.length; i++){
-          for(var j=0; j<list2.length; j++){
-            if(list1[i].id == list2[j].id){
-              list1[i].num = (list1[i].num * 1) - (list2[j].num * 1)
+        console.log(this_list)
+
+        for (var i = 0; i < this_list.length; i++) {
+          for (var j = i + 1; j < this_list.length; j++) {
+            if (this_list[i].warehouse == this_list[j].warehouse && this_list[i].pihao == this_list[j].pihao && this_list[i].product_id == this_list[j].product_id) {
+              this_list.splice(j, 1);
+              j = j - 1;
             }
           }
         }
+        
+        for (var i = 0;i<this_list.length;i++) {
+          for (var j =0;j<list1.length;j++) {
+              if(this_list[i].warehouse == list1[j].warehouse && this_list[i].pihao == list1[j].pihao && this_list[i].product_id == list1[j].product_id){
+                this_list[i].num = this_list[i].num * 1 + list1[j].num * 1
+              }
+          }
+        }
+
+        console.log(this_list)
+
+        for (var i = 0;i<this_list.length;i++) {
+          for (var j =0;j<list2.length;j++) {
+              if(this_list[i].warehouse == list2[j].warehouse && this_list[i].pihao == list2[j].pihao && this_list[i].product_id == list2[j].product_id){
+                this_list[i].num = this_list[i].num * 1 - list2[j].num * 1
+              }
+          }
+        }
+        console.log(this_list)
         _this.setData({
-          list: list1
+          list: this_list
         })
       },
       err: res => {
@@ -369,7 +436,7 @@ Page({
 
   inquire: function () {
     var _this = this
-    var e = ['1900-01-01','2100-12-31','']
+    var e = ['','','']
     _this.tableShow(e)
   },
 
@@ -404,7 +471,7 @@ Page({
             type:'',
           })
           _this.qxShow()
-          var e = ['1900-01-01','2100-12-31','']
+          var e = ['','','']
           _this.tableShow(e)
           wx.showToast({
             title: '添加成功！',
@@ -464,7 +531,7 @@ Page({
           type:'',
         })
         _this.qxShow()
-        var e = ['1900-01-01','2100-12-31','']
+        var e = ['','','']
          _this.tableShow(e)
 
         wx.showToast({
@@ -516,7 +583,7 @@ Page({
             type:'',
           })
           _this.qxShow()
-          var e = ['1900-01-01','2100-12-31','']
+          var e = ['','','']
           _this.tableShow(e)
           wx.showToast({
             title: '删除成功！',
@@ -540,8 +607,8 @@ Page({
     var _this=this
     _this.setData({
       cxShow:true,
-      start_date:"",
-      stop_date:"",
+      warehouse:"",
+      pihao:"",
       product_name:"",
     })
   },
@@ -556,15 +623,7 @@ Page({
 
   sel1:function(){
     var _this = this
-    var start_date = _this.data.start_date
-    var stop_date = _this.data.stop_date
-    if(start_date == ''){
-      start_date = '1900-01-01'
-    }
-    if(stop_date == ''){
-      stop_date = '2100-12-31'
-    }
-    var e = [start_date,stop_date,_this.data.product_name]
+    var e = [_this.data.warehouse,_this.data.pihao,_this.data.product_name]
     _this.tableShow(e)
     _this.qxShow()
   },
@@ -621,7 +680,7 @@ Page({
             xlShow1: false,
           })
           _this.qxShow()
-          var e = ['1900-01-01','2100-12-31','']
+          var e = ['','','']
            _this.tableShow(e)
   
           wx.showToast({

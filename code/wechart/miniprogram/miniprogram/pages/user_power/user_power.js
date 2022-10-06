@@ -170,8 +170,35 @@ Page({
     })
   },
 
+  // clickView:function(e){
+  //   var _this = this
+  //   if(_this.data.userPower.gai != '可操作' && _this.data.userInfo.power != '管理员'){
+  //     wx.showToast({
+  //       title: '无权限！',
+  //       icon: 'none',
+  //       duration: 3000
+  //     })
+  //     return;
+  //   }
+  //   _this.setData({
+  //     id: _this.data.list[e.currentTarget.dataset.index].id,
+  //     user_id:_this.data.list[e.currentTarget.dataset.index].user_id,
+  //     view_name:_this.data.list[e.currentTarget.dataset.index].view_name,
+  //     name: _this.data.list[e.currentTarget.dataset.index].name, 
+  //     zeng: _this.data.list[e.currentTarget.dataset.index].zeng,
+  //     shan: _this.data.list[e.currentTarget.dataset.index].shan,
+  //     gai: _this.data.list[e.currentTarget.dataset.index].gai,
+  //     cha: _this.data.list[e.currentTarget.dataset.index].cha,
+  //     xgShow:true,
+  //   })
+  // },
+
   clickView:function(e){
     var _this = this
+    var this_column = e.currentTarget.dataset.column
+    if(this_column != 'zeng' && this_column != 'shan' && this_column != 'gai' && this_column != 'cha' ){
+      return;
+    }
     if(_this.data.userPower.gai != '可操作' && _this.data.userInfo.power != '管理员'){
       wx.showToast({
         title: '无权限！',
@@ -180,15 +207,22 @@ Page({
       })
       return;
     }
+    console.log(e.currentTarget.dataset.column)
+    console.log(e.currentTarget.dataset.value)
+    console.log(_this.data.list[e.currentTarget.dataset.index].id)
     _this.setData({
       id: _this.data.list[e.currentTarget.dataset.index].id,
-      user_id:_this.data.list[e.currentTarget.dataset.index].user_id,
-      view_name:_this.data.list[e.currentTarget.dataset.index].view_name,
-      name: _this.data.list[e.currentTarget.dataset.index].name, 
-      zeng: _this.data.list[e.currentTarget.dataset.index].zeng,
-      shan: _this.data.list[e.currentTarget.dataset.index].shan,
-      gai: _this.data.list[e.currentTarget.dataset.index].gai,
-      cha: _this.data.list[e.currentTarget.dataset.index].cha,
+      this_column:e.currentTarget.dataset.column,
+      this_value:e.currentTarget.dataset.value,
+      // sale_name: _this.data.list[e.currentTarget.dataset.index].sale_name, 
+      // test_name: _this.data.list[e.currentTarget.dataset.index].test_name,
+      // express: _this.data.list[e.currentTarget.dataset.index].express,
+      // pick: _this.data.list[e.currentTarget.dataset.index].pick,
+      // pay: _this.data.list[e.currentTarget.dataset.index].pay,
+      // warehouse: _this.data.list[e.currentTarget.dataset.index].warehouse,
+      // department: _this.data.list[e.currentTarget.dataset.index].department,
+      // customer_type: _this.data.list[e.currentTarget.dataset.index].customer_type,
+      
       xgShow:true,
     })
   },
@@ -268,18 +302,13 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update userPower set user_id='" + _this.data.user_id + "',view_name='" + _this.data.view_name + "',zeng='" + _this.data.zeng + "',shan='" + _this.data.shan + "',gai='" + _this.data.gai + "',cha='" + _this.data.cha + "' where id=" + _this.data.id 
+        query: "update userPower set " + _this.data.this_column + "='" + _this.data.this_value + "' where  id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
-          id: '',
-          user_id:'',
-          view_name:'',
-          name: '',
-          zeng: '',
-          shan: '',
-          gai: '',
-          cha: '',
+          id:'',
+          this_column:'',
+          this_value:'',
         })
         _this.qxShow()
         var e = ['']
@@ -303,50 +332,50 @@ Page({
     })
   },
 
-  del1:function(){
-    var _this = this
-    if(_this.data.userPower.shan != '可操作' && _this.data.userInfo.power != '管理员'){
-      wx.showToast({
-        title: '无权限！',
-        icon: 'none',
-        duration: 3000
-      })
-      return;
-    }
-      wx.cloud.callFunction({
-        name: 'sqlServer_117',
-        data: {
-          query: "delete from userPower where id='" + _this.data.id + "'"
-        },
-        success: res => {
-          _this.setData({
-            id: '',
-            username: '',
-            password:'',
-            power: '',
-            name: '',
-            department: '',
-          })
-          _this.qxShow()
-          var e = ['']
-          _this.tableShow(e)
-          wx.showToast({
-            title: '删除成功！',
-            icon: 'none'
-          })
-        },
-        err: res => {
-          console.log("错误!")
-        },
-        fail: res => {
-          wx.showToast({
-            title: '请求失败！',
-            icon: 'none'
-          })
-          console.log("请求失败！")
-        }
-      })
-  },
+  // del1:function(){
+  //   var _this = this
+  //   if(_this.data.userPower.shan != '可操作' && _this.data.userInfo.power != '管理员'){
+  //     wx.showToast({
+  //       title: '无权限！',
+  //       icon: 'none',
+  //       duration: 3000
+  //     })
+  //     return;
+  //   }
+  //     wx.cloud.callFunction({
+  //       name: 'sqlServer_117',
+  //       data: {
+  //         query: "delete from userPower where id='" + _this.data.id + "'"
+  //       },
+  //       success: res => {
+  //         _this.setData({
+  //           id: '',
+  //           username: '',
+  //           password:'',
+  //           power: '',
+  //           name: '',
+  //           department: '',
+  //         })
+  //         _this.qxShow()
+  //         var e = ['']
+  //         _this.tableShow(e)
+  //         wx.showToast({
+  //           title: '删除成功！',
+  //           icon: 'none'
+  //         })
+  //       },
+  //       err: res => {
+  //         console.log("错误!")
+  //       },
+  //       fail: res => {
+  //         wx.showToast({
+  //           title: '请求失败！',
+  //           icon: 'none'
+  //         })
+  //         console.log("请求失败！")
+  //       }
+  //     })
+  // },
 
   entering:function(){
     var _this=this

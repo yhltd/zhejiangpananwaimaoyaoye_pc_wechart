@@ -51,8 +51,12 @@
     <view class="lables">姓名</view>
     <input bindinput="onInput" data-column="name" class="input_text_form" value="{{name}}" type="text" name="name"></input>
     <view class="lables">部门</view>
-    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="department" range="{{department_list}}">
+    <picker bindchange="bindPickerChange2" value="{{index}}" data-column_name="department" range="{{department_list}}">
       <input bindinput="onInput" data-column="department" class="input_text_form" value="{{department}}" type="text" name="department" disabled="disabled"></input>
+    </picker>
+    <view class="lables">能否修改审核通过数据</view>
+    <picker bindchange="bindPickerChange1" value="{{index}}" data-column_name="state_upd" range="{{state_upd_list}}">
+      <input bindinput="onInput" data-column="state_upd" class="input_text_form" value="{{state_upd}}" type="text" name="state_upd" disabled="disabled"></input>
     </picker>
   <view class="bottom_view" style="height:10%">
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>
@@ -74,8 +78,12 @@
     <view class="lables">姓名</view>
     <input bindinput="onInput" data-column="name" class="input_text_form" value="{{name}}" type="text" name="name"></input>
     <view class="lables">部门</view>
-    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="department" range="{{department_list}}">
+    <picker bindchange="bindPickerChange2" value="{{index}}" data-column_name="department" range="{{department_list}}">
       <input bindinput="onInput" data-column="department" class="input_text_form" value="{{department}}" type="text" name="department" disabled="disabled"></input>
+    </picker>
+    <view class="lables">能否修改审核通过数据</view>
+    <picker bindchange="bindPickerChange1" value="{{index}}" data-column_name="state_upd" range="{{state_upd_list}}">
+      <input bindinput="onInput" data-column="state_upd" class="input_text_form" value="{{state_upd}}" type="text" name="state_upd" disabled="disabled"></input>
     </picker>
   <view class="bottom_view" style="height:10%">
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>

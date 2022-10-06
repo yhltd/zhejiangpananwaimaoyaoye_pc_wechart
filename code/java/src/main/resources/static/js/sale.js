@@ -1,6 +1,11 @@
 let operation = "";
 let productList = [];
 let opt = "";
+let cangku = "";
+
+let sale_list = []
+let state_list = []
+let saleSubmit_list = []
 
 function getList() {
     $('#product').val("");
@@ -14,6 +19,8 @@ function getList() {
         url: '/sale/getList',
     }, false, '', function (res) {
         if (res.code == 200) {
+            console.log(res.data)
+            sale_list = res.data
             setTable(res.data);
             $("#saleTable").colResizable({
                 liveDrag: true,
@@ -37,6 +44,7 @@ function getSelect() {
                     item = "<option value=\"" + res.data[i].warehouse + "\">" + res.data[i].warehouse + "</option>"
                     $("#add-warehouse").append(item);
                     $("#update-warehouse").append(item);
+                    cangku = cangku + "<option value=\"" + res.data[i].warehouse + "\">" + res.data[i].warehouse + "</option>";
                 }
                 if (res.data[i].pick != null && res.data[i].pick != "") {
                     item = "<option value=\"" + res.data[i].pick + "\">" + res.data[i].pick + "</option>"
@@ -198,6 +206,11 @@ $(function () {
         $('#add-modal').modal('hide');
     });
 
+    //审核弹窗里点击关闭按钮
+    $('#state-close-btn').click(function () {
+        $('#state-modal').modal('hide');
+    });
+
     //新增弹窗里点击提交按钮
     $("#add-submit-btn").click(function () {
         let params = formToJson("#add-form");
@@ -206,6 +219,11 @@ $(function () {
             return;
         } else {
             $('#add-customer').next().css('display', 'none');
+        }
+        
+        if(productList.length == 0){
+            swal("未选择产品！");
+            return;
         }
 
         $.each(productList, function (index, row) {
@@ -234,6 +252,59 @@ $(function () {
         getProductAdd();
         $('#add-close-btn').click();
 
+    });
+
+
+    //审核弹窗里点击审核通过按钮
+    $("#state-tongguo-btn").click(function () {
+        saleSubmit_list = getStateRows("#show-state-table");
+        console.log(saleSubmit_list)
+        if(saleSubmit_list.length == 0){
+            swal("无审核内容！");
+            return;
+        }
+        $.each(saleSubmit_list, function (index, row) {
+            $ajax({
+                type: 'post',
+                url: '/sale/updateState',
+                data: {
+                    id: row.id,
+                    warehouse: row.warehouse,
+                    saleState:'审核通过'
+                },
+            }, false, '', function (res) {})
+        });
+
+        swal("", "审核成功！", "success");
+        getList();
+        getProductAdd();
+        $('#state-close-btn').click();
+    });
+
+    //审核弹窗里点击审核未通过按钮
+    $("#state-weitongguo-btn").click(function () {
+        saleSubmit_list = getStateRows("#show-state-table");
+        console.log(saleSubmit_list)
+        if(saleSubmit_list.length == 0){
+            swal("无审核内容！");
+            return;
+        }
+        $.each(saleSubmit_list, function (index, row) {
+            $ajax({
+                type: 'post',
+                url: '/sale/updateState',
+                data: {
+                    id: row.id,
+                    warehouse: row.warehouse,
+                    saleState:'审核未通过'
+                },
+            }, false, '', function (res) {})
+        });
+
+        swal("", "审核成功！", "success");
+        getList();
+        getProductAdd();
+        $('#state-close-btn').click();
     });
 
     //点击修改按钮显示弹窗
@@ -665,6 +736,9 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+                formatter: function (value, row, index) {
+                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='"+ row.id +"' style='text-decoration:underline;' onclick='javascript:state_select("+ row.id +")'>"+ value +"</span></div>";
+                }
             },
         ],
         onClickRow: function (row, el) {
@@ -677,6 +751,142 @@ function setTable(data) {
         }
     })
 }
+
+
+function setStateTable(data) {
+    if ($('#show-state-table').html != '') {
+        $('#show-state-table').bootstrapTable('load', data);
+    }
+
+    $('#show-state-table').bootstrapTable({
+        data: data,
+        sortStable: true,
+        classes: 'table table-hover',
+        idField: 'id',
+        pagination: false,
+        search: true,
+        searchAlign: 'left',
+        clickToSelect: true,
+        locale: 'zh-CN',
+        columns: [
+            {
+                field: 'warehouse',
+                title: '仓库',
+                align: 'left',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    return getCangKuXiaLa();
+                },
+            },
+            {
+                field: 'riqi',
+                title: '日期',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'customer',
+                title: '客户名称',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'shStaff',
+                title: '收货人员',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
+                field: 'salesman',
+                title: '业务员',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'pick',
+                title: '拿货方式',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
+                field: 'saleType',
+                title: '发货类型',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
+                field: 'productName',
+                title: '产品名称',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'spec',
+                title: '规格',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            },
+            {
+                field: 'unit',
+                title: '单位',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'price',
+                title: '销售单价',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'num',
+                title: '销售数量',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'xiaoji',
+                title: '小计',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
+                field: 'remarks',
+                title: '备注',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'type',
+                title: '类型',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'saleState',
+                title: '审核状态',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+        ],
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected');
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
+    })
+}
+
 
 function setProductTable(data) {
     if ($('#show-table-product').html() != '') {
@@ -906,6 +1116,43 @@ function setProductTable_Add(data) {
     })
 }
 
+function state_select(index){
+    state_list = []
+    var this_list = []
+    var this_date = ""
+    var this_customer = ""
+    var this_state = ""
+    let rows = sale_list
+    console.log(rows)
+    for(let i=0;i<rows.length;i++){
+        if(rows[i].id == index){
+            this_date = rows[i].riqi
+            this_customer = rows[i].customerId
+            this_state = rows[i].saleState
+            break;
+        }
+    }
+    console.log(this_date)
+    console.log(this_customer)
+    console.log(this_state)
+
+    if(this_state != '审核中'){
+        swal("此销售信息无需审核！")
+        return;
+    }
+
+    for(let i=0;i<rows.length;i++){
+        if(rows[i].riqi == this_date && rows[i].customerId == this_customer && rows[i].saleState == this_state){
+            this_list.push(rows[i])
+        }
+    }
+
+    console.log(this_list)
+    state_list = this_list
+    setStateTable(this_list)
+    $('#state-modal').modal('show');
+}
+
 function getRows(tableEl) {
     let result = [];
     let tableData = $(tableEl).bootstrapTable('getData');
@@ -936,9 +1183,35 @@ function getRows(tableEl) {
     return result;
 }
 
+function getStateRows(tableEl) {
+    let result = [];
+    let tableData = $(tableEl).bootstrapTable('getData');
+    $(tableEl + ' tr').each(function (i, tr) {
+        let index = $(tr).data('index');
+        if (index != undefined) {
+            let warehouse = $(tr).children().eq(0).children().val();
+            result.push({
+                id: '',
+                warehouse: warehouse,
+            })
+        }
+    });
+    for(var i=0; i<state_list.length; i++){
+        result[i].id = state_list[i].id
+    }
+    return result;
+}
+
 function getXiaLa() {
     var select = "<select name=\"saleType\" class=\"form-control\" >";
     select = select + opt;
+    select = select + "<select/>";
+    return select;
+}
+
+function getCangKuXiaLa() {
+    var select = "<select name=\"warehouse\" class=\"form-control\" >";
+    select = select + cangku;
     select = select + "<select/>";
     return select;
 }

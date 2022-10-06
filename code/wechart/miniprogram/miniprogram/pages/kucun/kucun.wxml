@@ -35,14 +35,12 @@
 <!---------查询弹窗--------->
 <!------------------------->
 <van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 60%;" >
-    <view class="lables1">开始日期</view>
-    <picker class="pick" mode="date" value="{{date}}" data-column_name="start_date" bindchange="choiceDate">
-      <input bindinput="onInput" data-column="start_date" class="input_text_form" value="{{start_date}}" type="text" name="start_date" ></input>
+    <view class="lables">仓库</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="warehouse" range="{{warehouse_list}}">
+      <input bindinput="onInput" data-column="warehouse" class="input_text_form"  value="{{warehouse}}" type="text" name="warehouse" disabled="disabled"></input>
     </picker>
-    <view class="lables1">结束日期</view>
-    <picker class="pick" mode="date" value="{{date}}" data-column_name="stop_date" bindchange="choiceDate">
-      <input bindinput="onInput" data-column="stop_date" class="input_text_form" value="{{stop_date}}" type="text" name=stop_date" ></input>
-    </picker>
+    <view class="lables">批号</view>
+    <input bindinput="onInput" data-column="pihao" class="input_text_form" value="{{pihao}}" type="text" name="pihao"></input>
     <view class="lables">产品名称</view>
     <input bindinput="onInput" bindtap="selCD" data-column="product_name" class="input_text_form" value="{{product_name}}" type="text" name="product_name" disabled="disabled"></input>
   <view class="bottom_view" style="height:10%">

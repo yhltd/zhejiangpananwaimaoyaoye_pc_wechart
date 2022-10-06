@@ -78,4 +78,9 @@ public class SaleImpl extends ServiceImpl<SaleMapper, Sale> implements SaleServi
     public boolean delete(List<Integer> idList) {
         return removeByIds(idList);
     }
+
+    @Override
+    public boolean updateSaleState(String saleState,String warehouse, int id) {
+        return saleMapper.updateSaleState(saleState,warehouse, id);
+    }
 }

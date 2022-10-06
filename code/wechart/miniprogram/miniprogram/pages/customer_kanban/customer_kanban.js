@@ -128,7 +128,8 @@ Page({
     var _this = this
     var userInfo = JSON.parse(options.userInfo)
     _this.setData({
-      userInfo:userInfo
+      userInfo:userInfo,
+      customer:'',
     })
 
     wx.cloud.callFunction({

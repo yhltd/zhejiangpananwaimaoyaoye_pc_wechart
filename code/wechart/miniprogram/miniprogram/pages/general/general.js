@@ -11,6 +11,19 @@ Page({
   xgShow: false,
   cxShow: false,
   data: {
+    update_name:{
+      sale_name:"销售人员姓名",
+      test_name:"化验人员姓名",
+      express:"快递方式",
+      pick:"客户拿货方式",
+      pay:"付款方式",
+      warehouse:"仓库",
+      department:"部门",
+      customer_type:"客户类别",
+      area:"区域",
+      attributes:"产品属性",
+      sale_type:"发货类型",
+    },
     list: [],
     title: [{
         text: "销售人员姓名",
@@ -61,6 +74,27 @@ Page({
         text: "客户类别",
         width: "275rpx",
         columnName: "customer_type",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "区域",
+        width: "275rpx",
+        columnName: "area",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "产品属性",
+        width: "275rpx",
+        columnName: "attributes",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "发货类型",
+        width: "275rpx",
+        columnName: "sale_type",
         type: "text",
         isupd: true
       },
@@ -131,16 +165,13 @@ Page({
       })
       return;
     }
+    console.log(e.currentTarget.dataset.column)
+    console.log(e.currentTarget.dataset.value)
+    console.log(_this.data.list[e.currentTarget.dataset.index].id)
     _this.setData({
       id: _this.data.list[e.currentTarget.dataset.index].id,
-      sale_name: _this.data.list[e.currentTarget.dataset.index].sale_name, 
-      test_name: _this.data.list[e.currentTarget.dataset.index].test_name,
-      express: _this.data.list[e.currentTarget.dataset.index].express,
-      pick: _this.data.list[e.currentTarget.dataset.index].pick,
-      pay: _this.data.list[e.currentTarget.dataset.index].pay,
-      warehouse: _this.data.list[e.currentTarget.dataset.index].warehouse,
-      department: _this.data.list[e.currentTarget.dataset.index].department,
-      customer_type: _this.data.list[e.currentTarget.dataset.index].customer_type,
+      this_column:e.currentTarget.dataset.column,
+      this_value:e.currentTarget.dataset.value,
       xgShow:true,
     })
   },
@@ -155,17 +186,51 @@ Page({
       })
       return;
     }
-    _this.setData({
-      tjShow: true,
-      id:'',
-      sale_name:'', 
-      test_name: '',
-      express: '',
-      pick: '',
-      pay: '',
-      warehouse: '',
-      department: '',
-      customer_type: '',
+
+    wx.showModal({
+      title: '提示',
+      content: '确认添加一条数据？',
+      success (res) {
+        if (res.confirm) {
+          wx.cloud.callFunction({
+            name: 'sqlServer_117',
+            data: {
+              query: "insert into general(sale_name,test_name,express,pick,pay,warehouse,department,customer_type,area,attributes,sale_type) values('','','','','','','','','','','')"
+            },
+            success: res => {
+              _this.setData({
+                id:'',
+                sale_name:'', 
+                test_name: '',
+                express: '',
+                pick: '',
+                pay: '',
+                warehouse: '',
+                department: '',
+                customer_type: '',
+              })
+              _this.qxShow()
+              _this.tableShow()
+              wx.showToast({
+                title: '添加成功！',
+                icon: 'none'
+              })
+            },
+            err: res => {
+              console.log("错误!")
+            },
+            fail: res => {
+              wx.showToast({
+                title: '请求失败！',
+                icon: 'none'
+              })
+              console.log("请求失败！")
+            }
+          })
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
     })
   },
 
@@ -221,19 +286,13 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update general set sale_name='" + _this.data.sale_name + "',test_name='" + _this.data.test_name + "',express='" + _this.data.express + "',pick='" + _this.data.pick + "',pay='" + _this.data.pay + "',warehouse='" + _this.data.warehouse + "',department='" + _this.data.department + "',customer_type='" + _this.data.customer_type + "' where  id=" + _this.data.id 
+        query: "update general set " + _this.data.this_column + "='" + _this.data.this_value + "' where  id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
           id:'',
-          sale_name:'', 
-          test_name: '',
-          express: '',
-          pick: '',
-          pay: '',
-          warehouse: '',
-          department: '',
-          customer_type: '',
+          this_column:'',
+          this_value:'',
         })
         _this.qxShow()
         _this.tableShow()
@@ -256,8 +315,9 @@ Page({
     })
   },
 
-  del1:function(){
+  del1:function(e){
     var _this = this
+    console.log(_this.data.list[e.currentTarget.dataset.index].id)
     if(_this.data.userPower.shan != '可操作' && _this.data.userInfo.power != '管理员'){
       wx.showToast({
         title: '无权限！',
@@ -266,41 +326,52 @@ Page({
       })
       return;
     }
-      wx.cloud.callFunction({
-        name: 'sqlServer_117',
-        data: {
-          query: "delete from general where id='" + _this.data.id + "'"
-        },
-        success: res => {
-          _this.setData({
-            id:'',
-            sale_name:'', 
-            test_name: '',
-            express: '',
-            pick: '',
-            pay: '',
-            warehouse: '',
-            department: '',
-            customer_type: '',
+
+    wx.showModal({
+      title: '提示',
+      content: '确认删除此行数据？',
+      success (res) {
+        if (res.confirm) {
+          wx.cloud.callFunction({
+            name: 'sqlServer_117',
+            data: {
+              query: "delete from general where id=" + _this.data.list[e.currentTarget.dataset.index].id
+            },
+            success: res => {
+              _this.setData({
+                id:'',
+                sale_name:'', 
+                test_name: '',
+                express: '',
+                pick: '',
+                pay: '',
+                warehouse: '',
+                department: '',
+                customer_type: '',
+              })
+              _this.qxShow()
+              _this.tableShow()
+              wx.showToast({
+                title: '删除成功！',
+                icon: 'none'
+              })
+            },
+            err: res => {
+              console.log("错误!")
+            },
+            fail: res => {
+              wx.showToast({
+                title: '请求失败！',
+                icon: 'none'
+              })
+              console.log("请求失败！")
+            }
           })
-          _this.qxShow()
-          _this.tableShow()
-          wx.showToast({
-            title: '删除成功！',
-            icon: 'none'
-          })
-        },
-        err: res => {
-          console.log("错误!")
-        },
-        fail: res => {
-          wx.showToast({
-            title: '请求失败！',
-            icon: 'none'
-          })
-          console.log("请求失败！")
+        } else if (res.cancel) {
+
         }
-      })
+      }
+    })
   },
 
   /**

@@ -225,13 +225,18 @@ public class SaleController {
     public ResultInfo update(@RequestBody String updateJson, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isUpdate("销售") && !userInfo.getPower().equals("管理员")) {
-            return ResultInfo.error(401, "无权限");
-        }
-
         Sale sale = null;
         try {
             sale = DecodeUtil.decodeToJson(updateJson, Sale.class);
+            if (sale.getSaleState().equals("审核通过") && !userInfo.getPower().equals("管理员")) {
+                if (!userInfo.getStateUpd().equals("是")) {
+                    return ResultInfo.error(401, "审核已通过，无修改权限");
+                }
+            } else {
+                if (!powerUtil.isUpdate("销售") && !userInfo.getPower().equals("管理员")) {
+                    return ResultInfo.error(401, "无权限");
+                }
+            }
             if (saleService.update(sale)) {
                 return ResultInfo.success("修改成功", sale);
             } else {
@@ -271,6 +276,28 @@ public class SaleController {
             log.error("删除失败：{}", e.getMessage());
             log.error("参数：{}", idList);
             return ResultInfo.error("删除失败");
+        }
+    }
+
+    /**
+     * 审核
+     */
+    @RequestMapping("/updateState")
+    public ResultInfo updateState(String saleState,String warehouse, int id, HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        if (!userInfo.getPower().equals("管理员")) {
+            return ResultInfo.success("无权限");
+        }
+        try {
+            if (saleService.updateSaleState(saleState,warehouse, id)) {
+                return ResultInfo.success("审核成功");
+            } else {
+                return ResultInfo.success("审核失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("审核失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
         }
     }
 

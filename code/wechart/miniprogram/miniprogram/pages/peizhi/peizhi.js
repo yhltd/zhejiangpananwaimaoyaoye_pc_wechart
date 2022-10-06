@@ -23,6 +23,10 @@ Page({
       text: "化验明细",
       url: "../assay/assay"
     },
+    {
+      text: "看板",
+      url: "../kanban/kanban"
+    },
   ]
   },
 

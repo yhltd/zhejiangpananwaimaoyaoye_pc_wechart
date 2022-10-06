@@ -154,10 +154,14 @@ Page({
 
   tableShow: function (e) {
     var _this = this
+    var sql = "select fukuan.id,fukuan.customer_id,kehu.customer,fukuan.pay,fukuan.quota,fukuan.r_jine,fukuan.f_jine,fukuan.discount,fukuan.remarks,fukuan.riqi,kehu.salesman from payment as fukuan left join (select id,customer,salesman from customerInfo)as kehu on fukuan.customer_id = kehu.id where convert(date,fukuan.riqi) >= convert(date,'"+ e[0] +"') and convert(date,fukuan.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' order by fukuan.riqi desc"
+    if(_this.data.userInfo.power != '管理员'){
+      sql = "select fukuan.id,fukuan.customer_id,kehu.customer,fukuan.pay,fukuan.quota,fukuan.r_jine,fukuan.f_jine,fukuan.discount,fukuan.remarks,fukuan.riqi,kehu.salesman from payment as fukuan left join (select id,customer,salesman from customerInfo)as kehu on fukuan.customer_id = kehu.id where convert(date,fukuan.riqi) >= convert(date,'"+ e[0] +"') and convert(date,fukuan.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' and kehu.salesman ='" + _this.data.userInfo.name + "' order by fukuan.riqi desc"
+    }
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select fukuan.id,fukuan.customer_id,kehu.customer,fukuan.pay,fukuan.quota,fukuan.r_jine,fukuan.f_jine,fukuan.discount,fukuan.remarks,fukuan.riqi from payment as fukuan left join (select id,customer from customerInfo)as kehu on fukuan.customer_id = kehu.id where convert(date,fukuan.riqi) >= convert(date,'"+ e[0] +"') and convert(date,fukuan.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' order by fukuan.riqi desc"
+        query: sql
       },
       success: res => {
         var list = res.result.recordset

@@ -127,8 +127,18 @@ public class Sale {
     private String saleType;
 
     /**
-     *  审核状态
+     *  销售审核状态
      */
     private String saleState;
+
+    /**
+     *  判断是否从出库表中直接录入，是填1
+     */
+    private String chukuInsert;
+
+    /**
+     *  出库审核状态
+     */
+    private String chukuState;
 
 }

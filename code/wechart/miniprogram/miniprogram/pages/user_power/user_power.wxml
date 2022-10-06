@@ -39,7 +39,7 @@
 <!------------------------->
 <!---------添加弹窗--------->
 <!------------------------->
-<van-popup bind:click-overlay="qxShow" show="{{ tjShow }}" position="bottom" custom-style="height: 82%;" >
+<!-- <van-popup bind:click-overlay="qxShow" show="{{ tjShow }}" position="bottom" custom-style="height: 82%;" >
   <view class="lables">用户名</view>
     <picker bindchange="bindPickerChange2" value="{{index}}" data-column_name="name" range="{{customer_picker_list}}">
       <input bindinput="onInput" data-column="name" class="input_text_form"  value="{{name}}" type="text" name="name" disabled="disabled"></input>
@@ -68,11 +68,11 @@
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="add1">添加</button>
   </view>
-</van-popup>
+</van-popup> -->
 <!------------------------->
 <!---------修改弹窗--------->
 <!------------------------->
-<van-popup bind:click-overlay="qxShow" show="{{ xgShow }}" position="bottom" custom-style="height: 82%;" >
+<!-- <van-popup bind:click-overlay="qxShow" show="{{ xgShow }}" position="bottom" custom-style="height: 82%;" >
   <view class="lables">用户名</view>
     <picker bindchange="bindPickerChange2" value="{{index}}" data-column_name="name" range="{{customer_picker_list}}">
       <input bindinput="onInput" data-column="name" class="input_text_form"  value="{{name}}" type="text" name="name" disabled="disabled"></input>
@@ -102,7 +102,23 @@
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="del1">删除</button>
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="upd1">修改</button>
   </view>
+</van-popup> -->
+
+<!------------------------->
+<!---------修改弹窗--------->
+<!------------------------->
+<van-popup bind:click-overlay="qxShow" show="{{ xgShow }}" position="bottom" custom-style="height: 25%;" >
+    <view class="lables">{{update_name[this_column]}}</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" data-column_name="this_value" range="{{power_list}}">
+      <input bindinput="onInput" data-column="this_value" class="input_text_form" value="{{this_value}}" type="text" name="this_value" ></input>
+    </picker>
+    <view class="bottom_view" style="height:10%">
+    <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>
+    <!-- <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="del1">删除</button> -->
+    <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="upd1">修改</button>
+  </view>
 </van-popup>
+
 <!------------------------->
 <!---------查询弹窗--------->
 <!------------------------->

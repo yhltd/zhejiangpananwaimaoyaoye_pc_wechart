@@ -12,6 +12,7 @@ Page({
   cxShow: false,
   data: {
     list: [],
+    state_upd_list:['是','否'],
     title: [{
         text: "用户名",
         width: "250rpx",
@@ -43,6 +44,12 @@ Page({
         text: "部门",
         width: "300rpx",
         columnName: "department",
+        type: "text",
+        isupd: true
+      },{
+        text: "能否修改审核通过数据",
+        width: "400rpx",
+        columnName: "state_upd",
         type: "text",
         isupd: true
       }
@@ -97,11 +104,19 @@ Page({
     _this.tableShow(e)
   },
 
-  bindPickerChange: function(e){
+  bindPickerChange2: function(e){
     var _this = this
     console.log(_this.data.department_list[e.detail.value])
     _this.setData({
       department: _this.data.department_list[e.detail.value]
+    })
+  },
+
+  bindPickerChange1: function(e){
+    var _this = this
+    console.log(_this.data.state_upd_list[e.detail.value])
+    _this.setData({
+      state_upd: _this.data.state_upd_list[e.detail.value]
     })
   },
 
@@ -169,6 +184,7 @@ Page({
       power: _this.data.list[e.currentTarget.dataset.index].power,
       name: _this.data.list[e.currentTarget.dataset.index].name,
       department: _this.data.list[e.currentTarget.dataset.index].department,
+      state_upd: _this.data.list[e.currentTarget.dataset.index].state_upd,
       xgShow:true,
     })
   },
@@ -191,6 +207,7 @@ Page({
       power: '',
       name: '',
       department: '',
+      state_upd: '',
     })
   },
 
@@ -199,23 +216,44 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into userInfo(username,password,power,name,department) values('" + _this.data.username + "','" + _this.data.password + "','" + _this.data.power + "','" + _this.data.name + "','" + _this.data.department + "')"
+          query: "insert into userInfo(username,password,power,name,department,state_upd) OUTPUT Inserted.id values('" + _this.data.username + "','" + _this.data.password + "','" + _this.data.power + "','" + _this.data.name + "','" + _this.data.department + "','" + _this.data.state_upd + "');"
         },
         success: res => {
-          _this.setData({
-            id: '',
-            username: '',
-            password:'',
-            power: '',
-            name: '',
-            department: '',
-          })
-          _this.qxShow()
-          var e = ['','']
-          _this.tableShow(e)
-          wx.showToast({
-            title: '添加成功！',
-            icon: 'none'
+          console.log(res)
+          wx.cloud.callFunction({
+            name: 'sqlServer_117',
+            data: {
+              query: "insert into userPower(user_id,view_name,zeng,shan,gai,cha) OUTPUT Inserted.id values('" + res.result.recordset[0].id + "','常规设置','','','',''),('" + res.result.recordset[0].id + "','产品设置','','','',''),('" + res.result.recordset[0].id + "','客户信息','','','',''),('" + res.result.recordset[0].id + "','化验明细','','','',''),('" + res.result.recordset[0].id + "','入库','','','',''),('" + res.result.recordset[0].id + "','销售','','','',''),('" + res.result.recordset[0].id + "','库存','','','',''),('" + res.result.recordset[0].id + "','收付款明细','','','',''),('" + res.result.recordset[0].id + "','发票','','','',''),('" + res.result.recordset[0].id + "','客户往来款看板','','','',''),('" + res.result.recordset[0].id + "','销售额统计','','','',''),('" + res.result.recordset[0].id + "','按月统计','','','',''),('" + res.result.recordset[0].id + "','审核管理','','','',''),('" + res.result.recordset[0].id + "','账号管理','','','',''),('" + res.result.recordset[0].id + "','权限管理','','','',''),('" + res.result.recordset[0].id + "','出库','','','',''),('" + res.result.recordset[0].id + "','看板','','','','')"
+            },
+            success: res => {
+              console.log(res)
+              _this.setData({
+                id: '',
+                username: '',
+                password:'',
+                power: '',
+                name: '',
+                department: '',
+                state_upd: '',
+              })
+              _this.qxShow()
+              var e = ['','']
+              _this.tableShow(e)
+              wx.showToast({
+                title: '添加成功！',
+                icon: 'none'
+              })
+            },
+            err: res => {
+              console.log("错误!")
+            },
+            fail: res => {
+              wx.showToast({
+                title: '请求失败！',
+                icon: 'none'
+              })
+              console.log("请求失败！")
+            }
           })
         },
         err: res => {
@@ -244,7 +282,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update userInfo set username='" + _this.data.username + "',password='" + _this.data.password + "',power='" + _this.data.power + "',name='" + _this.data.name + "',department='" + _this.data.department + "' where id=" + _this.data.id 
+        query: "update userInfo set username='" + _this.data.username + "',password='" + _this.data.password + "',power='" + _this.data.power + "',name='" + _this.data.name + "',department='" + _this.data.department + "',state_upd='" + _this.data.state_upd + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -254,6 +292,7 @@ Page({
           power: '',
           name: '',
           department: '',
+          state_upd: '',
         })
         _this.qxShow()
         var e = ['','']
@@ -290,7 +329,7 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "delete from userInfo where id='" + _this.data.id + "'"
+          query: "delete from userInfo where id='" + _this.data.id + "';delete from userPower where user_id='" + _this.data.id + "';"
         },
         success: res => {
           _this.setData({
@@ -300,9 +339,10 @@ Page({
             power: '',
             name: '',
             department: '',
+            state_upd: '',
           })
           _this.qxShow()
-          var e = ['']
+          var e = ['','']
           _this.tableShow(e)
           wx.showToast({
             title: '删除成功！',

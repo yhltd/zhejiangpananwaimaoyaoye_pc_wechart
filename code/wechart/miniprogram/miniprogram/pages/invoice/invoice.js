@@ -35,6 +35,27 @@ Page({
         isupd: true
       },
       {
+        text: "发票号",
+        width: "300rpx",
+        columnName: "thebillingnumber",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "品名",
+        width: "300rpx",
+        columnName: "nameofarticle",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "单价",
+        width: "200rpx",
+        columnName: "unitprice",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "开票金额",
         width: "200rpx",
         columnName: "jine",
@@ -105,10 +126,14 @@ Page({
 
   tableShow: function (e) {
     var _this = this
+    var sql = "select kaipiao.id,kaipiao.customer_id,kehu.customer,kaipiao.riqi,kaipiao.unit,kaipiao.jine,kaipiao.remarks,kehu.salesman from invoice as kaipiao left join (select id,customer,salesman from customerInfo)as kehu on kaipiao.customer_id = kehu.id where convert(date,kaipiao.riqi) >= convert(date,'"+ e[0] +"') and convert(date,kaipiao.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' order by kaipiao.riqi desc"
+    if (_this.data.userInfo.power != '管理员'){
+      sql = "select kaipiao.id,kaipiao.customer_id,kehu.customer,kaipiao.riqi,kaipiao.unit,kaipiao.jine,kaipiao.remarks,kehu.salesman from invoice as kaipiao left join (select id,customer,salesman from customerInfo)as kehu on kaipiao.customer_id = kehu.id where convert(date,kaipiao.riqi) >= convert(date,'"+ e[0] +"') and convert(date,kaipiao.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' and kehu.salesman ='" + _this.data.userInfo.name + "' order by kaipiao.riqi desc"
+    }
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select kaipiao.id,kaipiao.customer_id,kehu.customer,kaipiao.riqi,kaipiao.unit,kaipiao.jine,kaipiao.remarks from invoice as kaipiao left join (select id,customer from customerInfo)as kehu on kaipiao.customer_id = kehu.id where convert(date,kaipiao.riqi) >= convert(date,'"+ e[0] +"') and convert(date,kaipiao.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' order by kaipiao.riqi desc"
+        query: sql
       },
       success: res => {
         var list = res.result.recordset
@@ -168,6 +193,9 @@ Page({
       unit: _this.data.list[e.currentTarget.dataset.index].unit,
       jine: _this.data.list[e.currentTarget.dataset.index].jine,
       remarks: _this.data.list[e.currentTarget.dataset.index].remarks,
+      thebillingnumber: _this.data.list[e.currentTarget.dataset.index].thebillingnumber,
+      nameofarticle:_this.data.list[e.currentTarget.dataset.index].nameofarticle,
+      unitprice:_this.data.list[e.currentTarget.dataset.index].unitprice,
       xgShow:true,
     })
   },
@@ -191,6 +219,9 @@ Page({
       unit: '',
       jine: '',
       remarks: '',
+      thebillingnumber:'',
+      nameofarticle:'',
+      unitprice:'',
     })
   },
 
@@ -211,7 +242,7 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into invoice(riqi,customer_id,unit,jine,remarks) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.unit + "','" + _this.data.jine + "','" + _this.data.remarks + "')"
+          query: "insert into invoice(riqi,customer_id,unit,jine,remarks,thebillingnumber,nameofarticle,unitprice) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.unit + "','" + _this.data.jine + "','" + _this.data.remarks + "','" + _this.data.thebillingnumber + "','" + _this.data.nameofarticle + "','" + _this.data.unitprice + "')"
         },
         success: res => {
           _this.setData({
@@ -222,6 +253,9 @@ Page({
             unit: '',
             jine: '',
             remarks: '',
+            thebillingnumber:'',
+            nameofarticle:'',
+            unitprice:'',
           })
           _this.qxShow()
           var e = ['1900-01-01','2100-12-31','']
@@ -270,7 +304,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update invoice set riqi='" + _this.data.riqi + "',customer_id='" + _this.data.customer_id + "',unit='" + _this.data.unit + "',jine='" + _this.data.jine + "',remarks='" + _this.data.remarks + "' where id=" + _this.data.id 
+        query: "update invoice set riqi='" + _this.data.riqi + "',customer_id='" + _this.data.customer_id + "',unit='" + _this.data.unit + "',jine='" + _this.data.jine + "',remarks='" + _this.data.remarks + "',thebillingnumber='" + _this.data.thebillingnumber + "',nameofarticle='" + _this.data.nameofarticle + "',unitprice='" + _this.data.unitprice + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -281,6 +315,9 @@ Page({
           unit: '',
           jine: '',
           remarks: '',
+          thebillingnumber:'',
+          nameofarticle:'',
+          unitprice:'',
         })
         _this.qxShow()
         var e = ['1900-01-01','2100-12-31','']
@@ -328,6 +365,9 @@ Page({
             unit: '',
             jine: '',
             remarks: '',
+            thebillingnumber:'',
+            nameofarticle:'',
+            unitprice:'',
           })
           _this.qxShow()
           var e = ['1900-01-01','2100-12-31','']
@@ -429,6 +469,63 @@ Page({
         xlShow5: false,
       })
     }
+  },
+
+  getExcel : function(){
+    var _this = this;
+    wx.showLoading({
+      title: '打开Excel中',
+      mask : 'true'
+    })
+    var list = _this.data.list;
+    var title = _this.data.title
+    var cloudList = {
+      name : '化验明细',
+      items : [],
+      header : []
+    }
+
+    for(let i=0;i<title.length;i++){
+      cloudList.header.push({
+        item:title[i].text,
+        type:title[i].type,
+        width:parseInt(title[i].width.split("r")[0])/10,
+        columnName:title[i].columnName
+      })
+    }
+    cloudList.items = list
+    console.log(cloudList)
+
+    wx.cloud.callFunction({
+      name:'getExcel',
+      data:{
+        list : cloudList
+      },
+      success: function(res){
+        console.log("获取云储存id")
+        wx.cloud.downloadFile({
+          fileID : res.result.fileID,
+          success : res=> {
+            console.log("获取临时路径")
+            wx.hideLoading({
+              success: (res) => {},
+            })
+            console.log(res.tempFilePath)
+            wx.openDocument({
+              filePath: res.tempFilePath,
+              showMenu : 'true',
+              fileType : 'xlsx',
+              success : res=> {
+                console.log("打开Excel")
+              }
+            })
+          }
+        })
+      },
+      fail : res=> {
+        console.log(res)
+      }
+    })
   },
 
 

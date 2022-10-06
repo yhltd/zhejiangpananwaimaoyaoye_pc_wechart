@@ -9,6 +9,9 @@ Page({
   tjShow: false,
   rqxzShow1: false,
   xgShow: false,
+  shShow: false,
+  xgShow2: false,
+  xgShow3: false,
   cxShow: false,
   xlShow4: false,
   xlShow5: false,
@@ -36,13 +39,13 @@ Page({
         type: "text",
         isupd: true
       },
-      {
-        text: "快递公司",
-        width: "300rpx",
-        columnName: "express",
-        type: "text",
-        isupd: true
-      },
+      // {
+      //   text: "快递公司",
+      //   width: "300rpx",
+      //   columnName: "express",
+      //   type: "text",
+      //   isupd: true
+      // },
       {
         text: "业务员",
         width: "200rpx",
@@ -57,10 +60,17 @@ Page({
         type: "text",
         isupd: true
       },
+      // {
+      //   text: "物流单号",
+      //   width: "200rpx",
+      //   columnName: "wuliu_order",
+      //   type: "text",
+      //   isupd: true
+      // },
       {
-        text: "物流单号",
-        width: "200rpx",
-        columnName: "wuliu_order",
+        text: "发货类型",
+        width: "300rpx",
+        columnName: "sale_type",
         type: "text",
         isupd: true
       },
@@ -78,13 +88,13 @@ Page({
         type: "text",
         isupd: true
       },
-      {
-        text: "批号",
-        width: "200rpx",
-        columnName: "pihao",
-        type: "text",
-        isupd: true
-      },
+      // {
+      //   text: "批号",
+      //   width: "200rpx",
+      //   columnName: "pihao",
+      //   type: "text",
+      //   isupd: true
+      // },
       {
         text: "单位",
         width: "200rpx",
@@ -113,10 +123,248 @@ Page({
         type: "text",
         isupd: true
       },
+      // {
+      //   text: "仓库",
+      //   width: "200rpx",
+      //   columnName: "warehouse",
+      //   type: "text",
+      //   isupd: true
+      // },
       {
-        text: "仓库",
+        text: "备注",
         width: "200rpx",
-        columnName: "warehouse",
+        columnName: "remarks",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "类型",
+        width: "200rpx",
+        columnName: "type",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "审核状态",
+        width: "200rpx",
+        columnName: "sale_state",
+        type: "text",
+        isupd: true
+      },
+      // {
+      //   text: "发货状态",
+      //   width: "200rpx",
+      //   columnName: "fahuo",
+      //   type: "text",
+      //   isupd: true
+      // }
+    ],
+
+
+    shenhe_title: [
+    {
+      text: "发出仓库",
+      width: "200rpx",
+      columnName: "warehouse",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "日期",
+      width: "200rpx",
+      columnName: "riqi",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "客户名称",
+      width: "200rpx",
+      columnName: "customer",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "收货人员",
+      width: "200rpx",
+      columnName: "sh_staff",
+      type: "text",
+      isupd: true
+    },
+    // {
+    //   text: "快递公司",
+    //   width: "300rpx",
+    //   columnName: "express",
+    //   type: "text",
+    //   isupd: true
+    // },
+    {
+      text: "业务员",
+      width: "200rpx",
+      columnName: "salesman",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "拿货方式",
+      width: "200rpx",
+      columnName: "pick",
+      type: "text",
+      isupd: true
+    },
+    // {
+    //   text: "物流单号",
+    //   width: "200rpx",
+    //   columnName: "wuliu_order",
+    //   type: "text",
+    //   isupd: true
+    // },
+    {
+      text: "发货类型",
+      width: "300rpx",
+      columnName: "sale_type",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "产品名称",
+      width: "300rpx",
+      columnName: "product_name",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "规格",
+      width: "400rpx",
+      columnName: "spec",
+      type: "text",
+      isupd: true
+    },
+    // {
+    //   text: "批号",
+    //   width: "200rpx",
+    //   columnName: "pihao",
+    //   type: "text",
+    //   isupd: true
+    // },
+    {
+      text: "单位",
+      width: "200rpx",
+      columnName: "unit",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "销售单价",
+      width: "200rpx",
+      columnName: "price",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "销售数量",
+      width: "200rpx",
+      columnName: "num",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "小计",
+      width: "200rpx",
+      columnName: "xiaoji",
+      type: "text",
+      isupd: true
+    },
+    // {
+    //   text: "仓库",
+    //   width: "200rpx",
+    //   columnName: "warehouse",
+    //   type: "text",
+    //   isupd: true
+    // },
+    {
+      text: "备注",
+      width: "200rpx",
+      columnName: "remarks",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "类型",
+      width: "200rpx",
+      columnName: "type",
+      type: "text",
+      isupd: true
+    },
+    {
+      text: "审核状态",
+      width: "200rpx",
+      columnName: "sale_state",
+      type: "text",
+      isupd: true
+    },
+    // {
+    //   text: "发货状态",
+    //   width: "200rpx",
+    //   columnName: "fahuo",
+    //   type: "text",
+    //   isupd: true
+    // }
+  ],
+
+    add_title: [
+      {
+        text: "发货类型",
+        width: "200rpx",
+        columnName: "sale_type",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "产品名称",
+        width: "450rpx",
+        columnName: "product_name",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "规格",
+        width: "450rpx",
+        columnName: "spec",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "产品属性",
+        width: "200rpx",
+        columnName: "attribute",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "单位",
+        width: "200rpx",
+        columnName: "unit",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "销售单价",
+        width: "200rpx",
+        columnName: "price",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "数量",
+        width: "200rpx",
+        columnName: "num",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "小计",
+        width: "200rpx",
+        columnName: "xiaoji",
         type: "text",
         isupd: true
       },
@@ -126,26 +374,26 @@ Page({
         columnName: "remarks",
         type: "text",
         isupd: true
-      },
-      {
-        text: "销售方式",
-        width: "200rpx",
-        columnName: "type",
-        type: "text",
-        isupd: true
-      },
-      {
-        text: "发货状态",
-        width: "200rpx",
-        columnName: "fahuo",
-        type: "text",
-        isupd: true
       }
-    ],
+  ],
+
+  state_list:['审核中','审核通过','审核未通过'],
+
+  update_name:{
+    sale_type:"发货类型",
+    price:'销售单价',
+    num:"数量",
+    xiaoji:"小计",
+    remarks:"备注",
+    warehouse:'发出仓库',
+  },
+
     warehouse_list:[],
     id:'',
     warehouse: '', 
     pihao: '',
+    sale_state:'',
+    sale_type:'',
     listChanPin:[],
     listShenHe:[
       {name:'审核通过'},
@@ -168,7 +416,7 @@ Page({
       userPower:userPower
     })
 
-    var sql = "select '产品:' + product_name + ';规格:' + spec + ';单位:' + unit as name,id,product_name,spec,unit,price from product"
+    var sql = "select '产品:' + product_name + ';规格:' + spec + ';产品属性:' + attribute + ';单位:' + unit + ';单价:' + price  as name,id,product_name,spec,unit,price,attribute from product"
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
@@ -316,7 +564,37 @@ Page({
       }
     })
 
-    var e = ['1900-01-01','2100-12-31','','','']
+    var sql = "select sale_type from general where sale_type != ''"
+    wx.cloud.callFunction({
+      name: 'sqlServer_117',
+      data: {
+        query: sql
+      },
+      success: res => {
+        var list = res.result.recordset
+        var name_list = []
+        for(var i=0; i<list.length; i++){
+          name_list.push(list[i].sale_type)
+        }
+        _this.setData({
+          sale_type_list: name_list
+        })
+        console.log(name_list)
+      },
+      err: res => {
+        console.log("错误!")
+      },
+      fail: res => {
+        wx.showToast({
+          title: '请求失败！',
+          icon: 'none',
+          duration: 3000
+        })
+        console.log("请求失败！")
+      }
+    })
+
+    var e = ['1900-01-01','2100-12-31','','','','']
     _this.tableShow(e)
   },
 
@@ -328,20 +606,29 @@ Page({
     console.log(e.detail.value)
   },
 
+  bindPickerChange: function(e){
+    var _this = this
+    console.log(_this.data.warehouse_list[e.detail.value])
+    _this.setData({
+      warehouse: _this.data.warehouse_list[e.detail.value],
+      this_value: _this.data.warehouse_list[e.detail.value],
+    })
+  },
+
+  bindPickerChange1: function(e){
+    var _this = this
+    console.log(_this.data.state_list[e.detail.value])
+    _this.setData({
+      sale_state: _this.data.state_list[e.detail.value]
+    })
+  },
+
   bindPickerChange2: function(e){
     var _this = this
     console.log(_this.data.customer_list[e.detail.value].customer + " " + _this.data.customer_list[e.detail.value].id)
     _this.setData({
       [e.target.dataset.column_name]: _this.data.customer_list[e.detail.value].customer,
       customer_id: _this.data.customer_list[e.detail.value].id
-    })
-  },
-
-  bindPickerChange: function(e){
-    var _this = this
-    console.log(_this.data.warehouse_list[e.detail.value])
-    _this.setData({
-      warehouse: _this.data.warehouse_list[e.detail.value]
     })
   },
 
@@ -377,12 +664,37 @@ Page({
     })
   },
 
+  bindPickerChange7: function(e){
+    console.log(e)
+    var _this = this
+    console.log(_this.data.sale_type_list[e.detail.value])
+    _this.setData({
+      this_value: _this.data.sale_type_list[e.detail.value],
+      sale_type: _this.data.sale_type_list[e.detail.value],
+    })
+  },
+
+  selSH: function () {
+    var _this = this  
+    if(_this.data.userInfo.power != '管理员'){
+      wx.showToast({
+        title: '此账号无权限审核数据！',
+        icon: 'none',
+        duration: 3000
+      })
+      return;
+    }
+    _this.setData({
+      xlShow1: true
+    })
+  },
+
   tableShow: function (e) {
     var _this = this
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select sa.id,sa.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,sa.num,xiaoji,sa.remarks,warehouse,type,express,customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.fahuo from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,customer,salesman,pinyin,fahuo,s.price from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and pihao like '%" + e[4] + "%'"
+        query: "select sa.id,sa.riqi,customer_id,sh_staff,pick,product_id,sa.num,xiaoji,sa.remarks,type,customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.sale_state,sa.sale_type from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,customer,salesman,pinyin,fahuo,s.price,sale_state,sale_type from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and sale_state like '%" + e[4] + "%' and sale_type like '%" + e[5] + "%' order by sa.riqi desc,customer,sale_type"
       },
       success: res => {
         var list = res.result.recordset
@@ -412,13 +724,13 @@ Page({
       tjShow: false,
       xgShow: false,
       cxShow: false,
+      shShow: false,
       currentDate: new Date().getTime(),
       id: '',
       riqi: '',
       customer: '',
       customer_id: '',
       sh_staff: '',
-      express: '',
       pick: '',
       wuliu_order: '',
       warehouse: '',
@@ -434,43 +746,106 @@ Page({
       remarks:'',
       type:'',
       fahuo:'',
+      sale_state:'',
+      sale_type:'',
     })
   },
 
   clickView:function(e){
     var _this = this
-    if(_this.data.userPower.gai != '可操作' && _this.data.userInfo.power != '管理员'){
-      wx.showToast({
-        title: '无权限！',
-        icon: 'none',
-        duration: 3000
+    if(e.currentTarget.dataset.column != 'sale_state'){
+      if(_this.data.userPower.gai != '可操作' && _this.data.userInfo.power != '管理员'){
+        wx.showToast({
+          title: '无权限！',
+          icon: 'none',
+          duration: 3000
+        })
+        return;
+      }
+      if(_this.data.list[e.currentTarget.dataset.index].sale_state == '审核通过' && _this.data.userInfo.state_upd != '是' && _this.data.userInfo.power != '管理员'){
+        wx.showToast({
+          title: '此账号无权限修改审核通过的数据！',
+          icon: 'none',
+          duration: 3000
+        })
+        return;
+      }
+      _this.setData({
+        id: _this.data.list[e.currentTarget.dataset.index].id,
+        riqi: _this.data.list[e.currentTarget.dataset.index].riqi, 
+        customer: _this.data.list[e.currentTarget.dataset.index].customer,
+        customer_id: _this.data.list[e.currentTarget.dataset.index].customer_id,
+        sh_staff: _this.data.list[e.currentTarget.dataset.index].sh_staff,
+        express: _this.data.list[e.currentTarget.dataset.index].express,
+        pick: _this.data.list[e.currentTarget.dataset.index].pick,
+        wuliu_order: _this.data.list[e.currentTarget.dataset.index].wuliu_order,
+        warehouse: _this.data.list[e.currentTarget.dataset.index].warehouse,
+        staff: _this.data.list[e.currentTarget.dataset.index].staff,
+        product_id: _this.data.list[e.currentTarget.dataset.index].product_id,
+        product_name: _this.data.list[e.currentTarget.dataset.index].product_name,
+        spec: _this.data.list[e.currentTarget.dataset.index].spec,
+        unit: _this.data.list[e.currentTarget.dataset.index].unit,
+        price: _this.data.list[e.currentTarget.dataset.index].price,
+        xiaoji: _this.data.list[e.currentTarget.dataset.index].xiaoji,
+        pihao: _this.data.list[e.currentTarget.dataset.index].pihao,
+        num: _this.data.list[e.currentTarget.dataset.index].num,
+        remarks: _this.data.list[e.currentTarget.dataset.index].remarks,
+        type:_this.data.list[e.currentTarget.dataset.index].type,
+        fahuo:_this.data.list[e.currentTarget.dataset.index].fahuo,
+        sale_type:_this.data.list[e.currentTarget.dataset.index].sale_type,
+        xgShow:true,
       })
-      return;
+    }else{
+      if(_this.data.userInfo.power != '管理员'){
+        wx.showToast({
+          title: '非管理员账号无审核权限！',
+          icon: 'none',
+          duration: 3000
+        })
+        return;
+      }
+      if(_this.data.list[e.currentTarget.dataset.index].sale_state != '审核中'){
+        wx.showToast({
+          title: '此销售信息无需再次审核！',
+          icon: 'none',
+          duration: 3000
+        })
+        return;
+      }
+      var riqi = _this.data.list[e.currentTarget.dataset.index].riqi
+      var customer_id = _this.data.list[e.currentTarget.dataset.index].customer_id
+      var add_list = []
+      var list = _this.data.list
+      for(var i=0; i<list.length; i++){
+        if(list[i].riqi == riqi && list[i].customer_id == customer_id && list[i].sale_state == '审核中'){
+          add_list.push({
+            id:list[i].id,
+            riqi:list[i].riqi,
+            customer:list[i].customer,
+            sh_staff:list[i].sh_staff,
+            salesman:list[i].salesman,
+            pick:list[i].pick,
+            sale_type:list[i].sale_type,
+            product_name:list[i].product_name,
+            spec:list[i].spec,
+            unit:list[i].unit,
+            price:list[i].price,
+            num:list[i].num,
+            xiaoji:list[i].xiaoji,
+            remarks:list[i].remarks,
+            type:list[i].type,
+            sale_state:list[i].sale_state,
+            warehouse:''
+          })
+        }
+      }
+      console.log(add_list)
+      _this.setData({
+        add_list:add_list,
+        shShow:true
+      })
     }
-    _this.setData({
-      id: _this.data.list[e.currentTarget.dataset.index].id,
-      riqi: _this.data.list[e.currentTarget.dataset.index].riqi, 
-      customer: _this.data.list[e.currentTarget.dataset.index].customer,
-      customer_id: _this.data.list[e.currentTarget.dataset.index].customer_id,
-      sh_staff: _this.data.list[e.currentTarget.dataset.index].sh_staff,
-      express: _this.data.list[e.currentTarget.dataset.index].express,
-      pick: _this.data.list[e.currentTarget.dataset.index].pick,
-      wuliu_order: _this.data.list[e.currentTarget.dataset.index].wuliu_order,
-      warehouse: _this.data.list[e.currentTarget.dataset.index].warehouse,
-      staff: _this.data.list[e.currentTarget.dataset.index].staff,
-      product_id: _this.data.list[e.currentTarget.dataset.index].product_id,
-      product_name: _this.data.list[e.currentTarget.dataset.index].product_name,
-      spec: _this.data.list[e.currentTarget.dataset.index].spec,
-      unit: _this.data.list[e.currentTarget.dataset.index].unit,
-      price: _this.data.list[e.currentTarget.dataset.index].price,
-      xiaoji: _this.data.list[e.currentTarget.dataset.index].xiaoji,
-      pihao: _this.data.list[e.currentTarget.dataset.index].pihao,
-      num: _this.data.list[e.currentTarget.dataset.index].num,
-      remarks: _this.data.list[e.currentTarget.dataset.index].remarks,
-      type:_this.data.list[e.currentTarget.dataset.index].type,
-      fahuo:_this.data.list[e.currentTarget.dataset.index].fahuo,
-      xgShow:true,
-    })
+
   },
 
   inquire: function () {
@@ -486,11 +861,10 @@ Page({
     _this.setData({
       tjShow: true,
       id: '',
-      riqi: '',
+      riqi: getNowDate(), 
       customer: '',
       customer_id: '',
       sh_staff: '',
-      express: '',
       pick: '',
       wuliu_order: '',
       warehouse: '',
@@ -506,6 +880,9 @@ Page({
       remarks:'',
       type:'',
       fahuo:'',
+      add_list:[],
+      sale_state:'',
+      sale_type:'',
     })
   },
 
@@ -532,17 +909,54 @@ Page({
       })
       return;
     }
-    if(_this.data.product_id == ''){
+    if(_this.data.add_list.length == 0){
       wx.showToast({
         title: '请选择产品！',
         icon: 'none'
       })
       return;
     }
+    for(var i=0; i<_this.data.add_list.length; i++){
+      if(_this.data.add_list[i].num == ''){
+        wx.showToast({
+          title: '产品列表中第'+ i * 1+1 +'行未填写数量！',
+          icon: 'none'
+        })
+        return;
+      }
+      if(_this.data.add_list[i].add_type == ''){
+        wx.showToast({
+          title: '产品列表中第'+ i * 1+1 +'行未填写发货类型！',
+          icon: 'none'
+        })
+        return;
+      }
+      if(_this.data.add_list[i].price == ''){
+        wx.showToast({
+          title: '产品列表中第'+ i * 1+1 +'行未填写销售单价！',
+          icon: 'none'
+        })
+        return;
+      }
+    }
+
+    var sql1 = "insert into sale(riqi,customer_id,sh_staff,pick,type,sale_type,product_id,price,num,xiaoji,remarks,sale_state,warehouse,express,wuliu_order,pihao,chuku_insert,chuku_state) values "
+      var sql2 = ""
+      for(var i=0; i< _this.data.add_list.length; i++){
+        if(sql2 == ""){
+          sql2 = "('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.sh_staff + "','" + _this.data.pick + "','" + _this.data.type + "','" + _this.data.add_list[i].sale_type + "','" +  _this.data.add_list[i].product_id + "','" + _this.data.add_list[i].price + "','" + _this.data.add_list[i].num + "','" + _this.data.add_list[i].xiaoji + "','" + _this.data.add_list[i].remarks + "','审核中','','','','','','')"
+        }else{
+          sql2 = sql2 + ",('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.sh_staff + "','" + _this.data.pick + "','" + _this.data.type + "','" + _this.data.add_list[i].sale_type + "','" +  _this.data.add_list[i].product_id + "','" + _this.data.add_list[i].price + "','" + _this.data.add_list[i].num + "','" + _this.data.add_list[i].xiaoji + "','" + _this.data.add_list[i].remarks + "','审核中','','','','','','')"
+        }
+      }
+      var sql = sql1 + sql2
+      console.log(sql)
+
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into sale(riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,remarks,warehouse,type,express,fahuo,price) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.sh_staff + "','" + _this.data.pick + "','" + _this.data.wuliu_order + "','" + _this.data.product_id + "','" + _this.data.pihao + "','" + _this.data.num + "','" + _this.data.xiaoji + "','" + _this.data.remarks + "','" + _this.data.warehouse + "','" + _this.data.type + "','" + _this.data.express + "','" + _this.data.fahuo  + "','" + _this.data.price + "')"
+          query: sql
+          // query: "insert into sale(riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,remarks,warehouse,type,express,fahuo,price) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.sh_staff + "','" + _this.data.pick + "','" + _this.data.wuliu_order + "','" + _this.data.product_id + "','" + _this.data.pihao + "','" + _this.data.num + "','" + _this.data.xiaoji + "','" + _this.data.remarks + "','" + _this.data.warehouse + "','" + _this.data.type + "','" + _this.data.express + "','" + _this.data.fahuo  + "','" + _this.data.price + "')"
         },
         success: res => {
           _this.setData({
@@ -551,7 +965,6 @@ Page({
             customer: '',
             customer_id: '',
             sh_staff: '',
-            express: '',
             pick: '',
             wuliu_order: '',
             warehouse: '',
@@ -567,9 +980,11 @@ Page({
             remarks:'',
             type:'',
             fahuo:'',
+            sale_state:'',
+            sale_type:'',
           })
           _this.qxShow()
-          var e = ['1900-01-01','2100-12-31','','','']
+          var e = ['1900-01-01','2100-12-31','','','','']
           _this.tableShow(e)
           wx.showToast({
             title: '添加成功！',
@@ -623,7 +1038,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update sale set riqi='" + _this.data.riqi + "',customer_id=" + _this.data.customer_id + ",sh_staff='" + _this.data.sh_staff + "',pick='" + _this.data.pick + "',wuliu_order='" + _this.data.wuliu_order + "',product_id=" + _this.data.product_id + ",pihao='" + _this.data.pihao + "',num=" + _this.data.num + ",xiaoji='" + _this.data.xiaoji + "',remarks='" + _this.data.remarks + "',warehouse='" + _this.data.warehouse + "',type='" + _this.data.type + "',express='" + _this.data.express + "',fahuo='" + _this.data.fahuo + "',price='" + _this.data.price + "' where id=" + _this.data.id 
+        query: "update sale set riqi='" + _this.data.riqi + "',customer_id=" + _this.data.customer_id + ",sh_staff='" + _this.data.sh_staff + "',pick='" + _this.data.pick + "',product_id=" + _this.data.product_id + "',num=" + _this.data.num + ",xiaoji='" + _this.data.xiaoji + "',remarks='" + _this.data.remarks + "',type='" + _this.data.type + "',fahuo='" + _this.data.fahuo + "',price='" + _this.data.price + "',sale_state='审核中' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -632,7 +1047,6 @@ Page({
           customer: '',
           customer_id: '',
           sh_staff: '',
-          express: '',
           pick: '',
           wuliu_order: '',
           warehouse: '',
@@ -648,9 +1062,11 @@ Page({
           remarks:'',
           type:'',
           fahuo:'',
+          sale_state:'',
+          sale_type:'',
         })
         _this.qxShow()
-        var e = ['1900-01-01','2100-12-31','','','']
+        var e = ['1900-01-01','2100-12-31','','','','']
          _this.tableShow(e)
 
         wx.showToast({
@@ -693,7 +1109,6 @@ Page({
             customer: '',
             customer_id: '',
             sh_staff: '',
-            express: '',
             pick: '',
             wuliu_order: '',
             warehouse: '',
@@ -709,9 +1124,11 @@ Page({
             remarks:'',
             type:'',
             fahuo:'',
+            sale_state:'',
+            sale_type:'',
           })
           _this.qxShow()
-          var e = ['1900-01-01','2100-12-31','','','']
+          var e = ['1900-01-01','2100-12-31','','','','']
           _this.tableShow(e)
           wx.showToast({
             title: '删除成功！',
@@ -738,6 +1155,9 @@ Page({
       start_date:"",
       stop_date:"",
       product_name:"",
+      customer:"",
+      sale_state:'',
+      sale_type:'',
     })
   },
 
@@ -759,7 +1179,7 @@ Page({
     if(stop_date == ''){
       stop_date = '2100-12-31'
     }
-    var e = [start_date,stop_date,_this.data.customer,_this.data.product_name,_this.data.pihao]
+    var e = [start_date,stop_date,_this.data.customer,_this.data.product_name,_this.data.sale_state,_this.data.sale_type]
     _this.tableShow(e)
     _this.qxShow()
   },
@@ -767,19 +1187,130 @@ Page({
   select4: function (e) {
     var _this = this
     if (e.type == "select") {
-      _this.setData({
-        xlShow4: false,
-        product_name: e.detail.product_name,
-        spec: e.detail.spec,
-        unit: e.detail.unit,
-        price:e.detail.price,
-        product_id: e.detail.id,
-      })
+      if(_this.data.xlShow4_type == "add"){
+        var add_list = _this.data.add_list
+        add_list.push({
+          sale_type:'',
+          product_name: e.detail.product_name,
+          spec: e.detail.spec,
+          unit: e.detail.unit,
+          product_id: e.detail.id,
+          attribute: e.detail.attribute,
+          price:e.detail.price,
+          num:'',
+          xiaoji:'',
+          remarks:'',
+        })
+        _this.setData({
+          xlShow4: false,
+          add_list:add_list
+        })
+      }else if(_this.data.xlShow4_type == "upd"){
+        _this.setData({
+          product_name: e.detail.product_name,
+          spec: e.detail.spec,
+          unit: e.detail.unit,
+          product_id: e.detail.id,
+          attribute: e.detail.attribute,
+          price:e.detail.attribute,
+          xlShow4: false,
+        })
+      }
     } else if (e.type == "close") {
       _this.setData({
         xlShow4: false,
       })
     }
+  },
+
+  clickView1:function(e){
+    var _this = this
+    var this_column = e.currentTarget.dataset.column
+    if(this_column == 'product_name' || this_column == 'spec' || this_column == 'unit' || this_column == 'attribute'){
+      return;
+    }
+    console.log(e.currentTarget.dataset.column)
+    console.log(e.currentTarget.dataset.value)
+    console.log(_this.data.list[e.currentTarget.dataset.index].id)
+    _this.setData({
+      id: e.currentTarget.dataset.index,
+      this_column:e.currentTarget.dataset.column,
+      this_value:e.currentTarget.dataset.value,
+      xgShow2:true,
+    })
+  },
+
+  clickView2:function(e){
+    var _this = this
+    var this_column = e.currentTarget.dataset.column
+    if(this_column != 'warehouse'){
+      return;
+    }
+    console.log(e.currentTarget.dataset.column)
+    console.log(e.currentTarget.dataset.value)
+    console.log(_this.data.list[e.currentTarget.dataset.index].id)
+    _this.setData({
+      id: e.currentTarget.dataset.index,
+      this_column:e.currentTarget.dataset.column,
+      this_value:e.currentTarget.dataset.value,
+      xgShow3:true,
+    })
+  },
+
+  qxShow2: function () {
+    var _this = this
+    _this.setData({
+      xgShow2: false,
+    })
+  },
+
+  qxShow3: function () {
+    var _this = this
+    _this.setData({
+      xgShow3: false,
+    })
+  },
+
+  upd2:function(){
+    var _this = this
+    var add_list = _this.data.add_list
+    add_list[_this.data.id][_this.data.this_column] = _this.data.this_value
+    add_list[_this.data.id].xiaoji = add_list[_this.data.id].price * add_list[_this.data.id].num
+    _this.setData({
+      add_list:add_list
+    })
+    _this.qxShow2()
+  },
+
+  upd3:function(){
+    var _this = this
+    var add_list = _this.data.add_list
+    add_list[_this.data.id][_this.data.this_column] = _this.data.this_value
+    _this.setData({
+      add_list:add_list
+    })
+    _this.qxShow3()
+  },
+
+  tab_del:function(e){
+    var _this = this
+    console.log(e.currentTarget.dataset.index)
+    wx.showModal({
+      title: '提示',
+      content: '确认删除此行数据？',
+      success (res) {
+        if (res.confirm) {
+          var add_list = _this.data.add_list
+          add_list.splice(e.currentTarget.dataset.index,1)
+          _this.setData({
+            add_list:add_list
+          })
+          console.log(add_list)
+        } else if (res.cancel) {
+
+        }
+      }
+    })
   },
 
   select5: function (e) {
@@ -801,10 +1332,31 @@ Page({
     var _this = this
     if (e.type == "select") {
       var shenhe = e.detail.name
+      var sql = ""
+      if(shenhe =='审核通过'){
+        for(var i=0; i<_this.data.add_list.length; i++){
+          if(_this.data.add_list[i].warehouse == ''){
+            wx.showToast({
+              title: '列表中第' + (i * 1 + 1) + '行未填写发出仓库！',
+              icon: 'none',
+              duration: 3000
+            })
+            return;
+          }
+        }
+        for(var i=0; i<_this.data.add_list.length; i++){
+          sql = sql + "update sale set sale_state='" + shenhe + "',warehouse='" + _this.data.add_list[i].warehouse + "' where id=" + _this.data.add_list[i].id + ";"
+        }
+      }else{
+        for(var i=0; i<_this.data.add_list.length; i++){
+          sql = sql + "update sale set sale_state='" + shenhe + "' where id=" + _this.data.add_list[i].id + ";"
+        }
+      }
+      console.log(sql)
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "update ruku set state='" + shenhe + "' where id=" + _this.data.id 
+          query: sql
         },
         success: res => {
           _this.setData({
@@ -813,7 +1365,6 @@ Page({
             customer: '',
             customer_id: '',
             sh_staff: '',
-            express: '',
             pick: '',
             wuliu_order: '',
             warehouse: '',
@@ -829,10 +1380,13 @@ Page({
             remarks:'',
             type:'',
             fahuo:'',
+            sale_state:'',
+            sale_type:'',
+            add_list:[],
             xlShow1: false,
           })
           _this.qxShow()
-          var e = ['1900-01-01','2100-12-31','','','']
+          var e = ['1900-01-01','2100-12-31','','','','']
            _this.tableShow(e)
   
           wx.showToast({
@@ -864,13 +1418,21 @@ Page({
   selCD: function () {
     var _this = this
     _this.setData({
+      xlShow4_type:"add",
+      xlShow4: true
+    })
+  },
+
+  selCD2: function () {
+    var _this = this
+    _this.setData({
+      xlShow4_type:"upd",
       xlShow4: true
     })
   },
 
   selKH: function () {
     var _this = this
-
     var sql = "select customer as name,id,customer from customerInfo where customer like '%" + _this.data.customer + "%' or pinyin like'%" + _this.data.customer + "%'"
     wx.cloud.callFunction({
       name: 'sqlServer_117',
@@ -899,14 +1461,69 @@ Page({
         console.log("请求失败！")
       }
     })
-
-    
   },
 
   selSH: function () {
     var _this = this
     _this.setData({
       xlShow1: true
+    })
+  },
+
+  getExcel : function(){
+    var _this = this;
+    wx.showLoading({
+      title: '打开Excel中',
+      mask : 'true'
+    })
+    var list = _this.data.list;
+    var title = _this.data.title
+    var cloudList = {
+      name : '销售',
+      items : [],
+      header : []
+    }
+
+    for(let i=0;i<title.length;i++){
+      cloudList.header.push({
+        item:title[i].text,
+        type:title[i].type,
+        width:parseInt(title[i].width.split("r")[0])/10,
+        columnName:title[i].columnName
+      })
+    }
+    cloudList.items = list
+    console.log(cloudList)
+
+    wx.cloud.callFunction({
+      name:'getExcel',
+      data:{
+        list : cloudList
+      },
+      success: function(res){
+        console.log("获取云储存id")
+        wx.cloud.downloadFile({
+          fileID : res.result.fileID,
+          success : res=> {
+            console.log("获取临时路径")
+            wx.hideLoading({
+              success: (res) => {},
+            })
+            console.log(res.tempFilePath)
+            wx.openDocument({
+              filePath: res.tempFilePath,
+              showMenu : 'true',
+              fileType : 'xlsx',
+              success : res=> {
+                console.log("打开Excel")
+              }
+            })
+          }
+        })
+      },
+      fail : res=> {
+        console.log(res)
+      }
     })
   },
 
@@ -959,3 +1576,36 @@ Page({
 
   }
 })
+
+function getNowDate() {
+  var date = new Date();
+  var sign1 = "-";
+  var sign2 = ":";
+  var year = date.getFullYear() // 年
+  var month = date.getMonth() + 1; // 月
+  var day  = date.getDate(); // 日
+  var hour = date.getHours(); // 时
+  var minutes = date.getMinutes(); // 分
+  var seconds = date.getSeconds() //秒
+  var weekArr = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
+  var week = weekArr[date.getDay()];
+  // 给一位数数据前面加 “0”
+  if (month >= 1 && month <= 9) {
+   month = "0" + month;
+  }
+  if (day >= 0 && day <= 9) {
+   day = "0" + day;
+  }
+  if (hour >= 0 && hour <= 9) {
+   hour = "0" + hour;
+  }
+  if (minutes >= 0 && minutes <= 9) {
+   minutes = "0" + minutes;
+  }
+  if (seconds >= 0 && seconds <= 9) {
+   seconds = "0" + seconds;
+  }
+  // var currentdate = year + sign1 + month + sign1 + day + " " + hour + sign2 + minutes + sign2 + seconds + " " + week;
+  var currentdate = year + sign1 + month + sign1 + day ;
+  return currentdate;
+ }

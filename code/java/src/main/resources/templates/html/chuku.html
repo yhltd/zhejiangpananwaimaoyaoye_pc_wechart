@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>销售</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/sweetalert.css">
+    <script type="text/javascript" src="../js/sweetalert-dev.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/chuku.js"></script>
+    <script type="text/javascript" src="../js/tableExport.js"></script>
+</head>
+<body class="pt-2">
+<div class="top-toolbar row">
+    <div class="col-md-3 mb-2">
+        <input id="ks" type="date" class="form-control">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="js" type="date" class="form-control">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="customer" type="text" class="form-control" placeholder="客户名称" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="product" type="text" class="form-control" placeholder="产品名称" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="pihao" type="text" class="form-control" placeholder="批号" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="saleType" type="text" class="form-control" placeholder="发货类型" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-search icon"></i>
+            查询
+        </button>
+    </div>
+</div>
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <button id="refresh-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            刷新
+        </button>
+        <button id="add-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            新增
+        </button>
+        <button id="update-btn" class="btn btn-primary">
+            <i class="bi bi-pencil-square icon"></i>
+            修改
+        </button>
+        <button id="delete-btn" class="btn btn-primary">
+            <i class="bi bi-trash icon"></i>
+            删除
+        </button>
+        <button id="shenhezhong-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            审核中
+        </button>
+        <button id="tongguo-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            审核通过
+        </button>
+        <button id="weitongguo-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            审核未通过
+        </button>
+        <button id="import-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-bar-up"></i>
+            导入Excel
+        </button>
+        <button id="export-btn" class="btn btn-primary" onClick ="$('#saleTable').tableExport({ type: 'excel', escape: 'false' })">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+            导出Excel
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：出库</a>
+    </div>
+</div>
+
+<div class="table-div border-top">
+    <table id="chukuTable"></table>
+</div>
+
+<div id="add-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-form" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-riqi">日期</label>
+                        <input id="add-riqi" name="riqi" type="date" class="form-control" autocomplete="off">
+                    </div>
+<!--                    <div class="form-group">-->
+<!--                        <input id="add-customerId" name="customerId" type="hidden">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="add-customer">客户</label>-->
+<!--                        <input id="add-customer" type="text" class="form-control" autocomplete="off"-->
+<!--                               readonly="readonly">-->
+<!--                        <div class="invalid-feedback">-->
+<!--                            请选择客户！-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="add-shStaff">收货人员</label>-->
+<!--                        <input id="add-shStaff" name="shStaff" type="text" class="form-control" autocomplete="off" data-required="1">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="add-pick">拿货方式</label>-->
+<!--                        <select id="add-pick" name="pick" class="form-control" autocomplete="off" data-required="1">-->
+
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="add-type">类型</label>-->
+<!--                        <select id="add-type" name="type" class="form-control" autocomplete="off" >-->
+<!--                            <option>销售</option>-->
+<!--                            <option>退货</option>-->
+<!--                        </select>-->
+<!--                        <div class="invalid-feedback">-->
+<!--                            请选择类型！-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="select-product-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    选择产品
+                </button>
+                <button id="add-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-form" class="needs-validation">
+                    <div class="form-group">
+                        <input id="id" name="id" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-riqi">日期</label>
+                        <input id="update-riqi" name="riqi" type="date" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <input id="update-customerId" name="customerId" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-customer">客户</label>
+                        <input id="update-customer" type="text" class="form-control" autocomplete="off"
+                               readonly="readonly">
+                        <div class="invalid-feedback">
+                            请选择客户！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-shStaff">收货人员</label>
+                        <input id="update-shStaff" name="shStaff" type="text" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-pick">拿货方式</label>
+                        <select id="update-pick" name="pick" class="form-control" autocomplete="off" data-required="1">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-saleType">发货类型</label>
+                        <select id="update-saleType" name="saleType" class="form-control" autocomplete="off" data-required="1">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input id="update-productId" name="productId" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-productName">产品名称</label>
+                        <input id="update-productName" type="text" class="form-control" autocomplete="off"
+                               readonly="readonly">
+                        <div class="invalid-feedback">
+                            请选择产品！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-spec">规格</label>
+                        <input id="update-spec" type="text" class="form-control" autocomplete="off"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-unit">单位</label>
+                        <input id="update-unit" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-price">销售单价</label>
+                        <input id="update-price" name="price" type="number" class="form-control" autocomplete="off"
+                               data-required="1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="update-num">数量</label>
+                        <input id="update-num" name="num" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-xiaoji">小计</label>
+                        <input id="update-xiaoji" name="xiaoji" type="number" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-remarks">备注</label>
+                        <input id="update-remarks" name="remarks" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-type">类型</label>
+                        <select id="update-type" name="type" class="form-control" autocomplete="off" >
+                            <option>销售</option>
+                            <option>退货</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            请选择类型！
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="update-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="update-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">提示</div>
+            </div>
+            <div id="delete-modal-body" class="modal-body">
+                确定删除吗？
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="delete-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="delete-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询客户窗体-->
+<div id="show-customer-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择客户</div>
+            </div>
+            <div class="modal-body">
+                <input id="showCustomerId" type="hidden"/>
+                <table id="show-table-customer"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="customer-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="customer-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询产品窗体-->
+<div id="show-product-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择产品</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-table-product"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="product-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="product-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询产品窗体-->
+<div id="show-product-modal-add" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择产品</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-table-product-add"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="product-submit-btn-add" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="product-close-btn-add" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    审核窗体-->
+<div id="state-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">销售审核</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-state-table"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="state-tongguo-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    审核通过
+                </button>
+                <button id="state-weitongguo-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    审核未通过
+                </button>
+                <button id="state-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

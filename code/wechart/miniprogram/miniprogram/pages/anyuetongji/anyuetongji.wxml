@@ -30,17 +30,29 @@
 <view class="bottom_view">
 	<button class="bt_bottom" bindtap="inquire" >刷新</button>
   <button class="bt_bottom" bindtap="entering" >查询</button>
+  <button class="bt_bottom" bindtap="getExcel" >导出</button>
 </view>
 <!------------------------->
 <!---------查询弹窗--------->
 <!------------------------->
-<van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 30%;" >
+<van-popup bind:click-overlay="qxShow" show="{{ cxShow }}" position="bottom" custom-style="height: 45%;" >
   <view class="lables1">年份</view>
     <picker class="pick" mode="date" value="{{date}}" fields="year" data-column_name="year" bindchange="choiceDate">
       <input bindinput="onInput" data-column="year" class="input_text_form" value="{{year}}" type="text" name="year" disabled="disabled"></input>
     </picker>
+    <view class="lables">客户名称</view>
+    <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
   <view class="bottom_view" style="height:10%">
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="sel1">查询</button>
   </view>
 </van-popup>
+
+<!--客户下拉-->
+<van-action-sheet
+  show="{{ xlShow5 }}"
+  actions="{{ listKeHu }}"
+  close-on-click-overlay
+  bind:close="select5"
+  bind:select="select5" 
+/>
