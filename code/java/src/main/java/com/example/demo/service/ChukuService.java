@@ -38,4 +38,19 @@ public interface ChukuService extends IService<Sale> {
      */
     Sale add(Sale sale);
 
+    /**
+     * 修改
+     */
+    boolean update(Sale sale);
+
+    /**
+     * 删除
+     */
+    boolean delete(List<Integer> idList);
+
+    /**
+     * 审核
+     */
+    boolean updateChukuState(String chukuState, int id);
+
 }

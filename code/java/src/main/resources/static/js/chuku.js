@@ -57,6 +57,11 @@ function getSelect() {
                     $("#update-saleType").append(item);
                     opt = opt + "<option value=\"" + res.data[i].saleType + "\">" + res.data[i].saleType + "</option>";
                 }
+                if (res.data[i].express != null && res.data[i].express != "") {
+                    item = "<option value=\"" + res.data[i].express + "\">" + res.data[i].express + "</option>"
+                    $("#update-express").append(item);
+                    opt = opt + "<option value=\"" + res.data[i].express + "\">" + res.data[i].express + "</option>";
+                }
             }
         }
     })
@@ -247,7 +252,7 @@ $(function () {
 
     //审核弹窗里点击审核通过按钮
     $("#state-tongguo-btn").click(function () {
-        saleSubmit_list = getStateRows("#show-state-table");
+        saleSubmit_list = state_list
         console.log(saleSubmit_list)
         if(saleSubmit_list.length == 0){
             swal("无审核内容！");
@@ -256,11 +261,10 @@ $(function () {
         $.each(saleSubmit_list, function (index, row) {
             $ajax({
                 type: 'post',
-                url: '/sale/updateState',
+                url: '/chuku/updateState',
                 data: {
                     id: row.id,
-                    warehouse: row.warehouse,
-                    saleState:'审核通过'
+                    chukuState:'审核通过'
                 },
             }, false, '', function (res) {})
         });
@@ -273,7 +277,7 @@ $(function () {
 
     //审核弹窗里点击审核未通过按钮
     $("#state-weitongguo-btn").click(function () {
-        saleSubmit_list = getStateRows("#show-state-table");
+        saleSubmit_list = state_list
         console.log(saleSubmit_list)
         if(saleSubmit_list.length == 0){
             swal("无审核内容！");
@@ -285,8 +289,7 @@ $(function () {
                 url: '/sale/updateState',
                 data: {
                     id: row.id,
-                    warehouse: row.warehouse,
-                    saleState:'审核未通过'
+                    chukuState:'审核未通过'
                 },
             }, false, '', function (res) {})
         });
@@ -311,8 +314,6 @@ $(function () {
         $('#update-spec').val(rows[0].data.spec);
         $('#update-unit').val(rows[0].data.unit);
         $('#update-price').val(rows[0].data.price);
-        $('#update-customerId').val(rows[0].data.customerId);
-        $('#update-customer').val(rows[0].data.customer);
 
         $("#update-express").val(rows[0].data.express);
         $("#update-pick").val(rows[0].data.pick);
@@ -356,6 +357,7 @@ $(function () {
             }
 
             let params = formToJson('#update-form');
+            console.log(params)
             var update_num = $('#update-num').val();
             if (update_num == "" || update_num == 0) {
                 alert("数量不能为空且不能为为0！");
@@ -753,16 +755,6 @@ function setStateTable(data) {
         locale: 'zh-CN',
         columns: [
             {
-                field: 'warehouse',
-                title: '仓库',
-                align: 'left',
-                sortable: true,
-                width: 150,
-                formatter: function (value, row, index) {
-                    return getCangKuXiaLa();
-                },
-            },
-            {
                 field: 'riqi',
                 title: '日期',
                 align: 'center',
@@ -795,8 +787,36 @@ function setStateTable(data) {
                 width: 100,
             },
             {
+                field: 'warehouse',
+                title: '仓库',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
+                field: 'express',
+                title: '快递公司',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
+                field: 'wuliuOrder',
+                title: '物流单号',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
                 field: 'saleType',
                 title: '发货类型',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
+                field: 'pihao',
+                title: '批号',
                 align: 'center',
                 sortable: true,
                 width: 100,
@@ -851,9 +871,10 @@ function setStateTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
-            }, {
-                field: 'saleState',
-                title: '审核状态',
+            },
+            {
+                field: 'chukuState',
+                title: '出库审核状态',
                 align: 'center',
                 sortable: true,
                 width: 100,
@@ -1111,7 +1132,7 @@ function state_select(index){
         if(rows[i].id == index){
             this_date = rows[i].riqi
             this_customer = rows[i].customerId
-            this_state = rows[i].saleState
+            this_state = rows[i].chukuState
             break;
         }
     }
@@ -1125,7 +1146,7 @@ function state_select(index){
     }
 
     for(let i=0;i<rows.length;i++){
-        if(rows[i].riqi == this_date && rows[i].customerId == this_customer && rows[i].saleState == this_state){
+        if(rows[i].riqi == this_date && rows[i].customerId == this_customer && rows[i].chukuState == this_state){
             this_list.push(rows[i])
         }
     }
@@ -1166,35 +1187,10 @@ function getRows(tableEl) {
     return result;
 }
 
-function getStateRows(tableEl) {
-    let result = [];
-    let tableData = $(tableEl).bootstrapTable('getData');
-    $(tableEl + ' tr').each(function (i, tr) {
-        let index = $(tr).data('index');
-        if (index != undefined) {
-            let warehouse = $(tr).children().eq(0).children().val();
-            result.push({
-                id: '',
-                warehouse: warehouse,
-            })
-        }
-    });
-    for(var i=0; i<state_list.length; i++){
-        result[i].id = state_list[i].id
-    }
-    return result;
-}
 
 function getXiaLa() {
     var select = "<select name=\"saleType\" class=\"form-control\" >";
     select = select + opt;
-    select = select + "<select/>";
-    return select;
-}
-
-function getCangKuXiaLa() {
-    var select = "<select name=\"warehouse\" class=\"form-control\" >";
-    select = select + cangku;
     select = select + "<select/>";
     return select;
 }

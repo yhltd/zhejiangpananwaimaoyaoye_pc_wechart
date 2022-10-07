@@ -65,4 +65,18 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
         return save(sale) ? sale : null;
     }
 
+    @Override
+    public boolean update(Sale sale) {
+        return updateById(sale);
+    }
+
+    @Override
+    public boolean delete(List<Integer> idList) {
+        return removeByIds(idList);
+    }
+
+    @Override
+    public boolean updateChukuState(String saleState, int id) {
+        return chukuMapper.updateChukuState(saleState, id);
+    }
 }

@@ -51,4 +51,7 @@ public interface ChukuMapper extends BaseMapper<Sale> {
     List<Sale> queryListByName(String ks, String js, String customer, String product, String pihao,String saleType, String name);
 
 
+    @Update("update sale set chuku_state=#{saleState} where id=#{id}")
+    boolean updateChukuState(String chukuState, int id);
+
 }
