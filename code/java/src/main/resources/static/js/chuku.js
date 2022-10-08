@@ -220,7 +220,7 @@ $(function () {
     $("#add-submit-btn").click(function () {
         let params = formToJson("#add-form");
 
-        if(productList.length == 0){
+        if (productList.length == 0) {
             swal("未选择产品！");
             return;
         }
@@ -230,14 +230,15 @@ $(function () {
                 type: 'post',
                 url: '/chuku/insert',
                 data: {
-                    riqi:$('#add-riqi').val(),
+                    riqi: $('#add-riqi').val(),
                     productId: row.data.id,
                     saleType: row.saleType,
                     price: row.price,
                     num: row.num,
                     remarks: row.remarks,
                 },
-            }, false, '', function (res) {})
+            }, false, '', function (res) {
+            })
         });
 
         swal("", "新增成功！", "success");
@@ -254,7 +255,7 @@ $(function () {
     $("#state-tongguo-btn").click(function () {
         saleSubmit_list = state_list
         console.log(saleSubmit_list)
-        if(saleSubmit_list.length == 0){
+        if (saleSubmit_list.length == 0) {
             swal("无审核内容！");
             return;
         }
@@ -264,9 +265,10 @@ $(function () {
                 url: '/chuku/updateState',
                 data: {
                     id: row.id,
-                    chukuState:'审核通过'
+                    chukuState: '审核通过'
                 },
-            }, false, '', function (res) {})
+            }, false, '', function (res) {
+            })
         });
 
         swal("", "审核成功！", "success");
@@ -277,21 +279,22 @@ $(function () {
 
     //审核弹窗里点击审核未通过按钮
     $("#state-weitongguo-btn").click(function () {
-        saleSubmit_list = state_list
-        console.log(saleSubmit_list)
-        if(saleSubmit_list.length == 0){
+        saleSubmit_list = state_list;
+        console.log(saleSubmit_list);
+        if (saleSubmit_list.length == 0) {
             swal("无审核内容！");
             return;
         }
         $.each(saleSubmit_list, function (index, row) {
             $ajax({
                 type: 'post',
-                url: '/sale/updateState',
+                url: '/chuku/updateState',
                 data: {
                     id: row.id,
-                    chukuState:'审核未通过'
+                    chukuState: '审核未通过'
                 },
-            }, false, '', function (res) {})
+            }, false, '', function (res) {
+            })
         });
 
         swal("", "审核成功！", "success");
@@ -364,7 +367,7 @@ $(function () {
             } else {
                 $ajax({
                     type: 'post',
-                    url: '/sale/update',
+                    url: '/chuku/update',
                     data: {
                         updateJson: JSON.stringify(params)
                     },
@@ -427,7 +430,7 @@ $(function () {
         productList = getRows("#show-table-product-add");
         if (productList.length == 0) {
             swal('请选择要保存的数据！');
-        }else{
+        } else {
             $('#show-product-modal-add').modal('hide');
         }
     });
@@ -562,9 +565,52 @@ $(function () {
                     })
                 }
             } else {
-                swal("请选择正确的Excel文件！")
+                swal("请选择正确的Excel文件！");
                 $('#file').val('');
             }
+        }
+    });
+
+    //按指定格式导出excel
+    $('#export-btn2').click(function () {
+        let list = getData("#chukuTable");
+        if (list.length == 0) {
+            swal('没有数据,无法导出！');
+        } else {
+            $ajax({
+                type: 'post',
+                url: '/chuku/export',
+                data: JSON.stringify({
+                    list: list
+                }),
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8'
+            }, false, '', function (res) {
+                if(res.code==200){
+                    downloadFileByBase64("浙江省磐安外贸药业有限公司发货清单.xlsx", res.data.split(',')[1])
+                }
+            })
+        }
+    })
+
+    //打印
+    //按指定格式导出excel
+    $('#print-btn').click(function () {
+        let list = getData("#chukuTable");
+        if (list.length == 0) {
+            swal('没有数据,无法打印！');
+        } else {
+            $ajax({
+                type: 'post',
+                url: '/chuku/print',
+                data: JSON.stringify({
+                    list: list
+                }),
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8'
+            }, false, '', function (res) {
+
+            })
         }
     })
 
@@ -722,7 +768,7 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
                 formatter: function (value, row, index) {
-                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='"+ row.id +"' style='text-decoration:underline;' onclick='javascript:state_select("+ row.id +")'>"+ value +"</span></div>";
+                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='" + row.id + "' style='text-decoration:underline;' onclick='javascript:state_select(" + row.id + ")'>" + value + "</span></div>";
                 }
             },
         ],
@@ -1120,7 +1166,7 @@ function setProductTable_Add(data) {
     })
 }
 
-function state_select(index){
+function state_select(index) {
     state_list = []
     var this_list = []
     var this_date = ""
@@ -1128,8 +1174,8 @@ function state_select(index){
     var this_state = ""
     let rows = sale_list
     console.log(rows)
-    for(let i=0;i<rows.length;i++){
-        if(rows[i].id == index){
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].id == index) {
             this_date = rows[i].riqi
             this_customer = rows[i].customerId
             this_state = rows[i].chukuState
@@ -1140,13 +1186,13 @@ function state_select(index){
     console.log(this_customer)
     console.log(this_state)
 
-    if(this_state != '审核中'){
+    if (this_state != '审核中') {
         swal("此销售信息无需审核！")
         return;
     }
 
-    for(let i=0;i<rows.length;i++){
-        if(rows[i].riqi == this_date && rows[i].customerId == this_customer && rows[i].chukuState == this_state){
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].riqi == this_date && rows[i].customerId == this_customer && rows[i].chukuState == this_state) {
             this_list.push(rows[i])
         }
     }
@@ -1171,17 +1217,37 @@ function getRows(tableEl) {
                 result.push({
                     index: index,
                     data: tableData[index],
-                    saleType:saleType,
+                    saleType: saleType,
                     price: price,
                     num: num,
                     remarks: remarks,
-                    riqi:'',
-                    customerId:'',
-                    shStaff:'',
-                    pick:'',
-                    type:'',
+                    riqi: '',
+                    customerId: '',
+                    shStaff: '',
+                    pick: '',
+                    type: '',
                 })
             }
+        }
+    });
+    return result;
+}
+
+function getData(tableEl) {
+    let result = [];
+    let tableData = $(tableEl).bootstrapTable('getData');
+    $(tableEl + ' tr').each(function (i, tr) {
+        let index = $(tr).data('index');
+        if (index != undefined) {
+            result.push({
+                index: index,
+                productName: tableData[index].productName,
+                spec: tableData[index].spec,
+                num: tableData[index].num,
+                unit: tableData[index].unit,
+                price: tableData[index].price,
+                pihao: tableData[index].pihao,
+            })
         }
     });
     return result;
@@ -1193,4 +1259,85 @@ function getXiaLa() {
     select = select + opt;
     select = select + "<select/>";
     return select;
+}
+
+
+function dataURLtoBlob(dataurl, name) {//name:文件名
+    var mime = name.substring(name.lastIndexOf('.') + 1)//后缀名
+    var bstr = atob(dataurl), n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type: mime});
+}
+
+function downloadFile(url, name = '默认文件名') {
+    var a = document.createElement("a")//创建a标签触发点击下载
+    a.setAttribute("href", url)//附上
+    a.setAttribute("download", name);
+    a.setAttribute("target", "_blank");
+    let clickEvent = document.createEvent("MouseEvents");
+    clickEvent.initEvent("click", true, true);
+    a.dispatchEvent(clickEvent);
+}
+
+//主函数
+function downloadFileByBase64(name, base64) {
+    var myBlob = dataURLtoBlob(base64, name);
+    var myUrl = URL.createObjectURL(myBlob);
+    downloadFile(myUrl, name)
+}
+
+//获取后缀
+function getType(file) {
+    var filename = file;
+    var index1 = filename.lastIndexOf(".");
+    var index2 = filename.length;
+    var type = filename.substring(index1 + 1, index2);
+    return type;
+}
+
+//根据文件后缀 获取base64前缀不同
+function getBase64Type(type) {
+    switch (type) {
+        case 'data:text/plain;base64':
+            return 'txt';
+        case 'data:application/msword;base64':
+            return 'doc';
+        case 'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64':
+            return 'docx';
+        case 'data:application/vnd.ms-excel;base64':
+            return 'xls';
+        case 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64':
+            return 'xlsx';
+        case 'data:application/pdf;base64':
+            return 'pdf';
+        case 'data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64':
+            return 'pptx';
+        case 'data:application/vnd.ms-powerpoint;base64':
+            return 'ppt';
+        case 'data:image/png;base64':
+            return 'png';
+        case 'data:image/jpeg;base64':
+            return 'jpg';
+        case 'data:image/gif;base64':
+            return 'gif';
+        case 'data:image/svg+xml;base64':
+            return 'svg';
+        case 'data:image/x-icon;base64':
+            return 'ico';
+        case 'data:image/bmp;base64':
+            return 'bmp';
+    }
+}
+
+function base64ToBlob(code) {
+    code = code.replace(/[\n\r]/g, '');
+    const raw = window.atob(code);
+    const rawLength = raw.length;
+    const uInt8Array = new Uint8Array(rawLength);
+    for (let i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i)
+    }
+    return new Blob([uInt8Array], {type: 'application/pdf'})
 }

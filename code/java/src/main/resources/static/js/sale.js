@@ -220,7 +220,7 @@ $(function () {
         } else {
             $('#add-customer').next().css('display', 'none');
         }
-        
+
         if(productList.length == 0){
             swal("未选择产品！");
             return;

@@ -6,14 +6,29 @@ import com.example.demo.service.CustomerInfoService;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.SaleService;
 import com.example.demo.util.*;
+//import com.jacob.activeX.ActiveXComponent;
+//import com.jacob.com.ComThread;
+//import com.jacob.com.Dispatch;
+//import com.jacob.com.Variant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.FileInputStream;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -203,7 +218,7 @@ public class ChukuController {
         Sale sale = null;
         try {
             sale = DecodeUtil.decodeToJson(updateJson, Sale.class);
-            if (sale.getSaleState().equals("审核通过") && !userInfo.getPower().equals("管理员")) {
+            if (sale.getChukuState().equals("审核通过") && !userInfo.getPower().equals("管理员")) {
                 if (!userInfo.getStateUpd().equals("是")) {
                     return ResultInfo.error(401, "审核已通过，无修改权限");
                 }
@@ -275,4 +290,252 @@ public class ChukuController {
             return ResultInfo.error("错误!");
         }
     }
+
+    /**
+     * 按指定格式导出excel
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/export")
+    public ResultInfo export(@RequestBody HashMap map, HttpSession session, HttpServletResponse response) {
+        try {
+            GsonUtil gsonUtil = new GsonUtil(GsonUtil.toJson(map));
+            List<Sale> list = GsonUtil.toList(gsonUtil.get("list"), Sale.class);
+            //获得excel路径
+            //String path = System.getProperty("user.dir") + "/src/main/resources/static/excel/浙江省磐安外贸药业有限公司发货清单.xlsx";
+            String path = "C:\\zhejiang\\浙江省磐安外贸药业有限公司发货清单.xlsx";
+            File file = new File(path);
+            Workbook workbook = null;
+            try {
+                BufferedInputStream is = new BufferedInputStream(new FileInputStream(file));
+                workbook = WorkbookFactory.create(is);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //查找到指定的sheet
+            Sheet sheet = workbook.getSheet("发货清单");
+            //sheet.setForceFormulaRecalculation(true);
+            for (int i = 0; i < list.size(); i++) {
+                Row row = sheet.getRow(i + 7);
+                if (row == null) {
+                    row = sheet.createRow(i + 7);
+                }
+
+                //品名
+                Cell cell = row.getCell(2);
+                if (list.get(i).getProductName() != null && !list.get(i).getProductName().equals("")) {
+                    cell.setCellValue(list.get(i).getProductName());
+                } else {
+                    cell.setCellValue("-");
+                }
+                //规格
+                cell = row.getCell(3);
+                if (list.get(i).getSpec() != null && !list.get(i).getSpec().equals("")) {
+                    cell.setCellValue(list.get(i).getSpec());
+                } else {
+                    cell.setCellValue("-");
+                }
+                //数量
+                cell = row.getCell(8);
+                if (list.get(i).getNum() != null && !list.get(i).getNum().equals("")) {
+                    cell.setCellValue(list.get(i).getNum());
+                } else {
+                    cell.setCellValue("-");
+                }
+                //单位
+                cell = row.getCell(9);
+                if (list.get(i).getUnit() != null && !list.get(i).getUnit().equals("")) {
+                    cell.setCellValue(list.get(i).getUnit());
+                } else {
+                    cell.setCellValue("-");
+                }
+                //零售价
+                cell = row.getCell(10);
+                if (list.get(i).getPrice() != null && !list.get(i).getPrice().equals("")) {
+                    cell.setCellValue(list.get(i).getPrice());
+                } else {
+                    cell.setCellValue("-");
+                }
+                //批号
+                cell = row.getCell(14);
+                if (list.get(i).getPihao() != null && !list.get(i).getPihao().equals("")) {
+                    cell.setCellValue(list.get(i).getPihao());
+                } else {
+                    cell.setCellValue("-");
+                }
+            }
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try {
+                workbook.write(bos);
+                byte[] bytes = bos.toByteArray();
+                String base64ExlCode = Base64Utils.encodeToString(bytes);
+                String excel = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," + base64ExlCode;
+                return ResultInfo.success("获取成功", excel);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResultInfo.error("失败");
+            } finally {
+                try {
+                    if (bos != null) {
+                        bos.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return ResultInfo.error("失败");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("失败：{}", e.getMessage());
+            return ResultInfo.error("失败");
+        }
+    }
+
+//    /**
+//     * 打印
+//     *
+//     * @return ResultInfo
+//     */
+//    @RequestMapping("/print")
+//    public ResultInfo print(@RequestBody HashMap map, HttpSession session, HttpServletResponse response) {
+//        try {
+//            GsonUtil gsonUtil = new GsonUtil(GsonUtil.toJson(map));
+//            List<Sale> list = GsonUtil.toList(gsonUtil.get("list"), Sale.class);
+//            //获得excel路径
+//            //String path = System.getProperty("user.dir") + "/src/main/resources/static/excel/浙江省磐安外贸药业有限公司发货清单.xlsx";
+//            String path = "C:\\zhejiang\\浙江省磐安外贸药业有限公司发货清单.xlsx";
+//            File file = new File(path);
+//            Workbook workbook = null;
+//            try {
+//                BufferedInputStream is = new BufferedInputStream(new FileInputStream(file));
+//                workbook = WorkbookFactory.create(is);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            //查找到指定的sheet
+//            Sheet sheet = workbook.getSheet("发货清单");
+//            //sheet.setForceFormulaRecalculation(true);
+//            for (int i = 0; i < list.size(); i++) {
+//                Row row = sheet.getRow(i + 7);
+//                if (row == null) {
+//                    row = sheet.createRow(i + 7);
+//                }
+//
+//                //品名
+//                Cell cell = row.getCell(2);
+//                if (list.get(i).getProductName() != null && !list.get(i).getProductName().equals("")) {
+//                    cell.setCellValue(list.get(i).getProductName());
+//                } else {
+//                    cell.setCellValue("-");
+//                }
+//                //规格
+//                cell = row.getCell(3);
+//                if (list.get(i).getSpec() != null && !list.get(i).getSpec().equals("")) {
+//                    cell.setCellValue(list.get(i).getSpec());
+//                } else {
+//                    cell.setCellValue("-");
+//                }
+//                //数量
+//                cell = row.getCell(8);
+//                if (list.get(i).getNum() != null && !list.get(i).getNum().equals("")) {
+//                    cell.setCellValue(list.get(i).getNum());
+//                } else {
+//                    cell.setCellValue("-");
+//                }
+//                //单位
+//                cell = row.getCell(9);
+//                if (list.get(i).getUnit() != null && !list.get(i).getUnit().equals("")) {
+//                    cell.setCellValue(list.get(i).getUnit());
+//                } else {
+//                    cell.setCellValue("-");
+//                }
+//                //零售价
+//                cell = row.getCell(10);
+//                if (list.get(i).getPrice() != null && !list.get(i).getPrice().equals("")) {
+//                    cell.setCellValue(list.get(i).getPrice());
+//                } else {
+//                    cell.setCellValue("-");
+//                }
+//                //批号
+//                cell = row.getCell(14);
+//                if (list.get(i).getPihao() != null && !list.get(i).getPihao().equals("")) {
+//                    cell.setCellValue(list.get(i).getPihao());
+//                } else {
+//                    cell.setCellValue("-");
+//                }
+//            }
+//            Date date = new Date();
+//            SimpleDateFormat spd = new SimpleDateFormat("yyyyMMddhhmmss");
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            String filename = "C:\\zhejiang\\浙江省磐安外贸药业有限公司发货清单" + spd.format(date) + ".xlsx";
+//            try {
+//                workbook.write(bos);
+//                File outfile = new File(filename);
+//                FileOutputStream fileOutputStream = new FileOutputStream(outfile);
+//                fileOutputStream.write(bos.toByteArray());
+//                fileOutputStream.flush();
+//                fileOutputStream.close();
+//
+//                if (ChukuController.printOfficeFile(outfile)){
+//                    return ResultInfo.success("成功");
+//                }else{
+//                    return ResultInfo.error("失败");
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                return ResultInfo.error("失败");
+//            } finally {
+//                try {
+//                    if (bos != null) {
+//                        bos.close();
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("失败：{}", e.getMessage());
+//            return ResultInfo.error("失败");
+//        }
+//    }
+
+//    public static boolean printOfficeFile(File f) {
+//        ComThread.InitMTA();
+//        ActiveXComponent xl = new ActiveXComponent("Excel.Application");
+//        try {
+//            Dispatch.put(xl, "Visible", new Variant(false));
+//            Dispatch workbooks = xl.getProperty("Workbooks").toDispatch();
+//            // 打开文档
+//            Dispatch excel = Dispatch.call(workbooks, "Open", f.getAbsolutePath()).toDispatch();
+//            // 每张表都横向打印
+//            Dispatch sheets = Dispatch.get((Dispatch) excel, "Sheets").toDispatch();
+//            // 获得几个sheet
+//            int count = Dispatch.get(sheets, "Count").getInt();
+//            // System.out.println(count);
+//            for (int j = 1; j <= count; j++) {
+//                Dispatch sheet2 = Dispatch
+//                        .invoke(sheets, "Item", Dispatch.Get, new Object[] { new Integer(j) }, new int[1])
+//                        .toDispatch();
+//                Dispatch pageSetup = Dispatch.get(sheet2, "PageSetup").toDispatch();
+//                Dispatch.put(pageSetup, "Orientation", new Variant(2));
+//                Dispatch.call(sheet2, "PrintOut");
+//            }
+//            // 开始打印
+//            Dispatch.call(excel, "save");
+//            Dispatch.call(excel, "Close", new Variant(true));
+//
+//            xl.invoke("Quit", new Variant[] {});
+//            xl = null;
+//            return true;
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return false;
+//        }finally {
+//            // 始终释放资源
+//            ComThread.Release();
+//        }
+//    }
+//
 }
+
