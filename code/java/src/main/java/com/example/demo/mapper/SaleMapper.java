@@ -55,5 +55,11 @@ public interface SaleMapper extends BaseMapper<Sale> {
     @Update("update sale set sale_state=#{saleState},warehouse=#{warehouse} where id=#{id}")
     boolean updateSaleState(String saleState,String warehouse, int id);
 
+    @Select("select sum(convert(float,xiaoji)) as price from sale where sale_state = '审核通过' and chuku_state = '审核通过' and type = '销售' and riqi = #{riqi};")
+    List<Sale> getKanban(String riqi);
+
+    @Select("select sum(convert(float,xiaoji)) as price from sale as s left join customerInfo as c on s.customer_id = c.id where sale_state = '审核通过' and chuku_state = '审核通过' and type = '销售' and s.riqi >= #{riqi1} and s.riqi <= #{riqi2} and c.salesman = #{name}")
+    List<Sale> getKanbanByName(String riqi1,String riqi2,String name);
+
 
 }

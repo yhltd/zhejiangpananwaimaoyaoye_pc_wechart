@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>出库</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/sweetalert.css">
+    <script type="text/javascript" src="../js/sweetalert-dev.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/chukuPrint.js"></script>
+    <script type="text/javascript" src="../js/tableExport.js"></script>
+
+    <style>
+        td {
+            vertical-align: middle !important;
+            text-align: center;
+            /*border-color: #9fcdff !important;*/
+            font-size: 16px;
+        }
+
+        tr {
+            vertical-align: middle;
+            /*border-color: #9fcdff !important;*/
+        }
+
+        th {
+            font-size: 12px;
+            text-align: center;
+        }
+
+        table {
+            width: 95% !important;
+            margin: auto;
+            /*border-color: #9fcdff !important;*/
+        }
+
+        @page  {
+            size: auto;
+        }
+    </style>
+</head>
+<body class="pt-2">
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            选择数据
+        </button>
+        <button id="print-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            打印
+        </button>
+        <button id="clear-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            清空
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：出库打印</a>
+    </div>
+</div>
+
+<div class="table-div border-top" style="width: 200%" id="div">
+    <div class="row">
+        <div class="col-xs-16">
+            <div class="col-xs-16">
+                <table class="table table-bordered" style="margin-top: 2%">
+                    <thead>
+                    <tr>
+                        <th colspan="16" style="text-align: center;font-size: 25px">浙江省磐安外贸药业股份有限公司销货清单</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="3">编号</td>
+                        <td colspan="5"><input type="text" class="form-control" style="height: 35px;border:none"></td>
+                        <td colspan="3">日期</td>
+                        <td colspan="5"><input type="date" class="form-control" style="height: 35px;border:none"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">发货单位：</td>
+                        <td colspan="14">
+                            <select id="fahuo" class="form-control" style="height: 35px;border:none">
+                                <option value=""></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">发货地址：</td>
+                        <td colspan="4"><input id="fahuo_address" type="text" class="form-control" style="height: 35px;border:none"></td>
+                        <td colspan="2">发货联系人：</td>
+                        <td colspan="3"><input id="fahuo_name" type="text" class="form-control" style="height: 35px;border:none"></td>
+                        <td colspan="2">电话：</td>
+                        <td colspan="3"><input id="fahuo_phone" type="text" class="form-control" style="height: 35px;border:none"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">收货单位：</td>
+                        <td colspan="14">
+                            <select id="shouhuo" class="form-control" style="height: 35px;border:none">
+                                <option value=""></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">收货地址：</td>
+                        <td colspan="4"><input id="shouhuo_address" type="text" class="form-control" style="height: 35px;border:none"></td>
+                        <td colspan="2">收货联系人：</td>
+                        <td colspan="3"><input id="shouhuo_name" type="text" class="form-control" style="height: 35px;border:none"></td>
+                        <td colspan="2">电话：</td>
+                        <td colspan="3"><input id="shouhuo_phone" type="text" class="form-control" style="height: 35px;border:none"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th colspan="1">序号</th>
+                        <th colspan="1">品名</th>
+                        <th colspan="1">规格</th>
+                        <th colspan="1">生产产地</th>
+                        <th colspan="1">生产企业</th>
+                        <th colspan="1">数量</th>
+                        <th colspan="1">单位</th>
+                        <th colspan="1">数量</th>
+                        <th colspan="1">单位</th>
+                        <th colspan="1">零售价</th>
+                        <th colspan="1">折扣</th>
+                        <th colspan="1">进货价</th>
+                        <th colspan="1">进货总金额</th>
+                        <th colspan="1">生产批号</th>
+                        <th colspan="1">生产日期</th>
+                        <th colspan="1">有效期至</th>
+                    </tr>
+                    </thead>
+                    <tbody id="data"></tbody>
+                </table>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td colspan="4" style="text-align: left">发货人：潘静</td>
+                        <td colspan="4" style="text-align: left">复核人：陈建娣</td>
+                        <td colspan="4" style="text-align: left">质量状况：合格</td>
+                        <td colspan="4" style="text-align: left">收货人：</td>
+                    </tr>
+                    <tr>
+                        <td colspan="16" style="text-align: left">一式五联：白联销售、红联仓库、蓝联财务、黄联客户、绿联随货同行单（票）</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align: left">备注：1：货款请汇至如下账户：</td>
+                        <td colspan="4" style="text-align: left">户名：浙江省磐安外贸药业股份有限公司</td>
+                        <td colspan="8" style="text-align: left">2：如有质量问题，退货请在24小时之内与我们联系，谢谢合作！</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td colspan="12" style="text-align: left">开户行：中国工商银行磐安县支行</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td colspan="12" style="text-align: left">账户：1208080009045013604</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--    选择出库窗体-->
+<div id="chuku-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择出库数据</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-chuku-table"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="chuku-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="chuku-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

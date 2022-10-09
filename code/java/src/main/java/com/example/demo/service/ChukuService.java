@@ -53,4 +53,6 @@ public interface ChukuService extends IService<Sale> {
      */
     boolean updateChukuState(String chukuState, int id);
 
+    List<Sale> getListByIdRiqi(int id, String riqi);
+
 }

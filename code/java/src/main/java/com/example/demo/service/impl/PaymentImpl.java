@@ -28,6 +28,15 @@ public class PaymentImpl extends ServiceImpl<PaymentMapper, Payment> implements 
     }
 
     @Override
+    public List<Payment> getKanban(String riqi,String riqi1, String riqi2,String name,String power) {
+        if (power.equals("管理员")) {
+            return paymentMapper.getKanban(riqi);
+        } else {
+            return paymentMapper.getKanbanByName(riqi1,riqi2,name);
+        }
+    }
+
+    @Override
     public List<Payment> queryList(String customer, String name, String power) {
         if (power.equals("管理员")) {
             return paymentMapper.queryList(customer);

@@ -73,6 +73,24 @@ public class PaymentController {
     }
 
     /**
+     * 查询看板
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getKanban")
+    public ResultInfo getKanban(String riqi,String riqi1,String riqi2,HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        try {
+            List<Payment> getList = paymentService.getKanban(riqi,riqi1,riqi2,userInfo.getName(), userInfo.getPower());
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
      * 添加
      */
     @RequestMapping("/add")

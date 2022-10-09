@@ -18,6 +18,11 @@ public interface PaymentService extends IService<Payment> {
     List<Payment> getList(String name, String power);
 
     /**
+     * 查询所有
+     */
+    List<Payment> getKanban(String riqi, String riqi1,String riqi2,String name,String power);
+
+    /**
      * 根据条件查询
      */
     List<Payment> queryList(String customer, String name, String power);

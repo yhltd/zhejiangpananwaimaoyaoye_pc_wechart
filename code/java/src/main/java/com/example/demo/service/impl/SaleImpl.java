@@ -29,6 +29,15 @@ public class SaleImpl extends ServiceImpl<SaleMapper, Sale> implements SaleServi
     }
 
     @Override
+    public List<Sale> getKanban(String riqi,String riqi1, String riqi2,String name,String power) {
+        if (power.equals("管理员")) {
+            return saleMapper.getKanban(riqi);
+        } else {
+            return saleMapper.getKanbanByName(riqi1,riqi2,name);
+        }
+    }
+
+    @Override
     public List<Sale> getList_shenhezhong(String name, String power) {
         if (power.equals("管理员")) {
             return saleMapper.getList_shenhezhong();

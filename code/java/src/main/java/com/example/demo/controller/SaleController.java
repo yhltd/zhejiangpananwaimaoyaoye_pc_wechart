@@ -56,6 +56,24 @@ public class SaleController {
         }
     }
 
+    /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getKanban")
+    public ResultInfo getKanban(String riqi,String riqi1,String riqi2,HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        try {
+            List<Sale> getList = saleService.getKanban(riqi,riqi1,riqi2,userInfo.getName(), userInfo.getPower());
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
 
     /**
      * 查询所有审核中

@@ -153,7 +153,7 @@ public class UserInfoController {
             userInfo2 = userInfoService.add(userInfo2);
             List<UserInfo> getListid = userInfoService.getListid();
 
-            for(int i=0;i<16;i++){
+            for(int i=0;i<18;i++){
                 UserPower userPower=new UserPower();
                 userPower.setUserId(getListid.get(0).getId());
                 userPower.setZeng("");
@@ -192,6 +192,8 @@ public class UserInfoController {
                     userPower.setViewName("审核管理");
                 }else if(i==15){
                     userPower.setViewName("出库");
+                }else if(i==16){
+                    userPower.setViewName("打印设置");
                 }
                 userPowerService.add(userPower);
             }

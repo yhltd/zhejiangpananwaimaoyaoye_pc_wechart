@@ -38,6 +38,11 @@ public interface SaleService extends IService<Sale> {
     List<Sale> queryList(String ks, String js, String customer, String product, String pihao , String saleType, String name, String power);
 
     /**
+     * 查询所有
+     */
+    List<Sale> getKanban(String riqi, String riqi1, String riqi2, String name, String power);
+
+    /**
      * 新增
      */
     Sale add(Sale sale);

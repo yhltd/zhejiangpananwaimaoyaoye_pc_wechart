@@ -54,9 +54,9 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
     @Override
     public List<Sale> queryList(String ks, String js, String customer, String product, String pihao, String saleType, String name, String power) {
         if (power.equals("管理员")) {
-            return chukuMapper.queryList(ks, js, customer, product, pihao,saleType);
+            return chukuMapper.queryList(ks, js, customer, product, pihao, saleType);
         } else {
-            return chukuMapper.queryListByName(ks, js, customer, product, pihao,saleType, name);
+            return chukuMapper.queryListByName(ks, js, customer, product, pihao, saleType, name);
         }
     }
 
@@ -78,5 +78,10 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
     @Override
     public boolean updateChukuState(String saleState, int id) {
         return chukuMapper.updateChukuState(saleState, id);
+    }
+
+    @Override
+    public List<Sale> getListByIdRiqi(int id, String riqi) {
+        return chukuMapper.getListByIdRiqi(id, riqi);
     }
 }

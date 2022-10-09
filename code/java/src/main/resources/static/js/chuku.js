@@ -574,8 +574,8 @@ $(function () {
     //按指定格式导出excel
     $('#export-btn2').click(function () {
         let list = getData("#chukuTable");
-        if (list.length == 0) {
-            swal('没有数据,无法导出！');
+        if (list.length != 1) {
+            swal('请选择一条数据！');
         } else {
             $ajax({
                 type: 'post',
@@ -586,7 +586,7 @@ $(function () {
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8'
             }, false, '', function (res) {
-                if(res.code==200){
+                if (res.code == 200) {
                     downloadFileByBase64("浙江省磐安外贸药业有限公司发货清单.xlsx", res.data.split(',')[1])
                 }
             })
@@ -643,6 +643,13 @@ function setTable(data) {
                 formatter: function (value, row, index) {
                     return index + 1;
                 }
+            }, {
+                field: 'customerId',
+                title: '客户id',
+                align: 'center',
+                sortable: true,
+                width: 100,
+                visible: false,
             }, {
                 field: 'riqi',
                 title: '日期',
@@ -1239,15 +1246,20 @@ function getData(tableEl) {
     $(tableEl + ' tr').each(function (i, tr) {
         let index = $(tr).data('index');
         if (index != undefined) {
-            result.push({
-                index: index,
-                productName: tableData[index].productName,
-                spec: tableData[index].spec,
-                num: tableData[index].num,
-                unit: tableData[index].unit,
-                price: tableData[index].price,
-                pihao: tableData[index].pihao,
-            })
+            if ($(tr).hasClass('selected')) {
+                result.push({
+                    index: index,
+                    productName: tableData[index].productName,
+                    spec: tableData[index].spec,
+                    num: tableData[index].num,
+                    unit: tableData[index].unit,
+                    price: tableData[index].price,
+                    pihao: tableData[index].pihao,
+                    riqi: tableData[index].riqi,
+                    customerId: tableData[index].customerId,
+
+                })
+            }
         }
     });
     return result;
