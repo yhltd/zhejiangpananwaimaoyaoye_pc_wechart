@@ -1692,3 +1692,5 @@ function getNowDate() {
   var currentdate = year + sign1 + month + sign1 + day ;
   return currentdate;
  }
+
+ 

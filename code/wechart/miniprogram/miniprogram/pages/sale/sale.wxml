@@ -1,4 +1,13 @@
-<scroll-view class="sv_list" scroll-x="true" scroll-y="true" style="height:88%">
+
+<view class='item' >
+    <view class="title">
+      小计合计:</view>
+    <view class="detail2">
+      <text>{{xiaojiheji}}</text>
+    </view>
+  </view>
+  <view class="line"></view>
+<scroll-view class="sv_list" scroll-x="true" scroll-y="true" style="height:85%">
   <view class="table">
     <view class='table_header'>
       <block class="title" wx:for="{{title}}">
@@ -23,6 +32,7 @@
     </block>
   </view>
 </scroll-view>
+
 
 <!------------------------->
 <!---------下方按钮--------->

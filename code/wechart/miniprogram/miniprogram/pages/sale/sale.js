@@ -158,6 +158,27 @@ Page({
       //   type: "text",
       //   isupd: true
       // }
+      {
+        text: "客户类别",
+        width: "200rpx",
+        columnName: "leibie",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "客户号",
+        width: "200rpx",
+        columnName: "customer_num",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "区域",
+        width: "200rpx",
+        columnName: "area",
+        type: "text",
+        isupd: true
+      },
     ],
 
 
@@ -694,13 +715,21 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select sa.id,sa.riqi,customer_id,sh_staff,pick,product_id,sa.num,xiaoji,sa.remarks,type,customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.sale_state,sa.sale_type from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,customer,salesman,pinyin,fahuo,s.price,sale_state,sale_type from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and sale_state like '%" + e[4] + "%' and sale_type like '%" + e[5] + "%' order by sa.riqi desc,customer,sale_type"
+        query: "select sa.id,sa.riqi,customer_id,sh_staff,pick,product_id,sa.num,xiaoji,sa.remarks,type,customer,salesman,product_name,spec,unit,sa.price,p.pinyin,sa.sale_state,sa.sale_type,sa.leibie,sa.customer_num,sa.area from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,customer,salesman,pinyin,fahuo,s.price,sale_state,sale_type,c.leibie,c.customer_num,c.area from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and sale_state like '%" + e[4] + "%' and sale_type like '%" + e[5] + "%' order by sa.riqi desc,customer,sale_type"
       },
       success: res => {
-        var list = res.result.recordset
+        var xiaojiheji = 0;
+        var list = res.result.recordset 
+        for(var i=0;i<list.length;i++){
+          console.log(list[i])
+          console.log(list[i].xiaoji)
+          xiaojiheji = xiaojiheji + list[i].xiaoji * 1
+        }
+        
         console.log(list)
         _this.setData({
-          list: list
+          list: list,
+          xiaojiheji:xiaojiheji
         })
         console.log(list)
       },

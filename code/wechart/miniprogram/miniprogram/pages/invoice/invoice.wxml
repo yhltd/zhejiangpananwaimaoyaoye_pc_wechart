@@ -86,9 +86,10 @@
     <view class="lables">备注</view>
     <input bindinput="onInput" data-column="remarks" class="input_text_form" value="{{remarks}}" type="text" name="remarks"></input>
   <view class="bottom_view" style="height:10%">
-    <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>
-    <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="del1">删除</button>
-    <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="upd1">修改</button>
+    <button class="bt_bottom" style="width: 85px;" hover-class="bt_bottom_hover" bindtap="selSH">审核</button>
+    <button class="bt_bottom" style="width: 85px;" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>
+    <button class="bt_bottom" style="width: 85px;" hover-class="bt_bottom_hover" bindtap="del1">删除</button>
+    <button class="bt_bottom" style="width: 85px;" hover-class="bt_bottom_hover" bindtap="upd1">修改</button>
   </view>
 </van-popup>
 <!------------------------->
@@ -118,4 +119,13 @@
   close-on-click-overlay
   bind:close="select5"
   bind:select="select5" 
+/>
+
+<!--审核下拉-->
+<van-action-sheet
+  show="{{ xlShow1 }}"
+  actions="{{ listShenHe }}"
+  close-on-click-overlay
+  bind:close="select1"
+  bind:select="select1" 
 />

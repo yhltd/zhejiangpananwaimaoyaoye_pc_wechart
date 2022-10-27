@@ -422,6 +422,7 @@ Page({
       })
       return;
     }
+
     _this.setData({
       tjShow: true,
       id:'',

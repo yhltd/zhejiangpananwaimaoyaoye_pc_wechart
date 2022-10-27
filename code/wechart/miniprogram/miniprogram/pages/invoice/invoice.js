@@ -19,6 +19,18 @@ Page({
         columnName: "riqi",
         type: "text",
         isupd: true
+      },{
+        text: "发票号",
+        width: "300rpx",
+        columnName: "thebillingnumber",
+        type: "text",
+        isupd: true
+      },{
+        text: "税号",
+        width: "200rpx",
+        columnName: "shuihao",
+        type: "text",
+        isupd: true
       },
       {
         text: "客户名称",
@@ -26,36 +38,67 @@ Page({
         columnName: "customer",
         type: "text",
         isupd: true
-      },
-      {
+      },{
+        text: "客户号",
+        width: "200rpx",
+        columnName: "customer_num",
+        type: "text",
+        isupd: true
+      },{
+        text: "区域",
+        width: "200rpx",
+        columnName: "area",
+        type: "text",
+        isupd: true
+      },{
+        text: "客户类别",
+        width: "200rpx",
+        columnName: "leibie",
+        type: "text",
+        isupd: true
+      },{
         text: "开票单位",
         width: "600rpx",
         columnName: "unit",
         type: "text",
         isupd: true
-      },
-      {
-        text: "发票号",
-        width: "300rpx",
-        columnName: "thebillingnumber",
+      },{
+        text: "单位地址",
+        width: "200rpx",
+        columnName: "address",
         type: "text",
         isupd: true
-      },
-      {
+      },{
+        text: "电话号码",
+        width: "200rpx",
+        columnName: "phone",
+        type: "text",
+        isupd: true
+      },{
+        text: "开户银行",
+        width: "200rpx",
+        columnName: "yinhang",
+        type: "text",
+        isupd: true
+      },{
+        text: "银行账户",
+        width: "200rpx",
+        columnName: "zhanghu",
+        type: "text",
+        isupd: true
+      },{
         text: "品名",
         width: "300rpx",
         columnName: "nameofarticle",
         type: "text",
         isupd: true
-      },
-      {
+      },{
         text: "单价",
         width: "200rpx",
         columnName: "unitprice",
         type: "text",
         isupd: true
-      },
-      {
+      },{
         text: "开票金额",
         width: "200rpx",
         columnName: "jine",
@@ -67,12 +110,45 @@ Page({
         columnName: "remarks",
         type: "text",
         isupd: true
-      }
+      },
+      {
+        text: "审核状态",
+        width: "200rpx",
+        columnName: "state",
+        type: "text",
+        isupd: true
+      },
+     
+      // {
+      //   text: "拼音",
+      //   width: "200rpx",
+      //   columnName: "pinyin",
+      //   type: "text",
+      //   isupd: true
+      // },{
+      //   text: "销售姓名",
+      //   width: "200rpx",
+      //   columnName: "salesman",
+      //   type: "text",
+      //   isupd: true
+      // }
     ],
     customer_list:[],
     customer_picker_list:[],
     customer_id:'',
     pay_list:[],
+    
+
+    add_list:[],
+    warehouse_list:[],
+    id:'',
+    warehouse: '', 
+    pihao: '',
+    listChanPin:[],
+    listShenHe:[
+      {name:'审核通过'},
+      {name:'审核未通过'}
+    ],
   },
 
   /**
@@ -126,9 +202,9 @@ Page({
 
   tableShow: function (e) {
     var _this = this
-    var sql = "select kaipiao.id,kaipiao.customer_id,kehu.customer,kaipiao.riqi,kaipiao.unit,kaipiao.jine,kaipiao.remarks,kehu.salesman from invoice as kaipiao left join (select id,customer,salesman from customerInfo)as kehu on kaipiao.customer_id = kehu.id where convert(date,kaipiao.riqi) >= convert(date,'"+ e[0] +"') and convert(date,kaipiao.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' order by kaipiao.riqi desc"
+    var sql = "select kaipiao.id,kaipiao.customer_id,kehu.customer,kaipiao.riqi,kaipiao.unit,kaipiao.jine,kaipiao.remarks,kehu.salesman,kehu.leibie,kehu.customer_num,kehu.area,kaipiao.nameofarticle,kaipiao.unitprice,kaipiao.thebillingnumber,kaipiao.shuihao,kaipiao.address,kaipiao.phone,kaipiao.yinhang,kaipiao.zhanghu,kaipiao.state from invoice as kaipiao left join (select id,customer,salesman,leibie,customer_num,area from customerInfo)as kehu on kaipiao.customer_id = kehu.id where convert(date,kaipiao.riqi) >= convert(date,'"+ e[0] +"') and convert(date,kaipiao.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' order by kaipiao.riqi desc"
     if (_this.data.userInfo.power != '管理员'){
-      sql = "select kaipiao.id,kaipiao.customer_id,kehu.customer,kaipiao.riqi,kaipiao.unit,kaipiao.jine,kaipiao.remarks,kehu.salesman from invoice as kaipiao left join (select id,customer,salesman from customerInfo)as kehu on kaipiao.customer_id = kehu.id where convert(date,kaipiao.riqi) >= convert(date,'"+ e[0] +"') and convert(date,kaipiao.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' and kehu.salesman ='" + _this.data.userInfo.name + "' order by kaipiao.riqi desc"
+      sql = "select kaipiao.id,kaipiao.customer_id,kehu.customer,kaipiao.riqi,kaipiao.unit,kaipiao.jine,kaipiao.remarks,kehu.salesman,kehu.leibie,kehu.customer_num,kehu.area,kaipiao.nameofarticle,kaipiao.unitprice,kaipiao.thebillingnumber,kaipiao.shuihao,kaipiao.address,kaipiao.phone,kaipiao.yinhang,kaipiao.zhanghu,kaipiao.state from invoice as kaipiao left join (select id,customer,salesman,leibie,customer_num,area from customerInfo)as kehu on kaipiao.customer_id = kehu.id where convert(date,kaipiao.riqi) >= convert(date,'"+ e[0] +"') and convert(date,kaipiao.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' and kehu.salesman ='" + _this.data.userInfo.name + "' order by kaipiao.riqi desc"
     }
     wx.cloud.callFunction({
       name: 'sqlServer_117',
@@ -214,7 +290,7 @@ Page({
       tjShow: true,
       id: '',
       customer_id: '',
-      riqi: '', 
+      riqi: getNowDate(), 
       customer: '',
       unit: '',
       jine: '',
@@ -455,7 +531,20 @@ Page({
       }
     })
   },
-
+  selSH: function () {
+    var _this = this  
+    if(_this.data.userInfo.power != '管理员'){
+      wx.showToast({
+        title: '此账号无权限审核数据！',
+        icon: 'none',
+        duration: 3000
+      })
+      return;
+    }
+    _this.setData({
+      xlShow1: true
+    })
+  },
   select5: function (e) {
     var _this = this
     if (e.type == "select") {
@@ -467,6 +556,59 @@ Page({
     } else if (e.type == "close") {
       _this.setData({
         xlShow5: false,
+      })
+    }
+  },
+
+  select1: function (e) {
+    var _this = this
+    if (e.type == "select") {
+      var shenhe = e.detail.name
+      wx.cloud.callFunction({
+        name: 'sqlServer_117',
+        data: {
+          query: "update invoice set state='" + shenhe + "' where id=" + _this.data.id 
+        },
+        success: res => {
+          _this.setData({
+            id: '',
+            customer_id: '',
+            riqi: '', 
+            customer: '',
+            unit: '',
+            jine: '',
+            remarks: '',
+            thebillingnumber:'',
+            nameofarticle:'',
+            unitprice:'',
+            xlShow1: false,
+          })
+          _this.qxShow()
+          var e = ['1900-01-01','2100-12-31','']
+           _this.tableShow(e)
+  
+          wx.showToast({
+            title: '修改成功！',
+            icon: 'none'
+          })
+        },
+        err: res => {
+          console.log("错误!")
+        },
+        fail: res => {
+          wx.showToast({
+            title: '请求失败！',
+            icon: 'none'
+          })
+          console.log("请求失败！")
+        }
+      })
+      _this.setData({
+        xlShow1: false,
+      })
+    } else if (e.type == "close") {
+      _this.setData({
+        xlShow1: false,
       })
     }
   },
@@ -579,3 +721,35 @@ Page({
 
   }
 })
+function getNowDate() {
+  var date = new Date();
+  var sign1 = "-";
+  var sign2 = ":";
+  var year = date.getFullYear() // 年
+  var month = date.getMonth() + 1; // 月
+  var day  = date.getDate(); // 日
+  var hour = date.getHours(); // 时
+  var minutes = date.getMinutes(); // 分
+  var seconds = date.getSeconds() //秒
+  var weekArr = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
+  var week = weekArr[date.getDay()];
+  // 给一位数数据前面加 “0”
+  if (month >= 1 && month <= 9) {
+   month = "0" + month;
+  }
+  if (day >= 0 && day <= 9) {
+   day = "0" + day;
+  }
+  if (hour >= 0 && hour <= 9) {
+   hour = "0" + hour;
+  }
+  if (minutes >= 0 && minutes <= 9) {
+   minutes = "0" + minutes;
+  }
+  if (seconds >= 0 && seconds <= 9) {
+   seconds = "0" + seconds;
+  }
+  // var currentdate = year + sign1 + month + sign1 + day + " " + hour + sign2 + minutes + sign2 + seconds + " " + week;
+  var currentdate = year + sign1 + month + sign1 + day ;
+  return currentdate;
+ }

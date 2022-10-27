@@ -64,12 +64,47 @@ Page({
         columnName: "remarks",
         type: "text",
         isupd: true
-      }
+      },{
+        text: "客户类别",
+        width: "200rpx",
+        columnName: "leibie",
+        type: "text",
+        isupd: true
+      },{
+        text: "客户号",
+        width: "200rpx",
+        columnName: "customer_num",
+        type: "text",
+        isupd: true
+      },{
+        text: "区域",
+        width: "200rpx",
+        columnName: "area",
+        type: "text",
+        isupd: true
+      },{
+        text: "审核状态",
+        width: "200rpx",
+        columnName: "state",
+        type: "text",
+        isupd: true
+      },
     ],
     customer_list:[],
     customer_picker_list:[],
     customer_id:'',
     pay_list:[],
+
+    add_list:[],
+    warehouse_list:[],
+    id:'',
+    warehouse: '', 
+    pihao: '',
+    listChanPin:[],
+    listShenHe:[
+      {name:'审核通过'},
+      {name:'审核未通过'}
+    ],
   },
 
   /**
@@ -154,9 +189,9 @@ Page({
 
   tableShow: function (e) {
     var _this = this
-    var sql = "select fukuan.id,fukuan.customer_id,kehu.customer,fukuan.pay,fukuan.quota,fukuan.r_jine,fukuan.f_jine,fukuan.discount,fukuan.remarks,fukuan.riqi,kehu.salesman from payment as fukuan left join (select id,customer,salesman from customerInfo)as kehu on fukuan.customer_id = kehu.id where convert(date,fukuan.riqi) >= convert(date,'"+ e[0] +"') and convert(date,fukuan.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' order by fukuan.riqi desc"
+    var sql = "select fukuan.id,fukuan.customer_id,kehu.customer,fukuan.pay,fukuan.quota,fukuan.r_jine,fukuan.f_jine,fukuan.discount,fukuan.remarks,fukuan.riqi,fukuan.state,kehu.salesman,kehu.leibie,kehu.customer_num,kehu.area from payment as fukuan left join (select id,customer,salesman,leibie,customer_num,area from customerInfo)as kehu on fukuan.customer_id = kehu.id where convert(date,fukuan.riqi) >= convert(date,'"+ e[0] +"') and convert(date,fukuan.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' order by fukuan.riqi desc"
     if(_this.data.userInfo.power != '管理员'){
-      sql = "select fukuan.id,fukuan.customer_id,kehu.customer,fukuan.pay,fukuan.quota,fukuan.r_jine,fukuan.f_jine,fukuan.discount,fukuan.remarks,fukuan.riqi,kehu.salesman from payment as fukuan left join (select id,customer,salesman from customerInfo)as kehu on fukuan.customer_id = kehu.id where convert(date,fukuan.riqi) >= convert(date,'"+ e[0] +"') and convert(date,fukuan.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' and kehu.salesman ='" + _this.data.userInfo.name + "' order by fukuan.riqi desc"
+      sql = "select fukuan.id,fukuan.customer_id,kehu.customer,fukuan.pay,fukuan.quota,fukuan.r_jine,fukuan.f_jine,fukuan.discount,fukuan.remarks,fukuan.riqi,fukuan.state,kehu.salesman,kehu.leibie,kehu.customer_num,kehu.area from payment as fukuan left join (select id,customer,salesman,leibie,customer_num,area from customerInfo)as kehu on fukuan.customer_id = kehu.id where convert(date,fukuan.riqi) >= convert(date,'"+ e[0] +"') and convert(date,fukuan.riqi) <= convert(date,'"+ e[1] +"') and kehu.customer like '%"+ e[2] +"%' and kehu.salesman ='" + _this.data.userInfo.name + "' order by fukuan.riqi desc"
     }
     wx.cloud.callFunction({
       name: 'sqlServer_117',
@@ -248,7 +283,7 @@ Page({
     _this.setData({
       tjShow: true,
       id: '',
-      riqi: '', 
+      riqi: getNowDate(),
       customer: '',
       customer_id: '',
       f_jine: '',
@@ -269,12 +304,12 @@ Page({
         icon: 'none'
       })
     }
-    if(_this.data.customer_id == '' || _this.data.customer_id == undefined){
-      wx.showToast({
-        title: '未填写客户名称！',
-        icon: 'none'
-      })
-    }
+    // if(_this.data.customer_id == '' || _this.data.customer_id == undefined){
+    //   wx.showToast({
+    //     title: '未填写客户名称！',
+    //     icon: 'none'
+    //   })
+    // }
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
@@ -460,6 +495,23 @@ Page({
     console.log(e.detail.value)
   },
 
+  goto_file: function () {
+    var _this = this
+    if(_this.data.userPower.gai != '可操作' && _this.data.userInfo.power != '管理员'){
+      wx.showToast({
+        title: '无权限！',
+        icon: 'none',
+        duration: 3000
+      })
+      return;
+    }
+    var this_id = _this.data.id
+    var type = '收付款明细'
+    wx.navigateTo({
+      url: '../file_table/file_table?this_id=' + this_id + '&type=' + type,
+    })
+  },
+
   selKH: function () {
     var _this = this
     var sql = "select customer as name,id,customer from customerInfo where customer like '%" + _this.data.customer + "%' or pinyin like'%" + _this.data.customer + "%'"
@@ -491,7 +543,20 @@ Page({
       }
     })
   },
-
+  selSH: function () {
+    var _this = this  
+    if(_this.data.userInfo.power != '管理员'){
+      wx.showToast({
+        title: '此账号无权限审核数据！',
+        icon: 'none',
+        duration: 3000
+      })
+      return;
+    }
+    _this.setData({
+      xlShow1: true
+    })
+  },
   select5: function (e) {
     var _this = this
     if (e.type == "select") {
@@ -506,7 +571,58 @@ Page({
       })
     }
   },
-
+  select1: function (e) {
+    var _this = this
+    if (e.type == "select") {
+      var shenhe = e.detail.name
+      wx.cloud.callFunction({
+        name: 'sqlServer_117',
+        data: {
+          query: "update payment set state='" + shenhe + "' where id=" + _this.data.id 
+        },
+        success: res => {
+          _this.setData({
+            id: '',
+            riqi: '', 
+            customer: '',
+            customer_id: '',
+            f_jine: '',
+            discount: '',
+            r_jine: '',
+            quota: '',
+            pay: '',
+            remarks: '',
+            xlShow1: false,
+          })
+          _this.qxShow()
+          var e = ['1900-01-01','2100-12-31','']
+           _this.tableShow(e)
+  
+          wx.showToast({
+            title: '修改成功！',
+            icon: 'none'
+          })
+        },
+        err: res => {
+          console.log("错误!")
+        },
+        fail: res => {
+          wx.showToast({
+            title: '请求失败！',
+            icon: 'none'
+          })
+          console.log("请求失败！")
+        }
+      })
+      _this.setData({
+        xlShow1: false,
+      })
+    } else if (e.type == "close") {
+      _this.setData({
+        xlShow1: false,
+      })
+    }
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -556,3 +672,37 @@ Page({
 
   }
 })
+function getNowDate() {
+  var date = new Date();
+  var sign1 = "-";
+  var sign2 = ":";
+  var year = date.getFullYear() // 年
+  var month = date.getMonth() + 1; // 月
+  var day  = date.getDate(); // 日
+  var hour = date.getHours(); // 时
+  var minutes = date.getMinutes(); // 分
+  var seconds = date.getSeconds() //秒
+  var weekArr = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
+  var week = weekArr[date.getDay()];
+  // 给一位数数据前面加 “0”
+  if (month >= 1 && month <= 9) {
+   month = "0" + month;
+  }
+  if (day >= 0 && day <= 9) {
+   day = "0" + day;
+  }
+  if (hour >= 0 && hour <= 9) {
+   hour = "0" + hour;
+  }
+  if (minutes >= 0 && minutes <= 9) {
+   minutes = "0" + minutes;
+  }
+  if (seconds >= 0 && seconds <= 9) {
+   seconds = "0" + seconds;
+  }
+  // var currentdate = year + sign1 + month + sign1 + day + " " + hour + sign2 + minutes + sign2 + seconds + " " + week;
+  var currentdate = year + sign1 + month + sign1 + day ;
+  return currentdate;
+ }
+
+ 
