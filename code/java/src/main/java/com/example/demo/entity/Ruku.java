@@ -78,4 +78,14 @@ public class Ruku {
      */
     private String productDate;
 
+    /**
+     *  品号
+     */
+    private String pinhao;
+
+    /**
+     *  产品属性
+     */
+    private String attribute;
+
 }

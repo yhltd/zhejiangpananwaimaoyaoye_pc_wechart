@@ -18,6 +18,11 @@ public interface RukuService extends IService<Ruku> {
     List<Ruku> getList(String staff,String power);
 
     /**
+     * 查询
+     */
+    List<Ruku> getList_kanban(String riqi,String salesman,String type);
+
+    /**
      * 查询审核中
      */
     List<Ruku> getList_shenhezhong(String staff,String power);

@@ -72,4 +72,5 @@ public class Product {
      *  批号
      * */
     private String pihao;
+
 }

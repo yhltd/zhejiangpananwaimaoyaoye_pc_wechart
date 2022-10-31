@@ -58,6 +58,13 @@ Page({
         isupd: true
       },
       {
+        text: "品号",
+        width: "150rpx",
+        columnName: "pinhao",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "规格",
         width: "400rpx",
         columnName: "spec",
@@ -185,13 +192,18 @@ Page({
   onLoad(options) {
     var _this = this
     var userInfo = JSON.parse(options.userInfo)
-
     var userPower = JSON.parse(options.userPower)
+    var tiaojian = options.tiaojian
+    console.log(tiaojian)
+    if(tiaojian != undefined){
+      tiaojian = JSON.parse(options.tiaojian)
+    }
     console.log(userInfo)
     console.log(userPower)
     _this.setData({
       userInfo:userInfo,
-      userPower:userPower
+      userPower:userPower,
+      tiaojian:tiaojian
     })
 
     var sql = "select '产品:' + product_name + ';规格:' + spec + ';产品属性:' + attribute + ';单位:' + unit  as name,id,product_name,spec,unit,attribute from product"
@@ -280,9 +292,12 @@ Page({
 
   tableShow: function (e) {
     var _this = this
-    var sql = "select rk.id,rk.riqi,rk.warehouse,rk.staff,rk.product_id,rk.pihao,rk.num,rk.remarks,rk.state,pd.product_name,pd.spec,pd.unit,pd.attribute,rk.product_date from ruku as rk left join product as pd on rk.product_id = pd.id where CONVERT(date,rk.riqi) >= CONVERT(date,'" + e[0] + "') and CONVERT(date,rk.riqi) <= CONVERT(date,'" + e[1] + "') and pd.product_name like '%" + e[2] + "%' and rk.state like '%" + e[3] + "%' and rk.pihao like '%" + e[4] + "%'"
+    var sql = "select rk.id,rk.riqi,rk.warehouse,rk.staff,rk.product_id,rk.pihao,rk.num,rk.remarks,rk.state,pd.product_name,pd.spec,pd.unit,pd.attribute,rk.product_date,pd.pinhao from ruku as rk left join product as pd on rk.product_id = pd.id where CONVERT(date,rk.riqi) >= CONVERT(date,'" + e[0] + "') and CONVERT(date,rk.riqi) <= CONVERT(date,'" + e[1] + "') and pd.product_name like '%" + e[2] + "%' and rk.state like '%" + e[3] + "%' and rk.pihao like '%" + e[4] + "%'"
     if (_this.data.userInfo.power != '管理员'){
       sql = sql + " and rk.staff ='" + _this.data.userInfo.name + "'"
+    }
+    if(_this.data.tiaojian != undefined){
+      sql = "select rk.id,rk.riqi,rk.warehouse,rk.staff,rk.product_id,rk.pihao,rk.num,rk.remarks,rk.state,pd.product_name,pd.spec,pd.unit,pd.attribute,rk.product_date,pd.pinhao from ruku as rk left join product as pd on rk.product_id = pd.id where CONVERT(date,rk.riqi) >= CONVERT(date,'" + _this.data.tiaojian[2] + "') and CONVERT(date,rk.riqi) <= CONVERT(date,'" + _this.data.tiaojian[2] + "') and rk.state = '审核中' and rk.staff ='" + _this.data.tiaojian[3] + "'"
     }
     wx.cloud.callFunction({
       name: 'sqlServer_117',
@@ -293,7 +308,8 @@ Page({
         var list = res.result.recordset
         console.log(list)
         _this.setData({
-          list: list
+          list: list,
+          tiaojian:undefined
         })
         console.log(list)
       },

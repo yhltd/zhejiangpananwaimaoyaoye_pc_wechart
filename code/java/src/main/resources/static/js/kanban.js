@@ -79,6 +79,41 @@ $(function () {
     $("#refresh-btn").click(function () {
         getList();
     });
+
+    //销售明细
+    $("#xiaoshou").click(function () {
+
+        var riqi = getNowDate();
+        var this_date = getNowDate()
+        var year = this_date.split("-")[0] * 1
+        var month = this_date.split("-")[1] * 1
+        var stop_day = getDays(year,month)
+        var year = this_date.split("-")[0]
+        var month = this_date.split("-")[1]
+        var riqi1 = year + "-" + month + "-" + "01"
+        var riqi2 = year + "-" + month + "-" + stop_day
+        $.session.set('kanban_goto', riqi + "`" + riqi1 + "`" + riqi2)
+        console.log("销售")
+        document.location.href = 'sale.html'
+
+
+    });
+
+    //收付款明细
+    $("#shoukuan").click(function () {
+        var riqi = getNowDate();
+        var this_date = getNowDate()
+        var year = this_date.split("-")[0] * 1
+        var month = this_date.split("-")[1] * 1
+        var stop_day = getDays(year,month)
+        var year = this_date.split("-")[0]
+        var month = this_date.split("-")[1]
+        var riqi1 = year + "-" + month + "-" + "01"
+        var riqi2 = year + "-" + month + "-" + stop_day
+        $.session.set('kanban_goto', riqi + "`" + riqi1 + "`" + riqi2)
+        console.log("收款")
+        document.location.href = 'payment.html'
+    });
 });
 
 function setTable(data) {
@@ -99,6 +134,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style:'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: 'type',
@@ -130,6 +166,10 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 120,
+                formatter: function (value, row, index) {
+                    console.log(row)
+                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='"+ row.id +"' style='text-decoration:underline;' onclick='javascript:state_select("+ index + ")'>"+ value +"</span></div>";
+                }
             }
         ],
         onClickRow: function (row, el) {
@@ -183,5 +223,42 @@ function getDays(year, month) {
         days[1] = 29
     }
     return days[month]
+}
+
+function state_select(click_row){
+    console.log(click_row)
+    var tableEl = '#kanbanTable'
+    var riqi = ""
+    var customer = ""
+    var salesman = ""
+    var type = ""
+    var state = ""
+    let tableData = $(tableEl).bootstrapTable('getData');
+    $(tableEl + ' tr').each(function (i, tr) {
+        let index = $(tr).data('index');
+        if (index != undefined) {
+            if (index == click_row) {
+                riqi = tableData[index].riqi
+                customer = tableData[index].customer
+                salesman = tableData[index].salesman
+                type = tableData[index].type
+                state = tableData[index].state
+            }
+        }
+    });
+    console.log(riqi)
+    console.log(customer)
+    console.log(salesman)
+    console.log(type)
+    $.session.set('kanban_goto', riqi + "`" + customer + "`" + salesman + "`" + state)
+
+    if(type == '入库'){
+        document.location.href = 'ruku.html'
+    }else if(type == '销售'){
+        document.location.href = 'sale.html'
+    }else if(type == '出库'){
+        document.location.href = 'chuku.html'
+    }
+
 }
 

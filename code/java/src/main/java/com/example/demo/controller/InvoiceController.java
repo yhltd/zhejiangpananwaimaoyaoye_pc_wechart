@@ -160,4 +160,27 @@ public class InvoiceController {
             return ResultInfo.error("删除失败");
         }
     }
+
+
+    /**
+     * 审核
+     */
+    @RequestMapping("/updateState")
+    public ResultInfo updateState(String state, int id, HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        if (!userInfo.getPower().equals("管理员")) {
+            return ResultInfo.success("无权限");
+        }
+        try {
+            if (invoiceService.updateState(state, id)) {
+                return ResultInfo.success("审核成功");
+            } else {
+                return ResultInfo.success("审核失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("审核失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
 }

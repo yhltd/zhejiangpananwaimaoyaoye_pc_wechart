@@ -37,9 +37,23 @@ Page({
         isupd: true
       },
       {
+        text: "品号",
+        width: "150rpx",
+        columnName: "pinhao",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "规格",
         width: "400rpx",
         columnName: "spec",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "产品属性",
+        width: "200rpx",
+        columnName: "attribute",
         type: "text",
         isupd: true
       },
@@ -294,7 +308,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query : "select id,warehouse,pihao,product_id,product_name,spec,unit,price,pinyin,r.num from (select product_id,warehouse,pihao,sum(case when state='审核通过' then convert(float,num) else 0 end) as num from ruku group by product_id,warehouse,pihao) as r left join product p on r.product_id=p.id where warehouse like '%" + e[0] + "%' and pihao like '%" + e[1] + "%' and product_name like '%" + e[2] + "%';select id,warehouse,pihao,product_id,product_name,spec,unit,price,pinyin,s.num from (select product_id,warehouse,pihao,sum(case when type='销售' then convert(float,num) else -convert(float,num) end) as num from sale where sale_state = '审核通过' and chuku_state = '审核通过' group by product_id,warehouse,pihao ) as s left join product p on s.product_id=p.id where warehouse like '%" + e[0] + "%' and pihao like '%" + e[1] + "%' and product_name like '%" + e[2] + "%';"
+        query : "select id,warehouse,pihao,product_id,product_name,pinhao,spec,attribute,unit,price,pinyin,r.num from (select product_id,warehouse,pihao,sum(case when state='审核通过' then convert(float,num) else 0 end) as num from ruku group by product_id,warehouse,pihao) as r left join product p on r.product_id=p.id where warehouse like '%" + e[0] + "%' and pihao like '%" + e[1] + "%' and product_name like '%" + e[2] + "%';select id,warehouse,pihao,product_id,product_name,pinhao,spec,attribute,unit,price,pinyin,s.num from (select product_id,warehouse,pihao,sum(case when type='销售' then convert(float,num) else -convert(float,num) end) as num from sale where sale_state = '审核通过' and chuku_state = '审核通过' and fahuo = '已发货' group by product_id,warehouse,pihao ) as s left join product p on s.product_id=p.id where warehouse like '%" + e[0] + "%' and pihao like '%" + e[1] + "%' and product_name like '%" + e[2] + "%';"
       },
       success: res => {
         console.log(res)
@@ -307,7 +321,9 @@ Page({
             pihao:list1[i].pihao,
             product_id:list1[i].product_id,
             product_name:list1[i].product_name,
+            pinhao:list1[i].pinhao,
             spec:list1[i].spec,
+            attribute:list1[i].attribute,
             unit:list1[i].unit,
             price:list1[i].price,
             pinyin:list1[i].pinyin,
@@ -321,7 +337,9 @@ Page({
             pihao:list2[i].pihao,
             product_id:list2[i].product_id,
             product_name:list2[i].product_name,
+            pinhao:list2[i].pinhao,
             spec:list2[i].spec,
+            attribute:list2[i].attribute,
             unit:list2[i].unit,
             price:list2[i].price,
             pinyin:list2[i].pinyin,

@@ -272,6 +272,11 @@ Page({
       thebillingnumber: _this.data.list[e.currentTarget.dataset.index].thebillingnumber,
       nameofarticle:_this.data.list[e.currentTarget.dataset.index].nameofarticle,
       unitprice:_this.data.list[e.currentTarget.dataset.index].unitprice,
+      shuihao:_this.data.list[e.currentTarget.dataset.index].shuihao,
+      address:_this.data.list[e.currentTarget.dataset.index].address,
+      phone:_this.data.list[e.currentTarget.dataset.index].phone,
+      yinhang:_this.data.list[e.currentTarget.dataset.index].yinhang,
+      zhanghu:_this.data.list[e.currentTarget.dataset.index].zhanghu,
       xgShow:true,
     })
   },
@@ -298,6 +303,11 @@ Page({
       thebillingnumber:'',
       nameofarticle:'',
       unitprice:'',
+      shuihao:'',
+      address:'',
+      phone:'',
+      yinhang:'',
+      zhanghu:'',
     })
   },
 
@@ -318,7 +328,7 @@ Page({
       wx.cloud.callFunction({
         name: 'sqlServer_117',
         data: {
-          query: "insert into invoice(riqi,customer_id,unit,jine,remarks,thebillingnumber,nameofarticle,unitprice) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.unit + "','" + _this.data.jine + "','" + _this.data.remarks + "','" + _this.data.thebillingnumber + "','" + _this.data.nameofarticle + "','" + _this.data.unitprice + "')"
+          query: "insert into invoice(riqi,customer_id,unit,jine,remarks,thebillingnumber,nameofarticle,unitprice,shuihao,address,phone,yinhang,zhanghu,state) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.unit + "','" + _this.data.jine + "','" + _this.data.remarks + "','" + _this.data.thebillingnumber + "','" + _this.data.nameofarticle + "','" + _this.data.unitprice + "','" + _this.data.shuihao + "','" + _this.data.address + "','" + _this.data.phone + "','" + _this.data.yinhang + "','" + _this.data.zhanghu + "','审核中')"
         },
         success: res => {
           _this.setData({
@@ -332,6 +342,11 @@ Page({
             thebillingnumber:'',
             nameofarticle:'',
             unitprice:'',
+            shuihao:'',
+            address:'',
+            phone:'',
+            yinhang:'',
+            zhanghu:'',
           })
           _this.qxShow()
           var e = ['1900-01-01','2100-12-31','']
@@ -380,7 +395,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update invoice set riqi='" + _this.data.riqi + "',customer_id='" + _this.data.customer_id + "',unit='" + _this.data.unit + "',jine='" + _this.data.jine + "',remarks='" + _this.data.remarks + "',thebillingnumber='" + _this.data.thebillingnumber + "',nameofarticle='" + _this.data.nameofarticle + "',unitprice='" + _this.data.unitprice + "' where id=" + _this.data.id 
+        query: "update invoice set riqi='" + _this.data.riqi + "',customer_id='" + _this.data.customer_id + "',unit='" + _this.data.unit + "',jine='" + _this.data.jine + "',remarks='" + _this.data.remarks + "',thebillingnumber='" + _this.data.thebillingnumber + "',nameofarticle='" + _this.data.nameofarticle + "',unitprice='" + _this.data.unitprice + "',shuihao='" + _this.data.shuihao + "',address='" + _this.data.address + "',phone='" + _this.data.phone + "',yinhang='" + _this.data.yinhang + "',zhanghu='" + _this.data.zhanghu + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
@@ -394,6 +409,11 @@ Page({
           thebillingnumber:'',
           nameofarticle:'',
           unitprice:'',
+          shuihao:'',
+          address:'',
+          phone:'',
+          yinhang:'',
+          zhanghu:'',
         })
         _this.qxShow()
         var e = ['1900-01-01','2100-12-31','']
@@ -444,6 +464,11 @@ Page({
             thebillingnumber:'',
             nameofarticle:'',
             unitprice:'',
+            shuihao:'',
+            address:'',
+            phone:'',
+            yinhang:'',
+            zhanghu:'',
           })
           _this.qxShow()
           var e = ['1900-01-01','2100-12-31','']
@@ -581,6 +606,11 @@ Page({
             thebillingnumber:'',
             nameofarticle:'',
             unitprice:'',
+            shuihao:'',
+            address:'',
+            phone:'',
+            yinhang:'',
+            zhanghu:'',
             xlShow1: false,
           })
           _this.qxShow()
@@ -622,7 +652,7 @@ Page({
     var list = _this.data.list;
     var title = _this.data.title
     var cloudList = {
-      name : '化验明细',
+      name : '客户开票信息',
       items : [],
       header : []
     }

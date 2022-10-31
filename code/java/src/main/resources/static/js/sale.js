@@ -2,7 +2,7 @@ let operation = "";
 let productList = [];
 let opt = "";
 let cangku = "";
-
+let kucun_list = []
 let sale_list = []
 let state_list = []
 let saleSubmit_list = []
@@ -28,6 +28,15 @@ function getList() {
                 draggingClass: "dragging",
                 resizeMode: 'fit'
             });
+            var xiaoji_sum = 0
+            for(var i=0; i<res.data.length; i++){
+                if (res.data[i].type == '销售'){
+                    xiaoji_sum = xiaoji_sum + res.data[i].xiaoji * 1
+                }else{
+                    xiaoji_sum = xiaoji_sum - res.data[i].xiaoji * 1
+                }
+            }
+            $("#xiaoji_sum").html("小计汇总:" + xiaoji_sum)
         }
     })
 }
@@ -39,6 +48,14 @@ function getSelect() {
     }, false, '', function (res) {
         if (res.code == 200) {
             var item = "";
+            cangku = "";
+            opt = "";
+            $("#add-warehouse option").remove();
+            $("#update-warehouse option").remove();
+            $("#add-pick option").remove();
+            $("#update-pick option").remove();
+            $("#add-saleType option").remove();
+            $("#update-saleType option").remove();
             for (var i = 0; i < res.data.length; i++) {
                 if (res.data[i].warehouse != null && res.data[i].warehouse != "") {
                     item = "<option value=\"" + res.data[i].warehouse + "\">" + res.data[i].warehouse + "</option>"
@@ -74,6 +91,18 @@ function getProductAdd() {
     })
 }
 
+function getKuCun() {
+    $ajax({
+        type: 'post',
+        url: '/kucun/getKuCun',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            kucun_list = res.data
+        }
+        console.log(res)
+    })
+}
+
 function getProduct() {
     $ajax({
         type: 'post',
@@ -100,10 +129,71 @@ function getCustomer() {
     })
 }
 
+function kanbanSelect(){
+    var tiaojian = $.session.get('kanban_goto');
+    $.session.remove('kanban_goto');
+    console.log(tiaojian)
+    if(tiaojian != undefined){
+        if(tiaojian.split("`").length == 4){
+            var riqi = tiaojian.split("`")[0]
+            if(riqi == '' || riqi == 'null' || riqi == null){
+                riqi = ''
+            }
+            var customer = tiaojian.split("`")[1]
+            if(customer == '' || customer == 'null' || customer == null){
+                customer = ''
+            }
+            var salesman = tiaojian.split("`")[2]
+            if(salesman == '' || salesman == 'null' || salesman == null){
+                salesman = ''
+            }
+            var type = tiaojian.split("`")[3]
+            $.session.remove('kanban_goto');
+            $ajax({
+                type: 'post',
+                url: '/sale/getList_kanban',
+                data: {
+                    riqi: riqi,
+                    customer: customer,
+                    salesman: salesman,
+                    type: type,
+                }
+            }, true, '', function (res) {
+                if (res.code == 200) {
+                    setTable(res.data);
+                }
+            })
+        }else{
+            $ajax({
+                type: 'post',
+                url: '/sale/getXiaoShou_kanban',
+                data: {
+                    riqi: tiaojian.split("`")[0],
+                    riqi1: tiaojian.split("`")[1],
+                    riqi2: tiaojian.split("`")[2],
+                }
+            }, true, '', function (res) {
+                if (res.code == 200) {
+                    setTable(res.data);
+                }
+            })
+        }
+    }else{
+        $('#refresh-btn').trigger('click');
+    }
+
+}
+
+
+window.onload = function(){
+    kanbanSelect();
+};
+
 $(function () {
     getList();
     getSelect();
     getProductAdd();
+    getKuCun();
 
     $('#select-btn').click(function () {
         var ks = $('#ks').val();
@@ -126,6 +216,16 @@ $(function () {
         }, true, '', function (res) {
             if (res.code == 200) {
                 setTable(res.data);
+                getKuCun();
+                var xiaoji_sum = 0
+                for(var i=0; i<res.data.length; i++){
+                    if (res.data[i].type == '销售'){
+                        xiaoji_sum = xiaoji_sum + res.data[i].xiaoji * 1
+                    }else{
+                        xiaoji_sum = xiaoji_sum - res.data[i].xiaoji * 1
+                    }
+                }
+                $("#xiaoji_sum").html("小计汇总:" + xiaoji_sum)
             }
         })
     });
@@ -135,6 +235,7 @@ $(function () {
         getList();
         getSelect();
         getProductAdd();
+        getKuCun();
     });
 
     //审核中
@@ -263,10 +364,17 @@ $(function () {
             swal("无审核内容！");
             return;
         }
+        for(var i=0; i<saleSubmit_list.length; i++){
+            if(saleSubmit_list[i].warehouse == '' || saleSubmit_list[i].warehouse == null){
+                swal("列表中的产品未选择仓库！");
+                return;
+            }
+        }
         $.each(saleSubmit_list, function (index, row) {
             $ajax({
                 type: 'post',
                 url: '/sale/updateState',
+                async:false,
                 data: {
                     id: row.id,
                     warehouse: row.warehouse,
@@ -293,6 +401,7 @@ $(function () {
             $ajax({
                 type: 'post',
                 url: '/sale/updateState',
+                async:false,
                 data: {
                     id: row.id,
                     warehouse: row.warehouse,
@@ -596,6 +705,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: '',
@@ -618,6 +728,24 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'customerNum',
+                title: '客户号',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: 'area',
+                title: '区域',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: 'leibie',
+                title: '类别',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
                 field: 'shStaff',
                 title: '收货人员',
                 align: 'center',
@@ -665,8 +793,20 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'pinhao',
+                title: '品号',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
                 field: 'spec',
                 title: '规格',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            },{
+                field: 'attribute',
+                title: '产品属性',
                 align: 'center',
                 sortable: true,
                 width: 200,
@@ -766,6 +906,7 @@ function setStateTable(data) {
         pagination: false,
         search: true,
         searchAlign: 'left',
+        pageSize: 10,//单页记录数
         clickToSelect: true,
         locale: 'zh-CN',
         columns: [
@@ -776,7 +917,18 @@ function setStateTable(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return getCangKuXiaLa();
+                    var cangku = ""
+                    for(var i=0; i<kucun_list.length; i++){
+                        if(kucun_list[i].id == row.productId && kucun_list[i].num * 1 >= row.num * 1){
+                            cangku = cangku + "<option value=\"" + kucun_list[i].warehouse + "\">" + kucun_list[i].warehouse + "</option>";
+                        }
+                    }
+
+                    var select = "<select name=\"warehouse\" class=\"form-control\" >";
+                    select = select + cangku;
+                    select = select + "<select/>";
+
+                    return select;
                 },
             },
             {
@@ -830,8 +982,7 @@ function setStateTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 200,
-            },
-            {
+            }, {
                 field: 'unit',
                 title: '单位',
                 align: 'center',
@@ -900,6 +1051,7 @@ function setProductTable(data) {
         pagination: true,
         search: true,
         searchAlign: 'left',
+        pageSize: 10,//单页记录数
         clickToSelect: true,
         locale: 'zh-CN',
         columns: [
@@ -1037,6 +1189,7 @@ function setProductTable_Add(data) {
         idField: 'id',
         pagination: true,
         search: true,
+        pageSize: 10,//单页记录数
         searchAlign: 'left',
         clickToSelect: false,
         locale: 'zh-CN',
@@ -1140,7 +1293,6 @@ function state_select(index){
         swal("此销售信息无需审核！")
         return;
     }
-
     for(let i=0;i<rows.length;i++){
         if(rows[i].riqi == this_date && rows[i].customerId == this_customer && rows[i].saleState == this_state){
             this_list.push(rows[i])

@@ -28,6 +28,11 @@ public class RukuImpl extends ServiceImpl<RukuMapper, Ruku> implements RukuServi
     }
 
     @Override
+    public List<Ruku> getList_kanban(String riqi,String salesman,String type) {
+            return rukuMapper.getList_kanban(riqi,salesman,type);
+    }
+
+    @Override
     public List<Ruku> getList_shenhezhong(String staff, String power) {
         if (power.equals("管理员")) {
             return rukuMapper.getList_shenhezhong();

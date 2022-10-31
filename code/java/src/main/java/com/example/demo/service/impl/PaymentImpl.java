@@ -46,6 +46,15 @@ public class PaymentImpl extends ServiceImpl<PaymentMapper, Payment> implements 
     }
 
     @Override
+    public List<Payment> kanbanList(String riqi,String riqi1,String riqi2, String name, String power) {
+        if (power.equals("管理员")) {
+            return paymentMapper.kanbanList(riqi);
+        } else {
+            return paymentMapper.kanbanListByName(riqi1,riqi2,name);
+        }
+    }
+
+    @Override
     public Payment add(Payment payment) {
         return save(payment) ? payment : null;
     }
@@ -58,5 +67,10 @@ public class PaymentImpl extends ServiceImpl<PaymentMapper, Payment> implements 
     @Override
     public boolean delete(List<Integer> idList) {
         return removeByIds(idList);
+    }
+
+    @Override
+    public boolean updateState(String state, int id) {
+        return paymentMapper.updateState(state, id);
     }
 }

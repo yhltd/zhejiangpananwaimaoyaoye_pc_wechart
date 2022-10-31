@@ -141,4 +141,31 @@ public class Sale {
      */
     private String chukuState;
 
+
+    /**
+     *  品号
+     */
+    private String pinhao;
+
+    /**
+     *  产品属性
+     */
+    private String attribute;
+
+    /**
+     *  客户号
+     */
+    private String customerNum;
+
+    /**
+     *  区域
+     */
+    private String area;
+
+    /**
+     *  客户类别
+     */
+    private String leibie;
+
+
 }

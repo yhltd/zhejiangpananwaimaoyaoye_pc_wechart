@@ -23,7 +23,13 @@ function getSelect() {
     }, false, '', function (res) {
         if (res.code == 200) {
             var item = "";
+            console.log(res.data)
             for (var i = 0; i < res.data.length; i++) {
+                if (res.data[i].attributes != null && res.data[i].attributes != "") {
+                    item = "<option value=\"" + res.data[i].attributes + "\">" + res.data[i].attributes + "</option>"
+                    $("#add-attribute").append(item);
+                    $("#update-attribute").append(item);
+                }
                 if (res.data[i].attributes != null && res.data[i].attributes != "") {
                     item = "<option value=\"" + res.data[i].attributes + "\">" + res.data[i].attributes + "</option>"
                     $("#add-attribute").append(item);
@@ -36,7 +42,7 @@ function getSelect() {
 
 $(function () {
     getList();
-
+    getSelect();
     $('#select-btn').click(function () {
         var query = $('#query').val();
         $ajax({
@@ -225,6 +231,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style:'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: '',

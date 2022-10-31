@@ -78,6 +78,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: 'customer',
@@ -86,6 +87,24 @@ function setTable(data) {
                 sortable: true,
                 width: 150,
             }, {
+                field: 'customerNum',
+                title: '客户号',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: 'area',
+                title: '区域',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: 'leibie',
+                title: '类别',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
                 field: 'xswqye',
                 title: '往期余额',
                 align: 'center',

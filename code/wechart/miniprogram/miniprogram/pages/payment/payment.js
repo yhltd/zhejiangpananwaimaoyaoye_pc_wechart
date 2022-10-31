@@ -28,6 +28,25 @@ Page({
         isupd: true
       },
       {
+        text: "客户类别",
+        width: "200rpx",
+        columnName: "leibie",
+        type: "text",
+        isupd: true
+      },{
+        text: "客户号",
+        width: "200rpx",
+        columnName: "customer_num",
+        type: "text",
+        isupd: true
+      },{
+        text: "区域",
+        width: "200rpx",
+        columnName: "area",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "付款金额",
         width: "200rpx",
         columnName: "f_jine",
@@ -62,24 +81,6 @@ Page({
         text: "备注",
         width: "200rpx",
         columnName: "remarks",
-        type: "text",
-        isupd: true
-      },{
-        text: "客户类别",
-        width: "200rpx",
-        columnName: "leibie",
-        type: "text",
-        isupd: true
-      },{
-        text: "客户号",
-        width: "200rpx",
-        columnName: "customer_num",
-        type: "text",
-        isupd: true
-      },{
-        text: "区域",
-        width: "200rpx",
-        columnName: "area",
         type: "text",
         isupd: true
       },{
@@ -119,6 +120,7 @@ Page({
       userInfo:userInfo,
       userPower:userPower
     })
+    console.log(userInfo)
     var e = ['1900-01-01','2100-12-31','']
     _this.tableShow(e)
 
@@ -255,6 +257,7 @@ Page({
       })
       return;
     }
+
     _this.setData({
       id: _this.data.list[e.currentTarget.dataset.index].id,
       customer_id: _this.data.list[e.currentTarget.dataset.index].customer_id,
@@ -304,16 +307,10 @@ Page({
         icon: 'none'
       })
     }
-    // if(_this.data.customer_id == '' || _this.data.customer_id == undefined){
-    //   wx.showToast({
-    //     title: '未填写客户名称！',
-    //     icon: 'none'
-    //   })
-    // }
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "insert into payment(riqi,customer_id,f_jine,discount,r_jine,quota,pay,remarks) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.f_jine + "','" + _this.data.discount + "','" + _this.data.r_jine + "','" + _this.data.quota + "','" + _this.data.pay + "','" + _this.data.remarks + "')"
+        query: "insert into payment(riqi,customer_id,f_jine,discount,r_jine,quota,pay,remarks,state) values('" + _this.data.riqi + "','" + _this.data.customer_id + "','" + _this.data.f_jine + "','" + _this.data.discount + "','" + _this.data.r_jine + "','" + _this.data.quota + "','" + _this.data.pay + "','" + _this.data.remarks + "','审核中')"
       },
       success: res => {
         _this.setData({
@@ -623,6 +620,65 @@ Page({
       })
     }
   },
+
+
+  getExcel : function(){
+    var _this = this;
+    wx.showLoading({
+      title: '打开Excel中',
+      mask : 'true'
+    })
+    var list = _this.data.list;
+    var title = _this.data.title
+    var cloudList = {
+      name : '收付款明细',
+      items : [],
+      header : []
+    }
+
+    for(let i=0;i<title.length;i++){
+      cloudList.header.push({
+        item:title[i].text,
+        type:title[i].type,
+        width:parseInt(title[i].width.split("r")[0])/10,
+        columnName:title[i].columnName
+      })
+    }
+    cloudList.items = list
+    console.log(cloudList)
+
+    wx.cloud.callFunction({
+      name:'getExcel',
+      data:{
+        list : cloudList
+      },
+      success: function(res){
+        console.log("获取云储存id")
+        wx.cloud.downloadFile({
+          fileID : res.result.fileID,
+          success : res=> {
+            console.log("获取临时路径")
+            wx.hideLoading({
+              success: (res) => {},
+            })
+            console.log(res.tempFilePath)
+            wx.openDocument({
+              filePath: res.tempFilePath,
+              showMenu : 'true',
+              fileType : 'xlsx',
+              success : res=> {
+                console.log("打开Excel")
+              }
+            })
+          }
+        })
+      },
+      fail : res=> {
+        console.log(res)
+      }
+    })
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

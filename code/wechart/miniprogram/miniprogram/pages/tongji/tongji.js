@@ -23,6 +23,27 @@ Page({
         isupd: true
       },
       {
+        text: "客户类别",
+        width: "200rpx",
+        columnName: "leibie",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "客户号",
+        width: "200rpx",
+        columnName: "customer_num",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "区域",
+        width: "200rpx",
+        columnName: "area",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "往期余额",
         width: "400rpx",
         columnName: "ghye",
@@ -170,7 +191,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select xs.id,customer,isnull(xs,0) as xs,isnull(th,0) as th,isnull(fankuan,0) as fankuan,isnull(fukuan,0) as fukuan,isnull(zhekou,0) as zhekou,isnull(zengsong,0) as zengsong from (select id,customer,pinyin,xs,th from (select customer_id,sum(case when type='销售' then convert(float,xiaoji) else 0 end) as xs,sum(case when type='退货' then convert(float,xiaoji) else 0 end) as th from sale where convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') group by customer_id) as s right join customerInfo as c on s.customer_id=c.id) xs left join (select customer_id,sum(convert(float,r_jine)) fankuan,sum(convert(float,f_jine)) fukuan,sum(convert(float,discount)) zhekou,sum(convert(float,quota)) zengsong from payment where convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') group by customer_id) p on xs.id=p.customer_id where customer like '%"+ e[1] +"%' or pinyin like '%"+ e[1] +"%' ORDER BY xs ;select id,isnull(ghye,0) as ghye,isnull(zsye,0) as zsye from customerInfo;"
+        query: "select xs.id,customer,leibie,area,customer_num,isnull(xs,0) as xs,isnull(th,0) as th,isnull(fankuan,0) as fankuan,isnull(fukuan,0) as fukuan,isnull(zhekou,0) as zhekou,isnull(zengsong,0) as zengsong from (select id,customer,leibie,area,customer_num,pinyin,xs,th from (select customer_id,sum(case when type='销售' then convert(float,xiaoji) else 0 end) as xs,sum(case when type='退货' then convert(float,xiaoji) else 0 end) as th from sale where convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') and sale_state = '审核通过' and chuku_state = '审核通过' and fahuo = '已发货' group by customer_id) as s right join customerInfo as c on s.customer_id=c.id) xs left join (select customer_id,sum(convert(float,r_jine)) fankuan,sum(convert(float,f_jine)) fukuan,sum(convert(float,discount)) zhekou,sum(convert(float,quota)) zengsong from payment where convert(date,riqi)>=convert(date,'"+ e[0] +"-01-01') and convert(date,riqi)<=convert(date,'"+ e[0] +"-12-31') and state = '审核通过' group by customer_id) p on xs.id=p.customer_id where customer like '%"+ e[1] +"%' or pinyin like '%"+ e[1] +"%' ORDER BY xs ;select id,isnull(ghye,0) as ghye,isnull(zsye,0) as zsye from customerInfo;"
       },
       success: res => {
         var list1 = res.result.recordsets[0]
@@ -182,6 +203,9 @@ Page({
               list3.push({
                 id:list1[i].id,
                 customer:list1[i].customer,
+                leibie:list1[i].leibie,
+                area:list1[i].area,
+                customer_num:list1[i].customer_num,
                 xs:list1[i].xs,
                 th:list1[i].th,
                 fankuan:list1[i].fankuan,
@@ -195,8 +219,24 @@ Page({
             }
           }
         }
+        console.log(list3)
+        var swap = ""
+        for(var i = 0; i<list3.length-1;i++) {
+            for(var j = 0; j<list3.length - 1 - i; j++) {
+                if(list3[j].ye * 1 < list3[j + 1].ye * 1) {
+                    swap = list3[j + 1]
+                    list3[j] = list3[j + 1]
+                    list3[j + 1] = swap
+                }
+            }
+        }
+        var list4 = []
+        for(var i = list3.length - 1; i>= 0 ; i--){
+          list4.push(list3[i])
+        }
+        console.log(list4)
         _this.setData({
-          list: list3
+          list: list4
         })
       },
       err: res => {

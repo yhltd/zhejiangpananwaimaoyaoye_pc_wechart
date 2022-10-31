@@ -43,4 +43,9 @@ public interface InvoiceService extends IService<Invoice> {
      * @return 是否删除成功
      */
     boolean delete(List<Integer> idList);
+
+    /**
+     * 审核
+     */
+    boolean updateState(String state, int id);
 }

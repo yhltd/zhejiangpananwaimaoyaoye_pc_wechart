@@ -39,6 +39,15 @@ function getSelect() {
     }, false, '', function (res) {
         if (res.code == 200) {
             var item = "";
+            cangku = ""
+            opt = ""
+            $("#add-warehouse option").remove();
+            $("#update-warehouse option").remove();
+            $("#add-pick option").remove();
+            $("#update-pick option").remove();
+            $("#add-saleType option").remove();
+            $("#update-saleType option").remove();
+            $("#update-express option").remove();
             for (var i = 0; i < res.data.length; i++) {
                 if (res.data[i].warehouse != null && res.data[i].warehouse != "") {
                     item = "<option value=\"" + res.data[i].warehouse + "\">" + res.data[i].warehouse + "</option>"
@@ -104,6 +113,49 @@ function getCustomer() {
         console.log(res)
     })
 }
+
+function kanbanSelect(){
+    var tiaojian = $.session.get('kanban_goto');
+    console.log(tiaojian)
+    if(tiaojian != undefined){
+        var riqi = tiaojian.split("`")[0]
+        if(riqi == '' || riqi == 'null' || riqi == null){
+            riqi = ''
+        }
+        var customer = tiaojian.split("`")[1]
+        if(customer == '' || customer == 'null' || customer == null){
+            customer = ''
+        }
+        var salesman = tiaojian.split("`")[2]
+        if(salesman == '' || salesman == 'null' || salesman == null){
+            salesman = ''
+        }
+        var type = tiaojian.split("`")[3]
+        $.session.remove('kanban_goto');
+        $ajax({
+            type: 'post',
+            url: '/chuku/getList_kanban',
+            data: {
+                riqi: riqi,
+                customer: customer,
+                salesman: salesman,
+                type: type,
+            }
+        }, true, '', function (res) {
+            if (res.code == 200) {
+                setTable(res.data);
+            }
+        })
+    }else{
+        $('#refresh-btn').trigger('click');
+    }
+
+}
+
+
+window.onload = function(){
+    kanbanSelect();
+};
 
 $(function () {
     getList();
@@ -229,6 +281,7 @@ $(function () {
             $ajax({
                 type: 'post',
                 url: '/chuku/insert',
+                async:false,
                 data: {
                     riqi: $('#add-riqi').val(),
                     productId: row.data.id,
@@ -263,6 +316,7 @@ $(function () {
             $ajax({
                 type: 'post',
                 url: '/chuku/updateState',
+                async:false,
                 data: {
                     id: row.id,
                     chukuState: '审核通过'
@@ -289,6 +343,7 @@ $(function () {
             $ajax({
                 type: 'post',
                 url: '/chuku/updateState',
+                async:false,
                 data: {
                     id: row.id,
                     chukuState: '审核未通过'
@@ -322,6 +377,7 @@ $(function () {
         $("#update-pick").val(rows[0].data.pick);
         $("#update-warehouse").val(rows[0].data.warehouse);
         $("#update-type").val(rows[0].data.type);
+        $("#update-fahuo").val(rows[0].data.fahuo);
     });
 
     //修改弹窗点击关闭按钮
@@ -634,6 +690,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: '',
@@ -663,6 +720,24 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'customerNum',
+                title: '客户号',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: 'area',
+                title: '区域',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: 'leibie',
+                title: '类别',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
                 field: 'shStaff',
                 title: '收货人员',
                 align: 'center',
@@ -724,13 +799,24 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'pinhao',
+                title: '品号',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
                 field: 'spec',
                 title: '规格',
                 align: 'center',
                 sortable: true,
                 width: 200,
-            },
-            {
+            },{
+                field: 'attribute',
+                title: '产品属性',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
                 field: 'unit',
                 title: '单位',
                 align: 'center',
@@ -773,10 +859,16 @@ function setTable(data) {
                 title: '出库审核状态',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 150,
                 formatter: function (value, row, index) {
                     return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='" + row.id + "' style='text-decoration:underline;' onclick='javascript:state_select(" + row.id + ")'>" + value + "</span></div>";
                 }
+            }, {
+                field: 'fahuo',
+                title: '发货状态',
+                align: 'center',
+                sortable: true,
+                width: 100,
             },
         ],
         onClickRow: function (row, el) {
@@ -957,6 +1049,7 @@ function setProductTable(data) {
         pagination: true,
         search: true,
         searchAlign: 'left',
+        pageSize: 10,//单页记录数
         clickToSelect: true,
         locale: 'zh-CN',
         columns: [
@@ -1095,6 +1188,7 @@ function setProductTable_Add(data) {
         pagination: true,
         search: true,
         searchAlign: 'left',
+        pageSize: 10,//单页记录数
         clickToSelect: false,
         locale: 'zh-CN',
         columns: [

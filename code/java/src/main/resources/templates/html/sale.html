@@ -94,6 +94,7 @@
             导出Excel
         </button>
         <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：销售</a>
+        <a id="xiaoji_sum" class="btn btn-primary" style="color: white;padding-top: 8px">小计汇总：0</a>
     </div>
 </div>
 
@@ -330,12 +331,12 @@
 
 <!--    查询产品窗体-->
 <div id="show-product-modal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px;">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">选择产品</div>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 800px">
                 <table id="show-table-product"></table>
             </div>
             <div class="border-top" style="padding: 15px;">
@@ -353,13 +354,13 @@
 </div>
 
 <!--    查询产品窗体-->
-<div id="show-product-modal-add" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+<div id="show-product-modal-add" class="modal fade" tabindex="-1" >
+    <div class="modal-dialog modal-lg" style="max-width: 1200px">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">选择产品</div>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 800px">
                 <table id="show-table-product-add"></table>
             </div>
             <div class="border-top" style="padding: 15px;">
@@ -378,13 +379,13 @@
 
 <!--    审核窗体-->
 <div id="state-modal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">销售审核</div>
             </div>
             <div class="modal-body">
-                <table id="show-state-table"></table>
+                <table id="show-state-table" style="max-height: 800px"></table>
             </div>
             <div class="border-top" style="padding: 15px;">
                 <button id="state-tongguo-btn" type="button" class="btn btn-primary">

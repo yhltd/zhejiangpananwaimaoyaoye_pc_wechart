@@ -34,6 +34,7 @@
 <view class="bottom_view">
 	<button class="bt_bottom" bindtap="inquire" >添加</button>
   <button class="bt_bottom" bindtap="entering" >查询</button>
+  <button class="bt_bottom" bindtap="getExcel" >导出</button>
 </view>
 
 <!------------------------->
@@ -44,12 +45,22 @@
     <picker class="pick" mode="date" value="{{date}}" data-column_name="riqi" bindchange="choiceDate">
       <input bindinput="onInput" data-column="riqi" class="input_text_form" value="{{riqi}}" type="date" name="riqi" disabled="disabled"></input>
     </picker>
+    <view class="lables">发票号</view>
+    <input bindinput="onInput" data-column="thebillingnumber" class="input_text_form" value="{{thebillingnumber}}" type="text" name="thebillingnumber"></input>
+    <view class="lables">税号</view>
+    <input bindinput="onInput" data-column="shuihao" class="input_text_form" value="{{shuihao}}" type="text" name="shuihao"></input>
     <view class="lables">客户名称</view>
     <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">开票单位</view>
     <input bindinput="onInput" data-column="unit" class="input_text_form" value="{{unit}}" type="text" name="unit"></input>
-    <view class="lables">发票号</view>
-    <input bindinput="onInput" data-column="thebillingnumber" class="input_text_form" value="{{thebillingnumber}}" type="text" name="thebillingnumber"></input>
+    <view class="lables">单位地址</view>
+    <input bindinput="onInput" data-column="address" class="input_text_form" value="{{address}}" type="text" name="address"></input>
+    <view class="lables">电话号码</view>
+    <input bindinput="onInput" data-column="phone" class="input_text_form" value="{{phone}}" type="text" name="phone"></input>
+    <view class="lables">开户银行</view>
+    <input bindinput="onInput" data-column="yinhang" class="input_text_form" value="{{yinhang}}" type="text" name="yinhang"></input>
+    <view class="lables">银行账户</view>
+    <input bindinput="onInput" data-column="zhanghu" class="input_text_form" value="{{zhanghu}}" type="text" name="zhanghu"></input>
     <view class="lables">品名</view>
     <input bindinput="onInput" data-column="nameofarticle" class="input_text_form" value="{{nameofarticle}}" type="text" name="nameofarticle"></input>
     <view class="lables">单价</view>
@@ -71,12 +82,22 @@
     <picker class="pick" mode="date" value="{{date}}" data-column_name="riqi" bindchange="choiceDate">
       <input bindinput="onInput" data-column="riqi" class="input_text_form" value="{{riqi}}" type="date" name="riqi" disabled="disabled"></input>
     </picker>
+    <view class="lables">发票号</view>
+    <input bindinput="onInput" data-column="thebillingnumber" class="input_text_form" value="{{thebillingnumber}}" type="text" name="thebillingnumber"></input>
+    <view class="lables">税号</view>
+    <input bindinput="onInput" data-column="shuihao" class="input_text_form" value="{{shuihao}}" type="text" name="shuihao"></input>
     <view class="lables">客户名称</view>
     <input bindinput="onInput" bindlongtap="selKH" data-column="customer" class="input_text_form"  value="{{customer}}" type="text" name="customer"></input>
     <view class="lables">开票单位</view>
     <input bindinput="onInput" data-column="unit" class="input_text_form" value="{{unit}}" type="text" name="unit"></input>
-    <view class="lables">发票号</view>
-    <input bindinput="onInput" data-column="thebillingnumber" class="input_text_form" value="{{thebillingnumber}}" type="text" name="thebillingnumber"></input>
+    <view class="lables">单位地址</view>
+    <input bindinput="onInput" data-column="address" class="input_text_form" value="{{address}}" type="text" name="address"></input>
+    <view class="lables">电话号码</view>
+    <input bindinput="onInput" data-column="phone" class="input_text_form" value="{{phone}}" type="text" name="phone"></input>
+    <view class="lables">开户银行</view>
+    <input bindinput="onInput" data-column="yinhang" class="input_text_form" value="{{yinhang}}" type="text" name="yinhang"></input>
+    <view class="lables">银行账户</view>
+    <input bindinput="onInput" data-column="zhanghu" class="input_text_form" value="{{zhanghu}}" type="text" name="zhanghu"></input>
     <view class="lables">品名</view>
     <input bindinput="onInput" data-column="nameofarticle" class="input_text_form" value="{{nameofarticle}}" type="text" name="nameofarticle"></input>
     <view class="lables">单价</view>
@@ -84,7 +105,7 @@
     <view class="lables">开票金额</view>
     <input bindinput="onInput" data-column="jine" class="input_text_form" value="{{jine}}" type="text" name="jine"></input>
     <view class="lables">备注</view>
-    <input bindinput="onInput" data-column="remarks" class="input_text_form" value="{{remarks}}" type="text" name="remarks"></input>
+    <input bindinput="onInput" data-column="remarks" class="input_text_form" value="{{remarks}}" type="text" name="remarks"></input>>
   <view class="bottom_view" style="height:10%">
     <button class="bt_bottom" style="width: 85px;" hover-class="bt_bottom_hover" bindtap="selSH">审核</button>
     <button class="bt_bottom" style="width: 85px;" hover-class="bt_bottom_hover" bindtap="qxShow">取消</button>

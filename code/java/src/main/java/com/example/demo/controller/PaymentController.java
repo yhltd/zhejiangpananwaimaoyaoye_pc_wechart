@@ -73,6 +73,28 @@ public class PaymentController {
     }
 
     /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/kanbanList")
+    public ResultInfo kanbanList(String riqi,String riqi1,String riqi2, HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+        if (!powerUtil.isSelect("收付款明细") && !userInfo.getPower().equals("管理员")) {
+            return ResultInfo.error(401, "无权限");
+        }
+        try {
+            List<Payment> getList = paymentService.kanbanList(riqi,riqi1,riqi2, userInfo.getName(), userInfo.getPower());
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
      * 查询看板
      *
      * @return ResultInfo
@@ -171,6 +193,28 @@ public class PaymentController {
             log.error("删除失败：{}", e.getMessage());
             log.error("参数：{}", idList);
             return ResultInfo.error("删除失败");
+        }
+    }
+
+    /**
+     * 审核
+     */
+    @RequestMapping("/updateState")
+    public ResultInfo updateState(String state, int id, HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        if (!userInfo.getPower().equals("管理员")) {
+            return ResultInfo.success("无权限");
+        }
+        try {
+            if (paymentService.updateState(state, id)) {
+                return ResultInfo.success("审核成功");
+            } else {
+                return ResultInfo.success("审核失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("审核失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
         }
     }
 }

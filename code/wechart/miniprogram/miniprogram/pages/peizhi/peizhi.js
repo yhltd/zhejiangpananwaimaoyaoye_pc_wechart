@@ -79,9 +79,16 @@ Page({
     }
     console.log(url)
     if(url != ''){
-      wx.navigateTo({
-        url: url + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(quanxian)
-      })
+      if(view_name == '看板'){
+        wx.navigateTo({
+          url: url + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(_this.data.userPower)
+        })
+      }else{
+        wx.navigateTo({
+          url: url + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(quanxian)
+        })
+      }
+      
     }
   },
 

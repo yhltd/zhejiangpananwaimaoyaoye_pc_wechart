@@ -61,12 +61,35 @@ public class ChukuController {
     public ResultInfo getList(HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isSelect("销售") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isSelect("出库") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 
         try {
             List<Sale> getList = chukuService.getList(userInfo.getName(), userInfo.getPower());
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getList_kanban")
+    public ResultInfo getList_kanban(HttpSession session,String riqi,String customer,String salesman,String type) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+        if (!powerUtil.isSelect("出库") && !userInfo.getPower().equals("管理员")) {
+            return ResultInfo.error(401, "无权限");
+        }
+
+        try {
+            List<Sale> getList = chukuService.getList_kanban(riqi,customer,salesman,type);
             return ResultInfo.success("获取成功", getList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +108,7 @@ public class ChukuController {
     public ResultInfo getList_shenhezhong(HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isSelect("销售") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isSelect("出库") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 
@@ -109,7 +132,7 @@ public class ChukuController {
     public ResultInfo getList_tongguo(HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isSelect("销售") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isSelect("出库") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 
@@ -132,7 +155,7 @@ public class ChukuController {
     public ResultInfo getList_weitongguo(HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isSelect("销售") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isSelect("出库") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 
@@ -155,7 +178,7 @@ public class ChukuController {
     public ResultInfo queryList(String ks, String js, String customer, String product, String pihao, String saleType, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isSelect("销售") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isSelect("出库") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 
@@ -183,7 +206,7 @@ public class ChukuController {
     public ResultInfo insert(String riqi, Integer productId, String saleType, String price, String num, String remarks, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isAdd("銷售") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isAdd("出库") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 
@@ -220,11 +243,11 @@ public class ChukuController {
         try {
             sale = DecodeUtil.decodeToJson(updateJson, Sale.class);
             if (sale.getChukuState().equals("审核通过") && !userInfo.getPower().equals("管理员")) {
-                if (!userInfo.getStateUpd().equals("是")) {
-                    return ResultInfo.error(401, "审核已通过，无修改权限");
-                }
+//                if (!userInfo.getStateUpd().equals("是")) {
+//                    return ResultInfo.error(401, "审核已通过，无修改权限");
+//                }
             } else {
-                if (!powerUtil.isUpdate("销售") && !userInfo.getPower().equals("管理员")) {
+                if (!powerUtil.isUpdate("出库") && !userInfo.getPower().equals("管理员")) {
                     return ResultInfo.error(401, "无权限");
                 }
             }
@@ -250,7 +273,7 @@ public class ChukuController {
     public ResultInfo delete(@RequestBody HashMap map, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isDelete("销售") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isDelete("出库") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 

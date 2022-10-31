@@ -117,7 +117,7 @@
 <!------------------------->
 <!---------销售修改弹窗--------->
 <!------------------------->
-<van-popup bind:click-overlay="qxShow" show="{{ xgShow }}" position="bottom" custom-style="height: 53%;" >
+<van-popup bind:click-overlay="qxShow" show="{{ xgShow }}" position="bottom" custom-style="height: 68%;" >
   <view class="lables">快递公司</view>
   <picker bindchange="bindPickerChange3" value="{{index}}" data-column_name="pick" range="{{express_list}}">
     <input bindinput="onInput" data-column="express" class="input_text_form"  value="{{express}}" type="text" name="express" disabled="disabled"></input>
@@ -126,6 +126,10 @@
   <input bindinput="onInput" data-column="wuliu_order" class="input_text_form" value="{{wuliu_order}}" type="text" name="wuliu_order"></input>
   <view class="lables">批号</view>
   <input bindinput="onInput" data-column="pihao" class="input_text_form" value="{{pihao}}" type="text" name="pihao"></input>
+  <view class="lables">发货状态</view>
+  <picker bindchange="bindPickerChange6" value="{{index}}" data-column_name="pick" range="{{fahuo_list}}">
+    <input bindinput="onInput" data-column="fahuo" class="input_text_form"  value="{{fahuo}}" type="text" name="fahuo" disabled="disabled"></input>
+  </picker>
   <view class="bottom_view" style="height:10%">
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="del1">删除</button>
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="upd1">修改</button>
@@ -161,6 +165,10 @@
   <input bindinput="onInput" data-column="xiaoji" class="input_text_form" value="{{xiaoji}}" type="number" name="xiaoji"></input>
   <view class="lables">备注</view>
   <input bindinput="onInput" data-column="remarks" class="input_text_form" value="{{remarks}}" type="text" name="remarks"></input>
+  <view class="lables">发货状态</view>
+  <picker bindchange="bindPickerChange6" value="{{index}}" data-column_name="pick" range="{{fahuo_list}}">
+    <input bindinput="onInput" data-column="fahuo" class="input_text_form"  value="{{fahuo}}" type="text" name="fahuo" disabled="disabled"></input>
+  </picker>
   <view class="bottom_view" style="height:10%">
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="del1">删除</button>
     <button class="bt_bottom" hover-class="bt_bottom_hover" bindtap="upd4">修改</button>

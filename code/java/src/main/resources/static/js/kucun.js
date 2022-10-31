@@ -8,6 +8,7 @@ function getList() {
     }, false, '', function (res) {
         if (res.code == 200) {
             setTable(res.data);
+            console.log(res.data)
             $("#kucunTable").colResizable({
                 liveDrag: true,
                 gripInnerHtml: "<div class='grip'></div>",
@@ -63,6 +64,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style:'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: '',
@@ -91,8 +93,20 @@ function setTable(data) {
                 sortable: true,
                 width: 120,
             }, {
+                field: 'pinhao',
+                title: '品号',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
                 field: 'spec',
                 title: '规格',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'attribute',
+                title: '产品属性',
                 align: 'center',
                 sortable: true,
                 width: 200,

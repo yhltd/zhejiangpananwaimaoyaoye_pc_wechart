@@ -53,4 +53,9 @@ public class InvoiceImpl extends ServiceImpl<InvoiceMapper, Invoice> implements 
     public boolean delete(List<Integer> idList) {
         return removeByIds(idList);
     }
+
+    @Override
+    public boolean updateState(String state, int id) {
+        return invoiceMapper.updateState(state, id);
+    }
 }

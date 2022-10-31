@@ -62,4 +62,24 @@ public class Payment {
      * 客户
      */
     private String customer;
+
+    /**
+     * 审核状态
+     */
+    private String state;
+
+    /**
+     *  客户号
+     */
+    private String customerNum;
+
+    /**
+     *  区域
+     */
+    private String area;
+
+    /**
+     *  客户类别
+     */
+    private String leibie;
 }

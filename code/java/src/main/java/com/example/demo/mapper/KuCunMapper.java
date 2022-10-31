@@ -15,16 +15,16 @@ import java.util.List;
 @Mapper
 @Repository
 public interface KuCunMapper extends BaseMapper<Product> {
-    @Select("select id,warehouse,pihao,product_id,product_name,spec,unit,price,pinyin,s.num from (select product_id,warehouse,pihao,sum(case when type='销售' then convert(float,num) else -convert(float,num) end) as num from sale where sale_state = '审核通过' and chuku_state = '审核通过' group by product_id,warehouse,pihao ) as s left join product p on s.product_id=p.id")
+    @Select("select id,warehouse,pihao,product_id,product_name,spec,pinhao,attribute,unit,price,pinyin,s.num from (select product_id,warehouse,pihao,sum(case when type='销售' then convert(float,num) else -convert(float,num) end) as num from sale where sale_state = '审核通过' and chuku_state = '审核通过' and fahuo = '已发货' group by product_id,warehouse,pihao ) as s left join product p on s.product_id=p.id")
     List<Product> getSale();
 
-    @Select("select id,warehouse,pihao,product_id,product_name,spec,unit,price,pinyin,r.num from (select product_id,warehouse,pihao,sum(case when state='审核通过' then convert(float,num) else 0 end) as num from ruku group by product_id,warehouse,pihao) as r left join product p on r.product_id=p.id")
+    @Select("select id,warehouse,pihao,product_id,product_name,spec,pinhao,attribute,unit,price,pinyin,r.num from (select product_id,warehouse,pihao,sum(case when state='审核通过' then convert(float,num) else 0 end) as num from ruku group by product_id,warehouse,pihao) as r left join product p on r.product_id=p.id")
     List<Product> getRuku();
 
-    @Select("select id,warehouse,pihao,product_id,product_name,spec,unit,price,pinyin,s.num from (select product_id,warehouse,pihao,sum(case when type='销售' then convert(float,num) else -convert(float,num) end) as num from sale where sale_state = '审核通过' and chuku_state = '审核通过' group by product_id,warehouse,pihao ) as s left join product p on s.product_id=p.id where warehouse like '%'+#{warehouse}+'%' and pihao like '%'+#{pihao}+'%' and (product_name like '%'+#{product}+'%' or pinyin like '%'+#{product}+'%')")
+    @Select("select id,warehouse,pihao,product_id,product_name,spec,pinhao,attribute,unit,price,pinyin,s.num from (select product_id,warehouse,pihao,sum(case when type='销售' then convert(float,num) else -convert(float,num) end) as num from sale where sale_state = '审核通过' and chuku_state = '审核通过' and fahuo = '已发货' group by product_id,warehouse,pihao ) as s left join product p on s.product_id=p.id where warehouse like '%'+#{warehouse}+'%' and pihao like '%'+#{pihao}+'%' and (product_name like '%'+#{product}+'%' or pinyin like '%'+#{product}+'%')")
     List<Product> querySale(String warehouse, String pihao, String product);
 
-    @Select("select id,warehouse,pihao,product_id,product_name,spec,unit,price,pinyin,r.num from (select product_id,warehouse,pihao,sum(case when state='审核通过' then convert(float,num) else 0 end) as num from ruku group by product_id,warehouse,pihao) as r left join product p on r.product_id=p.id where warehouse like '%'+#{warehouse}+'%' and pihao like '%'+#{pihao}+'%' and (product_name like '%'+#{product}+'%' or pinyin like '%'+#{product}+'%')")
+    @Select("select id,warehouse,pihao,product_id,product_name,spec,pinhao,attribute,unit,price,pinyin,r.num from (select product_id,warehouse,pihao,sum(case when state='审核通过' then convert(float,num) else 0 end) as num from ruku group by product_id,warehouse,pihao) as r left join product p on r.product_id=p.id where warehouse like '%'+#{warehouse}+'%' and pihao like '%'+#{pihao}+'%' and (product_name like '%'+#{product}+'%' or pinyin like '%'+#{product}+'%')")
     List<Product> queryRuku(String warehouse, String pihao, String product);
 
 

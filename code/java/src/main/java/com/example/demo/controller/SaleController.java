@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,28 @@ public class SaleController {
 
         try {
             List<Sale> getList = saleService.getList(userInfo.getName(), userInfo.getPower());
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getList_kanban")
+    public ResultInfo getList_kanban(HttpSession session,String riqi,String customer,String salesman,String type) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+        if (!powerUtil.isSelect("销售") && !userInfo.getPower().equals("管理员")) {
+            return ResultInfo.error(401, "无权限");
+        }
+        try {
+            List<Sale> getList = saleService.getList_kanban(riqi,customer,salesman,type);
             return ResultInfo.success("获取成功", getList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,6 +198,37 @@ public class SaleController {
     }
 
     /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getXiaoShou_kanban")
+    public ResultInfo getXiaoShou_kanban(String riqi, String riqi1, String riqi2, HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+        if (!powerUtil.isSelect("销售") && !userInfo.getPower().equals("管理员")) {
+            return ResultInfo.error(401, "无权限");
+        }
+        String customer = "";
+        String product = "";
+        String pihao = "";
+        String saleType = "";
+        List<Sale> getList = new ArrayList<>();
+        try {
+            if(!userInfo.getPower().equals("管理员")){
+                getList = saleService.queryList(riqi1, riqi2, customer, product, pihao, saleType, userInfo.getName(), userInfo.getPower());
+            }else{
+                getList = saleService.queryList(riqi, riqi, customer, product, pihao, saleType, userInfo.getName(), userInfo.getPower());
+            }
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
      * 添加
      */
     @RequestMapping("/add")
@@ -209,7 +263,7 @@ public class SaleController {
     public ResultInfo insert(String riqi, Integer customerId, String shStaff, String pick, String type, Integer productId, String saleType, String price, String num, String remarks, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isAdd("銷售") && !userInfo.getPower().equals("管理员")) {
+        if (!powerUtil.isAdd("销售") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
 

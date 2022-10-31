@@ -56,10 +56,45 @@ function getProduct() {
 
 }
 
+function kanbanSelect(){
+    var tiaojian = $.session.get('kanban_goto');
+    console.log(tiaojian)
+    if(tiaojian != undefined){
+        var riqi = tiaojian.split("`")[0]
+        var salesman = tiaojian.split("`")[2]
+        var type = tiaojian.split("`")[3]
+        console.log(riqi)
+        console.log(salesman)
+        console.log(type)
+        $.session.remove('kanban_goto');
+        $ajax({
+            type: 'post',
+            url: '/ruku/getList_kanban',
+            data: {
+                riqi: riqi,
+                salesman: salesman,
+                type: type,
+            }
+        }, true, '', function (res) {
+            if (res.code == 200) {
+                setTable(res.data);
+            }
+        })
+    }
+
+}
+
+
+window.onload = function(){
+    kanbanSelect();
+};
+
 
 $(function () {
     getList();
     getSelect();
+    kanbanSelect();
+
     $('#select-btn').click(function () {
         var ks = $('#ks').val();
         var js = $('#js').val();
@@ -419,6 +454,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: '',
@@ -463,11 +499,23 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'pinhao',
+                title: '品号',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
                 field: 'spec',
                 title: '规格',
                 align: 'center',
                 sortable: true,
                 width: 200,
+            }, {
+                field: 'attribute',
+                title: '产品属性',
+                align: 'center',
+                sortable: true,
+                width: 100,
             }, {
                 field: 'pihao',
                 title: '批号',
@@ -661,6 +709,7 @@ function setAddRuku(data) {
         pagination: true,
         search: true,
         searchAlign: 'left',
+        pageSize: 10,//单页记录数
         clickToSelect: false,
         locale: 'zh-CN',
         columns: [
@@ -690,7 +739,11 @@ function setAddRuku(data) {
                 sortable: true,
                 width: 180,
                 formatter: function (value, row, index) {
-                    return '<input type="date" class="form-control" name="productDate" />'
+                    var time = new Date();
+                    var day = ("0" + time.getDate()).slice(-2);
+                    var month = ("0" + (time.getMonth() + 1)).slice(-2);
+                    var today = time.getFullYear() + "-" + (month) + "-" + (day);
+                    return '<input type="date" value="'+ today +'" class="form-control" name="productDate" />'
                 }
             }, {
                 field: 'productName',

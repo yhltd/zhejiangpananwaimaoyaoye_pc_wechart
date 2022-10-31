@@ -195,6 +195,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: '',
@@ -447,8 +448,6 @@ function columnUpd(id,column){
             setTimeout(function(){
                 obj.hidden = true
             },3000);
-
-            getList();
         }
     })
 }

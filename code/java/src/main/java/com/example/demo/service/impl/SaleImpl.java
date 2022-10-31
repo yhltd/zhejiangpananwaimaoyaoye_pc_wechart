@@ -29,6 +29,11 @@ public class SaleImpl extends ServiceImpl<SaleMapper, Sale> implements SaleServi
     }
 
     @Override
+    public List<Sale> getList_kanban(String riqi,String customer,String salesman,String type) {
+        return saleMapper.getList_kanban(riqi,customer,salesman,type);
+    }
+
+    @Override
     public List<Sale> getKanban(String riqi,String riqi1, String riqi2,String name,String power) {
         if (power.equals("管理员")) {
             return saleMapper.getKanban(riqi);

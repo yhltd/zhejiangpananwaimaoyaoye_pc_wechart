@@ -25,6 +25,11 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
     }
 
     @Override
+    public List<Sale> getList_kanban(String riqi,String customer,String salesman,String type) {
+        return chukuMapper.getList_kanban(riqi,customer,salesman,type);
+    }
+
+    @Override
     public List<Sale> getList_shenhezhong(String name, String power) {
         if (power.equals("管理员")) {
             return chukuMapper.getList_shenhezhong();

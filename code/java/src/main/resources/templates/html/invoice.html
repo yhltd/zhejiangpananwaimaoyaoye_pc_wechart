@@ -101,6 +101,11 @@
                                data-required="1">
                     </div>
                     <div class="form-group">
+                        <label for="add-shuihao">税号</label>
+                        <input id="add-shuihao" name="shuihao" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
                         <label for="add-customer">客户</label>
                         <input id="add-customer" type="text" class="form-control" autocomplete="off"
                                readonly="readonly">
@@ -114,17 +119,37 @@
                                data-required="1">
                     </div>
                     <div class="form-group">
+                        <label for="add-address">单位地址</label>
+                        <input id="add-address" name="address" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-phone">电话号码</label>
+                        <input id="add-phone" name="phone" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-yinhang">开户银行</label>
+                        <input id="add-yinhang" name="yinhang" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhanghu">银行账户</label>
+                        <input id="add-zhanghu" name="zhanghu" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
                         <label for="add-nameofarticle">品名</label>
-                        <select id="add-nameofarticle" name="nameofarticle" class="form-control">
+<!--                        <select id="add-nameofarticle" name="nameofarticle" class="form-control">-->
 
-                        </select>
+<!--                        </select>-->
 
-                        <!--                        <input id="add-nameofarticle" name="nameofarticle" type="text" class="form-control" autocomplete="off"-->
-                        <!--                               data-required="1">-->
+                        <input id="add-nameofarticle" name="nameofarticle" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
                     </div>
                     <div class="form-group">
                         <label for="add-unitprice">单价</label>
-                        <input id="add-unitprice" name="unitprice" type="number" class="form-control" autocomplete="off"
+                        <input id="add-unitprice" name="unitprice" type="text" class="form-control" autocomplete="off"
                                data-required="1">
                     </div>
                     <div class="form-group">
@@ -183,6 +208,11 @@
                                data-required="1">
                     </div>
                     <div class="form-group">
+                        <label for="update-shuihao">税号</label>
+                        <input id="update-shuihao" name="shuihao" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
                         <label for="update-customer">客户</label>
                         <input id="update-customer" type="text" class="form-control" autocomplete="off"
                                readonly="readonly">
@@ -196,16 +226,36 @@
                                data-required="1">
                     </div>
                     <div class="form-group">
+                        <label for="update-address">单位地址</label>
+                        <input id="update-address" name="address" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-phone">电话号码</label>
+                        <input id="update-phone" name="phone" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-yinhang">开户银行</label>
+                        <input id="update-yinhang" name="yinhang" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zhanghu">银行账户</label>
+                        <input id="update-zhanghu" name="zhanghu" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
                         <label for="update-nameofarticle">品名</label>
-                        <select id="update-nameofarticle" name="nameofarticle" class="form-control">
+<!--                        <select id="update-nameofarticle" name="nameofarticle" class="form-control">-->
 
-                        </select>
-                        <!--                        <input id="update-nameofarticle" name="nameofarticle" type="text" class="form-control" autocomplete="off"-->
-                        <!--                               data-required="1">-->
+<!--                        </select>-->
+                            <input id="update-nameofarticle" name="nameofarticle" type="text" class="form-control" autocomplete="off"
+                                   data-required="1" readonly="readonly">
                     </div>
                     <div class="form-group">
                         <label for="update-unitprice">单价</label>
-                        <input id="update-unitprice" name="unitprice" type="number" class="form-control" autocomplete="off"
+                        <input id="update-unitprice" name="unitprice" type="text" class="form-control" autocomplete="off"
                                data-required="1">
                     </div>
                     <div class="form-group">
@@ -274,6 +324,30 @@
                     确定
                 </button>
                 <button id="customer-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询产品窗体-->
+<div id="show-product-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择产品</div>
+            </div>
+            <div class="modal-body" style="max-height: 800px">
+                <table id="show-table-product"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="product-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="product-close-btn" type="button" class="btn btn-primary left-margin">
                     <i class="bi bi-x-circle icon"></i>
                     关闭
                 </button>

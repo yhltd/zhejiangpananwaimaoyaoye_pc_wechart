@@ -57,6 +57,29 @@ public class RukuController {
         }
     }
 
+
+    /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getList_kanban")
+    public ResultInfo getList_kanban(HttpSession session,String riqi,String salesman,String type) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
+        if (!powerUtil.isSelect("入库") && !userInfo.getPower().equals("管理员")) {
+            return ResultInfo.error(401, "无权限");
+        }
+        try {
+            List<Ruku> getList = rukuService.getList_kanban(riqi,salesman,type);
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
     /**
      * 查询所有审核中
      *

@@ -16,6 +16,11 @@ public interface ChukuService extends IService<Sale> {
     /**
      * 查询
      */
+    List<Sale> getList_kanban(String riqi,String customer,String salesman,String type);
+
+    /**
+     * 查询
+     */
     List<Sale> getList_shenhezhong(String name, String power);
 
     /**

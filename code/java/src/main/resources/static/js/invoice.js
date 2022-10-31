@@ -32,9 +32,21 @@ function getCustomer() {
     })
 }
 
+function getProduct() {
+    $ajax({
+        type: 'post',
+        url: '/product/getSelect',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            setProductTable(res.data);
+            $('#show-product-modal').modal('show');
+        }
+        console.log(res)
+    })
+}
+
 $(function () {
     getList();
-
     $('#select-btn').click(function () {
         var customer = $('#customer').val();
         var unit = $('#unit').val();
@@ -61,6 +73,11 @@ $(function () {
 
     //点击新增按钮显示弹窗
     $("#add-btn").click(function () {
+        var time = new Date();
+        var day = ("0" + time.getDate()).slice(-2);
+        var month = ("0" + (time.getMonth() + 1)).slice(-2);
+        var today = time.getFullYear() + "-" + (month) + "-" + (day);
+        $('#add-riqi').val(today);
         $('#add-modal').modal('show');
         var item4 = '';
         $ajax({
@@ -246,6 +263,50 @@ $(function () {
         }
     })
 
+    //修改窗体点击产品文本框
+    $("#update-nameofarticle").click(function () {
+        getProduct();
+    });
+
+    $("#add-nameofarticle").click(function () {
+        getProduct();
+    })
+
+    //产品窗体提交按钮
+    $("#product-submit-btn").click(function () {
+        let rows = getTableSelection("#show-table-product");
+        if (rows.length < 1) {
+            swal('请至少选择一条数据');
+        } else {
+
+            var name = ""
+            var price = ""
+            $.each(rows, function (index, row) {
+                console.log(row.data)
+                if(name == ""){
+                    name = row.data.productName
+                }else{
+                    name = name + "," + row.data.productName
+                }
+                if(price == ""){
+                    price = row.data.price
+                }else{
+                    price = price + "," + row.data.price
+                }
+            });
+            $("#add-nameofarticle").val(name);
+            $("#update-nameofarticle").val(name);
+            $("#add-unitprice").val(price);
+            $("#update-unitprice").val(price);
+            $('#show-product-modal').modal('hide');
+        }
+    });
+
+    //产品窗体关闭按钮
+    $("#product-close-btn").click(function () {
+        $('#show-product-modal').modal('hide');
+    });
+
 });
 
 function setTable(data) {
@@ -266,6 +327,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
+        height: document.body.clientHeight * 0.9,
         columns: [
             {
                 field: '',
@@ -288,18 +350,66 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'shuihao',
+                title: '税号',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
                 field: 'customer',
                 title: '客户',
                 align: 'center',
                 sortable: true,
                 width: 200,
             }, {
+                field: 'customerNum',
+                title: '客户号',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: 'area',
+                title: '区域',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: 'leibie',
+                title: '类别',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
                 field: 'unit',
                 title: '开票单位',
                 align: 'center',
                 sortable: true,
                 width: 200,
             }, {
+                field: 'address',
+                title: '单位地址',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'phone',
+                title: '电话号码',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'yinhang',
+                title: '开户银行',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'zhanghu',
+                title: '银行账户',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            },{
                 field: 'nameofarticle',
                 title: '品名',
                 align: 'center',
@@ -323,6 +433,20 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 200,
+            }, {
+                field: 'state',
+                title: '审批状态',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: '',
+                title: '操作',
+                align: 'center',
+                width: 100,
+                formatter: function (value, row, index) {
+                    return '<button onclick="javascript:pass(' + row.id + ')" class="btn-sm btn-primary">通过</button> <button onclick="javascript:refuse(' + row.id + ')" class="btn-sm btn-primary">拒绝</button>'
+                }
             }
         ],
         onClickRow: function (row, el) {
@@ -404,6 +528,103 @@ function setCustomerTable(data) {
             } else {
                 $(el).addClass('selected')
             }
+        }
+    })
+}
+
+function setProductTable(data) {
+    if ($('#show-table-product').html() != '') {
+        $('#show-table-product').bootstrapTable('load', data);
+    }
+    $('#show-table-product').bootstrapTable({
+        data: data,
+        sortStable: true,
+        classes: 'table table-hover',
+        idField: 'id',
+        pagination: true,
+        search: true,
+        searchAlign: 'left',
+        pageSize: 10,//单页记录数
+        clickToSelect: true,
+        locale: 'zh-CN',
+        columns: [
+            {
+                field: '',
+                title: '序号',
+                align: 'center',
+                width: 50,
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'productName',
+                title: '产品名称',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'spec',
+                title: '规格',
+                align: 'left',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'unit',
+                title: '单位',
+                align: 'left',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'price',
+                title: '价格',
+                align: 'left',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'pinyin',
+                title: '拼音代码',
+                align: 'left',
+                sortable: true,
+                width: 120,
+            }
+        ],
+        onClickRow: function (row, el) {
+            let isSelect = $(el).hasClass('selected')
+            if (isSelect) {
+                $(el).removeClass('selected')
+            } else {
+                $(el).addClass('selected')
+            }
+        }
+    })
+}
+
+function pass(id) {
+    $ajax({
+        type: 'post',
+        url: '/invoice/updateState',
+        data: {
+            state: "审核通过",
+            id: id,
+        },
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            getList();
+        }
+    })
+}
+
+function refuse(id) {
+    $ajax({
+        type: 'post',
+        url: '/invoice/updateState',
+        data: {
+            state: "审核未通过",
+            id: id,
+        },
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            getList();
         }
     })
 }

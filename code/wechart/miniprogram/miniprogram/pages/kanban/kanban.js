@@ -59,8 +59,10 @@ Page({
   onLoad(options) {
     var _this = this
     var userInfo = JSON.parse(options.userInfo)
+    var userPower = JSON.parse(options.userPower)
     _this.setData({
-      userInfo:userInfo
+      userInfo:userInfo,
+      userPower:userPower
     })
     _this.tableShow()
     _this.tableShow2()
@@ -222,195 +224,141 @@ Page({
     })
   },
 
-  qxShow: function () {
+  clickView1:function(e){
     var _this = this
-    _this.setData({
-      tjShow: false,
-      xgShow: false,
-      cxShow: false,
-      currentDate: new Date().getTime(),
-      id: '',
-      riqi: '',
-      customer: '',
-      customer_id: '',
-      sh_staff: '',
-      express: '',
-      pick: '',
-      wuliu_order: '',
-      warehouse: '',
-      staff: '',
-      product_id: '',
-      product_name: '',
-      spec: '',
-      unit: '',
-      price: '',
-      xiaoji:'',
-      pihao: '',
-      num: '',
-      remarks:'',
-      type:'',
-    })
-  },
+      var type = _this.data.list[e.currentTarget.dataset.index].type
+      var customer = _this.data.list[e.currentTarget.dataset.index].customer
+      var riqi = _this.data.list[e.currentTarget.dataset.index].riqi
+      var salesman = _this.data.list[e.currentTarget.dataset.index].salesman
+      var state = _this.data.list[e.currentTarget.dataset.index].state
+      var tiaojian = [type,customer,riqi,salesman,state]
 
-  clickView:function(e){
-    var _this = this
-    _this.setData({
-      id: _this.data.list[e.currentTarget.dataset.index].id,
-      riqi: _this.data.list[e.currentTarget.dataset.index].riqi, 
-      customer: _this.data.list[e.currentTarget.dataset.index].customer,
-      customer_id: _this.data.list[e.currentTarget.dataset.index].customer_id,
-      sh_staff: _this.data.list[e.currentTarget.dataset.index].sh_staff,
-      express: _this.data.list[e.currentTarget.dataset.index].express,
-      pick: _this.data.list[e.currentTarget.dataset.index].pick,
-      wuliu_order: _this.data.list[e.currentTarget.dataset.index].wuliu_order,
-      warehouse: _this.data.list[e.currentTarget.dataset.index].warehouse,
-      staff: _this.data.list[e.currentTarget.dataset.index].staff,
-      product_id: _this.data.list[e.currentTarget.dataset.index].product_id,
-      product_name: _this.data.list[e.currentTarget.dataset.index].product_name,
-      spec: _this.data.list[e.currentTarget.dataset.index].spec,
-      unit: _this.data.list[e.currentTarget.dataset.index].unit,
-      price: _this.data.list[e.currentTarget.dataset.index].price,
-      xiaoji: _this.data.list[e.currentTarget.dataset.index].xiaoji,
-      pihao: _this.data.list[e.currentTarget.dataset.index].pihao,
-      num: _this.data.list[e.currentTarget.dataset.index].num,
-      remarks: _this.data.list[e.currentTarget.dataset.index].remarks,
-      type:_this.data.list[e.currentTarget.dataset.index].type,
-      xgShow:true,
-    })
-  },
+      console.log(type)
 
-  inquire: function () {
-    var _this = this
-    _this.tableShow(e)
-  },
-
-  onInput: function (e) {
-    var _this = this
-    let column = e.currentTarget.dataset.column
-    _this.setData({
-      currentDate: e.detail,
-      [column]: e.detail.value
-    })
-  },
-
-  entering:function(){
-    var _this=this
-    _this.setData({
-      cxShow:true,
-      warehouse:"",
-      pihao:"",
-      product_name:"",
-    })
-  },
-
-  choiceDate: function (e) {
-    //e.preventDefault(); 
-    this.setData({
-      [e.target.dataset.column_name]: e.detail.value 
-    })
-    console.log(e.detail.value)
-  },
-
-  sel1:function(){
-    var _this = this
-    var e = [_this.data.warehouse,_this.data.pihao,_this.data.product_name]
-    _this.tableShow(e)
-    _this.qxShow()
-  },
-
-  select4: function (e) {
-    var _this = this
-    if (e.type == "select") {
-      _this.setData({
-        xlShow4: false,
-        product_name: e.detail.product_name,
-        spec: e.detail.spec,
-        unit: e.detail.unit,
-        price:e.detail.price,
-        product_id: e.detail.id,
-      })
-    } else if (e.type == "close") {
-      _this.setData({
-        xlShow4: false,
-      })
-    }
-  },
-
-  select1: function (e) {
-    var _this = this
-    if (e.type == "select") {
-      var shenhe = e.detail.name
-      wx.cloud.callFunction({
-        name: 'sqlServer_117',
-        data: {
-          query: "update ruku set state='" + shenhe + "' where id=" + _this.data.id 
-        },
-        success: res => {
-          _this.setData({
-            id: '',
-            riqi: '',
-            customer: '',
-            customer_id: '',
-            sh_staff: '',
-            express: '',
-            pick: '',
-            wuliu_order: '',
-            warehouse: '',
-            staff: '',
-            product_id: '',
-            product_name: '',
-            spec: '',
-            unit: '',
-            price: '',
-            xiaoji:'',
-            pihao: '',
-            num: '',
-            remarks:'',
-            type:'',
-            xlShow1: false,
-          })
-          _this.qxShow()
-          var e = ['','','']
-           _this.tableShow(e)
-  
-          wx.showToast({
-            title: '修改成功！',
-            icon: 'none'
-          })
-        },
-        err: res => {
-          console.log("错误!")
-        },
-        fail: res => {
-          wx.showToast({
-            title: '请求失败！',
-            icon: 'none'
-          })
-          console.log("请求失败！")
+      wx.showModal({
+        title: '',
+        content: '是否要跳转到对应页面？',
+        success:res=>{
+         if (res.confirm) {
+          var quanxian = ""
+          if(type == '入库'){
+            for(var i=0; i<_this.data.userPower.length; i++){
+              if("入库" == _this.data.userPower[i].view_name){
+                quanxian={
+                  zeng:_this.data.userPower[i].zeng,
+                  shan:_this.data.userPower[i].shan,
+                  gai:_this.data.userPower[i].gai,
+                  cha:_this.data.userPower[i].cha
+                }
+              }
+            }
+            wx.navigateTo({
+              url: "../ruku/ruku" + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(quanxian)+ "&tiaojian=" + JSON.stringify(tiaojian)
+            })
+          }else if(type == '销售'){
+            for(var i=0; i<_this.data.userPower.length; i++){
+              if("销售" == _this.data.userPower[i].view_name){
+                quanxian={
+                  zeng:_this.data.userPower[i].zeng,
+                  shan:_this.data.userPower[i].shan,
+                  gai:_this.data.userPower[i].gai,
+                  cha:_this.data.userPower[i].cha
+                }
+              }
+            }
+            wx.navigateTo({
+              url: "../sale/sale" + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(quanxian)+ "&tiaojian=" + JSON.stringify(tiaojian)
+            })
+          }else if(type == '出库'){
+            for(var i=0; i<_this.data.userPower.length; i++){
+              if("出库" == _this.data.userPower[i].view_name){
+                quanxian={
+                  zeng:_this.data.userPower[i].zeng,
+                  shan:_this.data.userPower[i].shan,
+                  gai:_this.data.userPower[i].gai,
+                  cha:_this.data.userPower[i].cha
+                }
+              }
+            }
+            wx.navigateTo({
+              url: "../chuku/chuku" + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(quanxian)+ "&tiaojian=" + JSON.stringify(tiaojian)
+            })
+          }
+         } else if (res.cancel) {
+          return;
+         }
         }
       })
-      _this.setData({
-        xlShow1: false,
-      })
-    } else if (e.type == "close") {
-      _this.setData({
-        xlShow1: false,
-      })
-    }
+      
   },
 
-  selCD: function () {
-    var _this = this
-    _this.setData({
-      xlShow4: true
-    })
-  },
-
-  selSH: function () {
-    var _this = this
-    _this.setData({
-      xlShow1: true
-    })
+  clickView2:function(e){
+    var type = _this.data.list2[e.currentTarget.dataset.index].type
+      var customer = _this.data.list2[e.currentTarget.dataset.index].customer
+      var riqi = _this.data.list2[e.currentTarget.dataset.index].riqi
+      var salesman = _this.data.list2[e.currentTarget.dataset.index].salesman
+      var state = _this.data.list2[e.currentTarget.dataset.index].state
+      var tiaojian = [type,customer,riqi,salesman,state]
+      for(var i=0; i<tiaojian.length; i++){
+        if(tiaojian[i] == undefined){
+          tiaojian[i] = ''
+        }
+      }
+      wx.showModal({
+        title: '',
+        content: '是否要跳转到对应页面？',
+        success:res=>{
+         if (res.confirm) {
+          var quanxian = ""
+          if(type == '入库'){
+            for(var i=0; i<_this.data.userPower.length; i++){
+              if("入库" == _this.data.userPower[i].view_name){
+                quanxian={
+                  zeng:_this.data.userPower[i].zeng,
+                  shan:_this.data.userPower[i].shan,
+                  gai:_this.data.userPower[i].gai,
+                  cha:_this.data.userPower[i].cha
+                }
+              }
+            }
+            wx.navigateTo({
+              url: "../ruku/ruku" + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(quanxian) + "&tiaojian=" + JSON.stringify(tiaojian)
+            })
+          }else if(type == '销售'){
+            for(var i=0; i<_this.data.userPower.length; i++){
+              if("销售" == _this.data.userPower[i].view_name){
+                quanxian={
+                  zeng:_this.data.userPower[i].zeng,
+                  shan:_this.data.userPower[i].shan,
+                  gai:_this.data.userPower[i].gai,
+                  cha:_this.data.userPower[i].cha
+                }
+              }
+            }
+            wx.navigateTo({
+              url: "../sale/sale" + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(quanxian)+ "&tiaojian=" + JSON.stringify(tiaojian)
+            })
+          }else if(type == '出库'){
+            for(var i=0; i<_this.data.userPower.length; i++){
+              if("出库" == _this.data.userPower[i].view_name){
+                quanxian={
+                  zeng:_this.data.userPower[i].zeng,
+                  shan:_this.data.userPower[i].shan,
+                  gai:_this.data.userPower[i].gai,
+                  cha:_this.data.userPower[i].cha
+                }
+              }
+            }
+            wx.navigateTo({
+              url: "../chuku/chuku" + "?userInfo="+JSON.stringify(_this.data.userInfo) + "&userPower=" + JSON.stringify(quanxian)+ "&tiaojian=" + JSON.stringify(tiaojian)
+            })
+          }
+         } else if (res.cancel) {
+          return;
+         }
+        }
+      })
+      
   },
 
   

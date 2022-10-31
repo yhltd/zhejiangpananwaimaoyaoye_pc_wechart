@@ -62,4 +62,19 @@ public class TongJi {
      *  赠送往期余额
      */
     private String zswqye;
+
+    /**
+     *  客户号
+     */
+    private String customerNum;
+
+    /**
+     *  区域
+     */
+    private String area;
+
+    /**
+     *  客户类别
+     */
+    private String leibie;
 }

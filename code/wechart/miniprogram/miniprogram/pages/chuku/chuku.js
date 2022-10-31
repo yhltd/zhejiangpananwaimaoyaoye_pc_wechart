@@ -34,6 +34,27 @@ Page({
         isupd: true
       },
       {
+        text: "客户类别",
+        width: "200rpx",
+        columnName: "leibie",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "客户号",
+        width: "200rpx",
+        columnName: "customer_num",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "区域",
+        width: "200rpx",
+        columnName: "area",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "收货人员",
         width: "200rpx",
         columnName: "sh_staff",
@@ -97,9 +118,23 @@ Page({
         isupd: true
       },
       {
+        text: "品号",
+        width: "150rpx",
+        columnName: "pinhao",
+        type: "text",
+        isupd: true
+      },
+      {
         text: "规格",
         width: "400rpx",
         columnName: "spec",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "产品属性",
+        width: "200rpx",
+        columnName: "attribute",
         type: "text",
         isupd: true
       },
@@ -149,6 +184,13 @@ Page({
         text: "出库审核状态",
         width: "200rpx",
         columnName: "chuku_state",
+        type: "text",
+        isupd: true
+      },
+      {
+        text: "发货状态",
+        width: "200rpx",
+        columnName: "fahuo",
         type: "text",
         isupd: true
       },
@@ -391,10 +433,16 @@ Page({
     var _this = this
     var userInfo = JSON.parse(options.userInfo)
     var userPower = JSON.parse(options.userPower)
+    var tiaojian = options.tiaojian
+    console.log(tiaojian)
+    if(tiaojian != undefined){
+      tiaojian = JSON.parse(options.tiaojian)
+    }
     console.log(userPower)
     _this.setData({
       userInfo:userInfo,
-      userPower:userPower
+      userPower:userPower,
+      tiaojian:tiaojian
     })
 
     var sql = "select '产品:' + product_name + ';规格:' + spec + ';产品属性:' + attribute + ';单位:' + unit + ';单价:' + price  as name,id,product_name,spec,unit,price,attribute from product"
@@ -574,7 +622,6 @@ Page({
         console.log("请求失败！")
       }
     })
-
     var e = ['1900-01-01','2100-12-31','','','','','']
     _this.tableShow(e)
   },
@@ -672,17 +719,29 @@ Page({
 
   tableShow: function (e) {
     var _this = this
+    var sql = ""
+    var tiaojian = _this.data.tiaojian
+    console.log(tiaojian)
+    if(_this.data.tiaojian != undefined){
+      sql = "select sa.id,sa.riqi,customer_id,sh_staff,pick,product_id,sa.num,xiaoji,sa.remarks,type,isnull(customer,'') as customer,customer_num,area,leibie,isnull(salesman,'') as salesman,product_name,spec,pinhao,attribute,unit,sa.price,isnull(p.pinyin,'') as pinyin,sa.sale_state,sa.sale_type,sa.warehouse,sa.express,sa.wuliu_order,sa.pihao,sa.chuku_insert,sa.chuku_state,fahuo from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,isnull(customer,'') as customer,customer_num,area,leibie,salesman,isnull(pinyin,'') as pinyin,fahuo,s.price,sale_state,sale_type,chuku_insert,chuku_state from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id  where convert(date,sa.riqi)>=convert(date,'" + _this.data.tiaojian[2] + "') and convert(date,sa.riqi)<=convert(date,'" + _this.data.tiaojian[2] + "') and (customer = '" + _this.data.tiaojian[1] + "') and chuku_state = '审核中' and sale_state = '审核通过' and isnull(salesman,'') = '" + _this.data.tiaojian[3] + "' order by sa.riqi desc,customer,sale_type;"
+    }else if(_this.data.userInfo.power == '管理员'){
+      sql = "select sa.id,sa.riqi,customer_id,sh_staff,pick,product_id,sa.num,xiaoji,sa.remarks,type,isnull(customer,'') as customer,customer_num,area,leibie,isnull(salesman,'') as salesman,product_name,spec,pinhao,attribute,unit,sa.price,isnull(p.pinyin,'') as pinyin,sa.sale_state,sa.sale_type,sa.warehouse,sa.express,sa.wuliu_order,sa.pihao,sa.chuku_insert,sa.chuku_state,fahuo from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,isnull(customer,'') as customer,customer_num,area,leibie,salesman,isnull(pinyin,'') as pinyin,fahuo,s.price,sale_state,sale_type,chuku_insert,chuku_state from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id  where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and chuku_state like '%"+ e[5] +"%' and sale_state = '审核通过' and sale_type like '%" + e[4] + "%' and pihao like '%" + e[6] + "%' order by sa.riqi desc,customer,sale_type;"
+    }else{
+      sql = "select sa.id,sa.riqi,customer_id,sh_staff,pick,product_id,sa.num,xiaoji,sa.remarks,type,isnull(customer,'') as customer,customer_num,area,leibie,isnull(salesman,'') as salesman,product_name,spec,pinhao,attribute,unit,sa.price,isnull(p.pinyin,'') as pinyin,sa.sale_state,sa.sale_type,sa.warehouse,sa.express,sa.wuliu_order,sa.pihao,sa.chuku_insert,sa.chuku_state,fahuo from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,isnull(customer,'') as customer,customer_num,area,leibie,salesman,isnull(pinyin,'') as pinyin,fahuo,s.price,sale_state,sale_type,chuku_insert,chuku_state from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id  where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and chuku_state like '%"+ e[5] +"%' and sale_state = '审核通过' and sale_type like '%" + e[4] + "%' and pihao like '%" + e[6] + "%' and salesman = '" + _this.data.userInfo.name + "' order by sa.riqi desc,customer,sale_type;"
+    }
+    console.log(_this.data.tiaojian)
+    console.log(sql)
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "select sa.id,sa.riqi,customer_id,sh_staff,pick,product_id,sa.num,xiaoji,sa.remarks,type,isnull(customer,'') as customer,isnull(salesman,'') as salesman,product_name,spec,unit,sa.price,isnull(p.pinyin,'') as pinyin,sa.sale_state,sa.sale_type,sa.warehouse,sa.express,sa.wuliu_order,sa.pihao,sa.chuku_insert,sa.chuku_state from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,isnull(customer,'')as customer,salesman,isnull(pinyin,'') as pinyin,fahuo,s.price,sale_state,sale_type,chuku_insert,chuku_state from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where convert(date,sa.riqi)>=convert(date,'" + e[0] + "') and convert(date,sa.riqi)<=convert(date,'" + e[1] + "') and (customer like '%" + e[2] + "%' or sa.pinyin like '%" + e[2] + "%') and (product_name like '%" + e[3] + "%' or p.pinyin like '%" + e[3] + "%') and chuku_state like '%"+ e[5] +"%' and sale_state = '审核通过' and sale_type like '%" + e[4] + "%' and pihao like '%" + e[6] + "%' order by sa.riqi desc,customer,sale_type;"
+        query: sql
       },
       success: res => {
-        
         var list = res.result.recordset
         console.log(list)
         _this.setData({
-          list: list
+          list: list,
+          tiaojian:undefined
         })
         console.log(list)
       },
@@ -745,14 +804,14 @@ Page({
         })
         return;
       }
-      if(_this.data.list[e.currentTarget.dataset.index].sale_state == '审核通过' && _this.data.userInfo.state_upd != '是' && _this.data.userInfo.power != '管理员'){
-        wx.showToast({
-          title: '此账号无权限修改审核通过的数据！',
-          icon: 'none',
-          duration: 3000
-        })
-        return;
-      }
+      // if(_this.data.list[e.currentTarget.dataset.index].sale_state == '审核通过' && _this.data.userInfo.state_upd != '是' && _this.data.userInfo.power != '管理员'){
+      //   wx.showToast({
+      //     title: '此账号无权限修改审核通过的数据！',
+      //     icon: 'none',
+      //     duration: 3000
+      //   })
+      //   return;
+      // }
       if(_this.data.list[e.currentTarget.dataset.index].chuku_insert != '1'){
         _this.setData({
           id: _this.data.list[e.currentTarget.dataset.index].id,
@@ -1022,9 +1081,10 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update sale set express='" + _this.data.express + "',wuliu_order=" + _this.data.wuliu_order + ",pihao='" + _this.data.pihao + "',chuku_state='审核中' where id=" + _this.data.id 
+        query: "update sale set express='" + _this.data.express + "',wuliu_order='" + _this.data.wuliu_order + "',pihao='" + _this.data.pihao  + "',fahuo='" + _this.data.fahuo + "' where id=" + _this.data.id 
       },
       success: res => {
+        console.log(res.result)
         _this.setData({
           id: '',
           riqi: '',
@@ -1073,10 +1133,11 @@ Page({
 
   upd4:function(){
     var _this = this
+    console.log(_this.data.fahuo)
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update sale set riqi='" + _this.data.riqi + "',sale_type='" + _this.data.sale_type + "',pihao='" + _this.data.pihao + "',product_id=" + _this.data.product_id + ",price='" + _this.data.price + "',num='" + _this.data.num + "',xiaoji='" + _this.data.xiaoji + "',remarks='" + _this.data.remarks + "',chuku_state='审核中' where id=" + _this.data.id 
+        query: "update sale set riqi='" + _this.data.riqi + "',sale_type='" + _this.data.sale_type + "',pihao='" + _this.data.pihao + "',product_id=" + _this.data.product_id + ",price='" + _this.data.price + "',num='" + _this.data.num + "',xiaoji='" + _this.data.xiaoji + "',remarks='" + _this.data.remarks + "',fahuo='" + _this.data.fahuo + "' where id=" + _this.data.id
       },
       success: res => {
         _this.setData({
@@ -1130,7 +1191,7 @@ Page({
     wx.cloud.callFunction({
       name: 'sqlServer_117',
       data: {
-        query: "update sale set express='" + _this.data.express + "',wuliu_order=" + _this.data.wuliu_order + ",pihao='" + _this.data.pihao + "',chuku_state='审核中' where id=" + _this.data.id 
+        query: "update sale set express='" + _this.data.express + "',wuliu_order=" + _this.data.wuliu_order + ",pihao='" + _this.data.pihao + "' where id=" + _this.data.id 
       },
       success: res => {
         _this.setData({
