@@ -50,7 +50,7 @@ public class ApprovalItemController {
     @RequestMapping("/add")
     public ResultInfo add(int userId,int approvalId, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
-        if (!userInfo.getPower().equals("管理员")) {
+        if (userInfo.getPower().equals("其他")) {
             return ResultInfo.error(401, "无权限");
         }
 
@@ -74,7 +74,7 @@ public class ApprovalItemController {
     @RequestMapping("/updateState")
     public ResultInfo updateState(String state,int id,int userId , HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
-        if (!userInfo.getId().equals(userId) || !userInfo.getPower().equals("管理员")){
+        if (!userInfo.getId().equals(userId) || userInfo.getPower().equals("其他")){
             return ResultInfo.success("无权限");
         }
         try {

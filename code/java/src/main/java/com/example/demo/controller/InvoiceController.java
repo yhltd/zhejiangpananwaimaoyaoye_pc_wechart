@@ -168,7 +168,7 @@ public class InvoiceController {
     @RequestMapping("/updateState")
     public ResultInfo updateState(String state, int id, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
-        if (!userInfo.getPower().equals("管理员")) {
+        if (userInfo.getPower().equals("其他")) {
             return ResultInfo.success("无权限");
         }
         try {

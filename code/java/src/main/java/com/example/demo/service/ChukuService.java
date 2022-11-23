@@ -58,6 +58,11 @@ public interface ChukuService extends IService<Sale> {
      */
     boolean updateChukuState(String chukuState, int id);
 
+    /**
+     * 发货
+     */
+    boolean updateFahuo(int id,String pihao,String express,String wuliuOrder);
+
     List<Sale> getListByIdRiqi(int id, String riqi);
 
 }

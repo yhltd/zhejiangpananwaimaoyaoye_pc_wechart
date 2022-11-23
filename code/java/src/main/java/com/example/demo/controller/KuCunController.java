@@ -195,7 +195,7 @@ public class KuCunController {
 
             for(int i=0;i<kuCun.size();i++){
                 for(int j=0;j<getRuku.size();j++){
-                    if(getRuku.get(i).getId()==kuCun.get(j).getId() && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getRuku.get(i).getPihao().equals(kuCun.get(j).getPihao())){
+                    if(getRuku.get(j).getId()==kuCun.get(i).getId() && getRuku.get(j).getWarehouse().equals(kuCun.get(i).getWarehouse()) && getRuku.get(j).getPihao().equals(kuCun.get(i).getPihao())){
                         kuCun.get(i).setNum(kuCun.get(i).getNum()+getRuku.get(j).getNum());
                     }
                 }
@@ -203,7 +203,7 @@ public class KuCunController {
 
             for(int i=0;i<kuCun.size();i++){
                 for(int j=0;j<getSale.size();j++){
-                    if(getSale.get(i).getId()==kuCun.get(j).getId() && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getSale.get(i).getPihao().equals(kuCun.get(j).getPihao())){
+                    if(getSale.get(j).getId()==kuCun.get(i).getId() && getSale.get(j).getWarehouse().equals(kuCun.get(i).getWarehouse()) && getSale.get(j).getPihao().equals(kuCun.get(i).getPihao())){
                         kuCun.get(i).setNum(kuCun.get(i).getNum()-getSale.get(j).getNum());
                     }
                 }

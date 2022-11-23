@@ -705,7 +705,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
-        height: document.body.clientHeight * 0.9,
+        height: document.body.clientHeight * 0.8,
         columns: [
             {
                 field: '',
@@ -1189,7 +1189,7 @@ function setProductTable_Add(data) {
         idField: 'id',
         pagination: true,
         search: true,
-        pageSize: 10,//单页记录数
+        pageSize: 5,//单页记录数
         searchAlign: 'left',
         clickToSelect: false,
         locale: 'zh-CN',
@@ -1209,7 +1209,7 @@ function setProductTable_Add(data) {
                 title: '发货类型',
                 align: 'left',
                 sortable: true,
-                width: 150,
+                width: 120,
                 formatter: function (value, row, index) {
                     return getXiaLa();
                 },
@@ -1218,7 +1218,7 @@ function setProductTable_Add(data) {
                 title: '产品名称',
                 align: 'left',
                 sortable: true,
-                width: 150,
+                width: 250,
             }, {
                 field: 'spec',
                 title: '规格',
@@ -1236,22 +1236,31 @@ function setProductTable_Add(data) {
                 title: '单位',
                 align: 'left',
                 sortable: true,
-                width: 150,
+                width: 80,
             }, {
                 field: 'price',
                 title: '价格',
                 align: 'left',
                 sortable: true,
-                width: 150,
+                width: 100,
                 formatter: function (value, row, index) {
                     return '<input type="number" name="price" class="form-control" value="' + value + '" />'
+                }
+            }, {
+                field: 'zhekou',
+                title: '折扣率',
+                align: 'left',
+                sortable: true,
+                width: 120,
+                formatter: function (value, row, index) {
+                    return '<input type="number" name="zhekou" class="form-control" value="1.00" />'
                 }
             }, {
                 field: '',
                 title: '数量',
                 align: 'left',
                 sortable: true,
-                width: 150,
+                width: 100,
                 formatter: function (value, row, index) {
                     return '<input type="number" name="num" class="form-control" value="' + value + '" />'
                 }
@@ -1310,9 +1319,12 @@ function getRows(tableEl) {
     let tableData = $(tableEl).bootstrapTable('getData');
     $(tableEl + ' tr').each(function (i, tr) {
         let saleType = $(tr).children().eq(2).children().val();
-        let price = $(tr).children().eq(7).children().val();
-        let num = $(tr).children().eq(8).children().val();
-        let remarks = $(tr).children().eq(9).children().val();
+        let yuanjia = $(tr).children().eq(7).children().val();
+        let zhekou = $(tr).children().eq(8).children().val();
+        let price = yuanjia * zhekou;
+        price = Math.round(price * 100) / 100
+        let num = $(tr).children().eq(9).children().val();
+        let remarks = $(tr).children().eq(10).children().val();
         let index = $(tr).data('index');
         if (index != undefined) {
             if ($(tr).hasClass('selected')) {

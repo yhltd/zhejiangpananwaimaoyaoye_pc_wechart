@@ -17,7 +17,7 @@ public class kanbanImpl extends ServiceImpl<kanbanMapper, kanban> implements kan
 
     @Override
     public List<kanban> getRuku(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return kanbanMapper.getRuku();
         } else {
             return kanbanMapper.getRukuByName(name);
@@ -28,7 +28,7 @@ public class kanbanImpl extends ServiceImpl<kanbanMapper, kanban> implements kan
 
     @Override
     public List<kanban> getSale(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return kanbanMapper.getSale();
         } else {
             return kanbanMapper.getSaleByName(name);
@@ -37,7 +37,7 @@ public class kanbanImpl extends ServiceImpl<kanbanMapper, kanban> implements kan
 
     @Override
     public List<kanban> getChuku(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return kanbanMapper.getChuku();
         } else {
             return kanbanMapper.getChukuByName(name);

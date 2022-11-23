@@ -121,7 +121,7 @@ public class TongJiController {
             List<AnYueTongJi> th=new ArrayList<>();
             List<AnYueTongJi> fk=new ArrayList<>();
             List<AnYueTongJi> hk=new ArrayList<>();
-            if (userInfo.getPower().equals("管理员")) {
+            if (userInfo.getPower().equals("管理员") || userInfo.getPower().equals("审核人")) {
                 xs = anYueTongJiService.getXSByAdmin(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer);
                 th = anYueTongJiService.getTHByAdmin(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer);
                 fk = anYueTongJiService.getfkByAdmin(ks1, js1, ks2, js2, ks3, js3, ks4, js4, ks5, js5, ks6, js6, ks7, js7, ks8, js8, ks9, js9, ks10, js10, ks11, js11, ks12, js12, customer);
@@ -155,7 +155,7 @@ public class TongJiController {
                 anYueTongJi1.setYue9(xs.get(0).getYue9());
                 anYueTongJi1.setYue10(xs.get(0).getYue10());
                 anYueTongJi1.setYue11(xs.get(0).getYue11());
-                anYueTongJi1.setYue11(xs.get(0).getYue12());
+                anYueTongJi1.setYue12(xs.get(0).getYue12());
             }
 
             if (fk.size() > 0) {
@@ -170,7 +170,7 @@ public class TongJiController {
                 anYueTongJi2.setYue9(fk.get(0).getYue9());
                 anYueTongJi2.setYue10(fk.get(0).getYue10());
                 anYueTongJi2.setYue11(fk.get(0).getYue11());
-                anYueTongJi2.setYue11(fk.get(0).getYue12());
+                anYueTongJi2.setYue12(fk.get(0).getYue12());
             }
 
             if (th.size() > 0) {
@@ -185,7 +185,7 @@ public class TongJiController {
                 anYueTongJi3.setYue9(th.get(0).getYue9());
                 anYueTongJi3.setYue10(th.get(0).getYue10());
                 anYueTongJi3.setYue11(th.get(0).getYue11());
-                anYueTongJi3.setYue11(th.get(0).getYue12());
+                anYueTongJi3.setYue12(th.get(0).getYue12());
             }
 
             if (th.size() > 0) {
@@ -200,7 +200,7 @@ public class TongJiController {
                 anYueTongJi4.setYue9(hk.get(0).getYue9());
                 anYueTongJi4.setYue10(hk.get(0).getYue10());
                 anYueTongJi4.setYue11(hk.get(0).getYue11());
-                anYueTongJi4.setYue11(hk.get(0).getYue12());
+                anYueTongJi4.setYue12(hk.get(0).getYue12());
             }
 
             List<AnYueTongJi> list = new ArrayList<>();

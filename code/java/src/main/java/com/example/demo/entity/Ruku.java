@@ -88,4 +88,9 @@ public class Ruku {
      */
     private String attribute;
 
+    /**
+     *  有效期
+     */
+    private String validity;
+
 }

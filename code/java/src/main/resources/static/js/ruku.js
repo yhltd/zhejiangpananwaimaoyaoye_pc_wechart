@@ -214,6 +214,7 @@ $(function () {
                     pihao: row.pihao,
                     num: row.num,
                     remarks: row.remarks,
+                    validity: row.validity,
                 }
             }, false, '', function (res) {
 
@@ -454,7 +455,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
-        height: document.body.clientHeight * 0.9,
+        height: document.body.clientHeight * 0.87,
         columns: [
             {
                 field: '',
@@ -489,6 +490,12 @@ function setTable(data) {
             }, {
                 field: 'productDate',
                 title: '生产日期',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'validity',
+                title: '有效期',
                 align: 'center',
                 sortable: true,
                 width: 100,
@@ -610,9 +617,10 @@ function getRows(tableEl) {
     $(tableEl + ' tr').each(function (i, tr) {
         let warehouse = $(tr).children().eq(2).children().val();
         let productDate = $(tr).children().eq(3).children().val();
-        let num = $(tr).children().eq(8).children().val();
-        let pihao = $(tr).children().eq(10).children().val();
-        let remarks = $(tr).children().eq(11).children().val();
+        let num = $(tr).children().eq(4).children().val();
+        let pihao = $(tr).children().eq(5).children().val();
+        let validity = $(tr).children().eq(6).children().val();
+        let remarks = $(tr).children().eq(12).children().val();
         let index = $(tr).data('index');
         if (index != undefined) {
             if ($(tr).hasClass('selected')) {
@@ -624,6 +632,7 @@ function getRows(tableEl) {
                     num: num,
                     pihao: pihao,
                     remarks: remarks,
+                    validity: validity,
                 })
             }
         }
@@ -709,7 +718,7 @@ function setAddRuku(data) {
         pagination: true,
         search: true,
         searchAlign: 'left',
-        pageSize: 10,//单页记录数
+        pageSize: 5,//单页记录数
         clickToSelect: false,
         locale: 'zh-CN',
         columns: [
@@ -728,7 +737,7 @@ function setAddRuku(data) {
                 title: '仓库',
                 align: 'left',
                 sortable: true,
-                width: 150,
+                width: 170,
                 formatter: function (value, row, index) {
                     return getXiaLa();
                 },
@@ -737,7 +746,38 @@ function setAddRuku(data) {
                 title: '生产日期',
                 align: 'left',
                 sortable: true,
-                width: 180,
+                width: 150,
+                formatter: function (value, row, index) {
+                    var time = new Date();
+                    var day = ("0" + time.getDate()).slice(-2);
+                    var month = ("0" + (time.getMonth() + 1)).slice(-2);
+                    var today = time.getFullYear() + "-" + (month) + "-" + (day);
+                    return '<input type="date" value="'+ today +'" class="form-control" name="productDate" />'
+                }
+            }, {
+                field: '',
+                title: '数量',
+                align: 'left',
+                sortable: true,
+                width: 100,
+                formatter: function (value, row, index) {
+                    return '<input type="number" name="num" class="form-control" value="' + value + '" />'
+                }
+            }, {
+                field: 'pihao',
+                title: '批号',
+                align: 'left',
+                sortable: true,
+                width: 100,
+                formatter: function (value, row, index) {
+                    return '<input type="text" name="pihao" class="form-control" />'
+                }
+            }, {
+                field: 'validity',
+                title: '有效期',
+                align: 'left',
+                sortable: true,
+                width: 150,
                 formatter: function (value, row, index) {
                     var time = new Date();
                     var day = ("0" + time.getDate()).slice(-2);
@@ -750,7 +790,7 @@ function setAddRuku(data) {
                 title: '产品名称',
                 align: 'center',
                 sortable: true,
-                width: 150,
+                width: 200,
             }, {
                 field: 'spec',
                 title: '规格',
@@ -762,38 +802,20 @@ function setAddRuku(data) {
                 title: '单位',
                 align: 'left',
                 sortable: true,
-                width: 150,
+                width: 80,
             }, {
                 field: 'price',
                 title: '价格',
                 align: 'left',
                 sortable: true,
-                width: 150,
-            }, {
-                field: '',
-                title: '数量',
-                align: 'left',
-                sortable: true,
-                width: 150,
-                formatter: function (value, row, index) {
-                    return '<input type="number" name="num" class="form-control" value="' + value + '" />'
-                }
+                width: 80,
             }
             , {
                 field: 'pinyin',
                 title: '拼音代码',
                 align: 'left',
                 sortable: true,
-                width: 150,
-            }, {
-                field: 'pihao',
-                title: '批号',
-                align: 'left',
-                sortable: true,
-                width: 150,
-                formatter: function (value, row, index) {
-                    return '<input type="text" name="pihao" class="form-control" />'
-                }
+                width: 100,
             }, {
                 field: 'remarks',
                 title: '备注',

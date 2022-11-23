@@ -44,7 +44,6 @@ public class ApprovalController {
         if (!powerUtil.isSelect("审核管理") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
-
         try {
             List<Approval> getList = approvalService.getList();
             List<ApprovalItem> getAllList = approvalItemService.getAllList();
@@ -56,7 +55,7 @@ public class ApprovalController {
                     }
                 }
             }
-            if (userInfo.getPower().equals("管理员")) {
+            if (userInfo.getPower().equals("管理员") || userInfo.getPower().equals("审核人")) {
                 return ResultInfo.success("获取成功", list);
             } else {
                 return ResultInfo.success("获取成功", getList);
@@ -93,7 +92,7 @@ public class ApprovalController {
                     }
                 }
             }
-            if (userInfo.getPower().equals("管理员")) {
+            if (userInfo.getPower().equals("管理员") || userInfo.getPower().equals("审核人")) {
                 return ResultInfo.success("获取成功", list);
             } else {
                 return ResultInfo.success("获取成功", getList);

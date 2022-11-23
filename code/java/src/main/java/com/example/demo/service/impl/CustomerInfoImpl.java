@@ -21,7 +21,7 @@ public class CustomerInfoImpl extends ServiceImpl<CustomerInfoMapper, CustomerIn
 
     @Override
     public List<CustomerInfo> getList(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return customerInfoMapper.getList();
         } else {
             return customerInfoMapper.getListByName(name);
@@ -31,7 +31,7 @@ public class CustomerInfoImpl extends ServiceImpl<CustomerInfoMapper, CustomerIn
 
     @Override
     public List<CustomerInfo> queryList(String customerInfo, String leibie, String name, String power, String area) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return customerInfoMapper.queryList(customerInfo, leibie, area);
         } else {
             return customerInfoMapper.queryListByName(customerInfo, leibie, area, name);

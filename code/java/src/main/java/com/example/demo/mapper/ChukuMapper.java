@@ -57,6 +57,11 @@ public interface ChukuMapper extends BaseMapper<Sale> {
     @Update("update sale set chuku_state=#{chukuState} where id=#{id}")
     boolean updateChukuState(String chukuState, int id);
 
+
+    @Update("update sale set fahuo='已发货',pihao=#{pihao},express=#{express},wuliu_order=#{wuliuOrder} where id=#{id}")
+    boolean updateFahuo(int id,String pihao,String express,String wuliuOrder);
+
+
     @Select("select sa.id,sa.riqi,customer_id,sh_staff,pick,product_id,sa.num,xiaoji,sa.remarks,type,isnull(customer,'') as customer,customer_num,area,leibie,isnull(salesman,'') as salesman,product_name,spec,pinhao,attribute,unit,sa.price,isnull(p.pinyin,'') as pinyin,sa.sale_state,sa.sale_type,sa.warehouse,sa.express,sa.wuliu_order,sa.pihao,sa.chuku_insert,sa.chuku_state,sa.fahuo from (select s.id,s.riqi,customer_id,sh_staff,pick,wuliu_order,product_id,pihao,num,xiaoji,s.remarks,warehouse,type,express,isnull(customer,'')as customer,customer_num,area,leibie,salesman,isnull(pinyin,'') as pinyin,fahuo,s.price,sale_state,sale_type,chuku_insert,chuku_state from sale s left join customerInfo c on s.customer_id=c.id) as sa left join product p on sa.product_id=p.id where sale_state = '审核通过' and customer_id=#{id} and riqi=#{riqi} ")
     List<Sale> getListByIdRiqi(int id, String riqi);
 

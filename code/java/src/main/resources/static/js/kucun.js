@@ -19,8 +19,26 @@ function getList() {
     })
 }
 
+function getSelect() {
+    $ajax({
+        type: 'post',
+        url: '/general/getSelect',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            var item = "";
+            for (var i = 0; i < res.data.length; i++) {
+                if (res.data[i].warehouse != null && res.data[i].warehouse != "") {
+                    item = "<option value=\"" + res.data[i].warehouse + "\">" + res.data[i].warehouse + "</option>"
+                    $("#warehouse").append(item);
+                }
+            }
+        }
+    })
+}
+
 $(function () {
     getList();
+    getSelect();
     //刷新
     $("#refresh-btn").click(function () {
         getList();
@@ -64,7 +82,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style:'table-layout:fixed',
-        height: document.body.clientHeight * 0.9,
+        height: document.body.clientHeight * 0.87,
         columns: [
             {
                 field: '',

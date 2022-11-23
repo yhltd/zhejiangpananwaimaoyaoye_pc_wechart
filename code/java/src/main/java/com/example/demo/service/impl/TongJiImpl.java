@@ -20,7 +20,7 @@ public class TongJiImpl extends ServiceImpl<TongJiMapper, TongJi> implements Ton
 
     @Override
     public List<TongJi> getList(String ks, String js, String customer,String name,String power) {
-        if(power.equals("管理员")){
+        if(power.equals("管理员") || power.equals("审核人")){
             return tongJiMapper.getList(ks, js, customer);
         }else{
             return tongJiMapper.getListByName(ks, js, customer,name);

@@ -212,7 +212,7 @@ public class RukuController {
      * 添加
      */
     @RequestMapping("/insert")
-    public ResultInfo insert(String warehouse, String productDate, String productId, String pihao, String num, String remarks, HttpSession session) {
+    public ResultInfo insert(String warehouse, String productDate, String productId, String pihao, String num, String remarks,String validity, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
         if (!powerUtil.isAdd("入库") && !userInfo.getPower().equals("管理员")) {
@@ -230,6 +230,7 @@ public class RukuController {
             ruku.setPihao(pihao);
             ruku.setNum(num);
             ruku.setRemarks(remarks);
+            ruku.setValidity(validity);
             ruku.setStaff(userInfo.getName());
             ruku.setState("审核中");
             ruku.setRiqi(spd.format(date));
@@ -320,7 +321,7 @@ public class RukuController {
     @RequestMapping("/updateState")
     public ResultInfo updateState(String state, int id, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
-        if (!userInfo.getPower().equals("管理员")) {
+        if (userInfo.getPower().equals("其他")) {
             return ResultInfo.success("无权限");
         }
         try {
@@ -383,38 +384,44 @@ public class RukuController {
                     productDate.setCellType(CellType.STRING);
                     ruku.setProductDate(productDate.getStringCellValue());
                 }
+                //生产日期
+                Cell validity = row.getCell(4);
+                if (validity != null) {
+                    validity.setCellType(CellType.STRING);
+                    ruku.setValidity(validity.getStringCellValue());
+                }
                 //产品名称
-                Cell productName = row.getCell(4);
+                Cell productName = row.getCell(5);
                 if (productName != null) {
                     productName.setCellType(CellType.STRING);
                     product = productName.getStringCellValue();
                 }
                 //规格
-                Cell spec = row.getCell(5);
+                Cell spec = row.getCell(6);
                 if (spec != null) {
                     spec.setCellType(CellType.STRING);
                     productSpec = spec.getStringCellValue();
                 }
                 //批号
-                Cell pihao = row.getCell(6);
+                Cell pihao = row.getCell(7);
                 if (pihao != null) {
                     pihao.setCellType(CellType.STRING);
                     ruku.setPihao(pihao.getStringCellValue());
                 }
                 //数量
-                Cell num = row.getCell(7);
+                Cell num = row.getCell(8);
                 if (num != null) {
                     num.setCellType(CellType.STRING);
                     ruku.setNum(num.getStringCellValue());
                 }
                 //单位
-                Cell unit = row.getCell(8);
+                Cell unit = row.getCell(9);
                 if (unit != null) {
                     unit.setCellType(CellType.STRING);
                     productUnit = unit.getStringCellValue();
                 }
                 //备注
-                Cell remarks = row.getCell(9);
+                Cell remarks = row.getCell(10);
                 if (remarks != null) {
                     remarks.setCellType(CellType.STRING);
                     ruku.setRemarks(remarks.getStringCellValue());

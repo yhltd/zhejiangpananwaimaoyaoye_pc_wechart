@@ -20,7 +20,7 @@ public class InvoiceImpl extends ServiceImpl<InvoiceMapper, Invoice> implements 
 
     @Override
     public List<Invoice> getList(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return invoiceMapper.getList();
         } else {
             return invoiceMapper.getListByName(name);
@@ -32,7 +32,7 @@ public class InvoiceImpl extends ServiceImpl<InvoiceMapper, Invoice> implements 
 
     @Override
     public List<Invoice> queryList(String customer, String unit,String unit1, String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return invoiceMapper.queryList(customer, unit, unit1);
         } else {
             return invoiceMapper.queryListByName(customer, unit,unit1, name);

@@ -17,7 +17,7 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
 
     @Override
     public List<Sale> getList(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return chukuMapper.getList();
         } else {
             return chukuMapper.getListByName(name);
@@ -31,7 +31,7 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
 
     @Override
     public List<Sale> getList_shenhezhong(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return chukuMapper.getList_shenhezhong();
         } else {
             return chukuMapper.getListByName_shenhezhong(name);
@@ -40,7 +40,7 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
 
     @Override
     public List<Sale> getList_tongguo(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return chukuMapper.getList_tongguo();
         } else {
             return chukuMapper.getListByName_tongguo(name);
@@ -49,7 +49,7 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
 
     @Override
     public List<Sale> getList_weitongguo(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return chukuMapper.getList_weitongguo();
         } else {
             return chukuMapper.getListByName_weitongguo(name);
@@ -58,7 +58,7 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
 
     @Override
     public List<Sale> queryList(String ks, String js, String customer, String product, String pihao, String saleType, String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return chukuMapper.queryList(ks, js, customer, product, pihao, saleType);
         } else {
             return chukuMapper.queryListByName(ks, js, customer, product, pihao, saleType, name);
@@ -83,6 +83,11 @@ public class ChukuImpl extends ServiceImpl<ChukuMapper, Sale> implements ChukuSe
     @Override
     public boolean updateChukuState(String saleState, int id) {
         return chukuMapper.updateChukuState(saleState, id);
+    }
+
+    @Override
+    public boolean updateFahuo(int id,String pihao,String express,String wuliuOrder) {
+        return chukuMapper.updateFahuo(id, pihao,express,wuliuOrder);
     }
 
     @Override

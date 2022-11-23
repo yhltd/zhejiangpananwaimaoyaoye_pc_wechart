@@ -69,6 +69,7 @@ function getSelect() {
                 if (res.data[i].express != null && res.data[i].express != "") {
                     item = "<option value=\"" + res.data[i].express + "\">" + res.data[i].express + "</option>"
                     $("#update-express").append(item);
+                    $("#fahuo-express").append(item);
                     opt = opt + "<option value=\"" + res.data[i].express + "\">" + res.data[i].express + "</option>";
                 }
             }
@@ -444,6 +445,69 @@ $(function () {
         }
     });
 
+    //修改弹窗点击关闭按钮
+    $('#fahuo-close-btn').click(function () {
+        $('#fahuo-modal').modal('hide');
+    });
+
+    //修改弹窗里点击提交按钮
+    $('#fahuo-submit-btn').click(function () {
+        var msg = confirm("确认要修改吗？");
+        if (msg) {
+            if ($('#fahuo-pihao').val() == "") {
+                $('#fahuo-pihao').next().css('display', 'block');
+                return;
+            } else {
+                $('#fahuo-pihao').next().css('display', 'none');
+            }
+            if ($('#fahuo-express').val() == "") {
+                $('#fahuo-express').next().css('display', 'block');
+                return;
+            } else {
+                $('#fahuo-express').next().css('display', 'none');
+            }
+            if ($('#fahuo-wuliuOrder').val() == "") {
+                $('#fahuo-wuliuOrder').next().css('display', 'block');
+                return;
+            } else {
+                $('#fahuo-wuliuOrder').next().css('display', 'none');
+            }
+
+            var id = $("#fahuo-id").val();
+            var pihao = $("#fahuo-pihao").val();
+            var express = $("#fahuo-express").val();
+            var wuliuOrder = $("#fahuo-wuliuOrder").val();
+            var params = {
+                id:id,
+                pihao:pihao,
+                express:express,
+                wuliuOrder:wuliuOrder
+            }
+
+            $ajax({
+                type: 'post',
+                url: '/chuku/updateFahuo',
+                data: {
+                    id:id,
+                    pihao:pihao,
+                    express:express,
+                    wuliuOrder:wuliuOrder
+                },
+            }, false, '', function (res) {
+                if (res.code == 200) {
+                    swal("", res.msg, "success");
+                    $('#fahuo-close-btn').click();
+                    $('#fahuo-modal').modal('hide');
+                    getList();
+                } else {
+                    swal("", res.msg, "error");
+                }
+            })
+
+
+        }
+    });
+
     //点击删除按钮
     $('#delete-btn').click(function () {
         var msg = confirm("确认要删除吗？");
@@ -690,7 +754,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
-        height: document.body.clientHeight * 0.9,
+        height: document.body.clientHeight * 0.8,
         columns: [
             {
                 field: '',
@@ -869,6 +933,9 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+                formatter: function (value, row, index) {
+                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='" + row.id + "' style='text-decoration:underline;' onclick='javascript:fahuo_update(" + row.id + ")'>" + value + "</span></div>";
+                }
             },
         ],
         onClickRow: function (row, el) {
@@ -1302,6 +1369,48 @@ function state_select(index) {
     state_list = this_list
     setStateTable(this_list)
     $('#state-modal').modal('show');
+}
+
+function fahuo_update(index) {
+    state_list = []
+    var this_id = ""
+    var this_pihao = ""
+    var this_express = ""
+    var this_wuliuOrder = ""
+    var this_fahuo = ""
+    var this_chuku_state = ""
+    let rows = sale_list
+    console.log(rows)
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].id == index) {
+            this_id = rows[i].id
+            this_pihao = rows[i].pihao
+            this_express = rows[i].express
+            this_wuliuOrder = rows[i].wuliuOrder
+            this_fahuo = rows[i].fahuo
+            this_chuku_state = rows[i].chukuState
+            break;
+        }
+    }
+
+    if(this_chuku_state != '审核通过'){
+        swal('此产品未审核通过，不能发货。')
+        return;
+    }
+
+    if(this_fahuo == '已发货'){
+        swal('此产品无需再次发货')
+        return;
+    }
+
+    console.log(this_id)
+
+    $('#fahuo-id').val(this_id);
+    $('#fahuo-pihao').val(this_pihao);
+    $('#fahuo-express').val(this_express);
+    $('#fahuo-wuliuOrder').val(this_wuliuOrder);
+
+    $('#fahuo-modal').modal('show');
 }
 
 function getRows(tableEl) {

@@ -153,7 +153,7 @@ public class UserInfoController {
             userInfo2 = userInfoService.add(userInfo2);
             List<UserInfo> getListid = userInfoService.getListid();
 
-            for(int i=0;i<18;i++){
+            for(int i=0;i<17;i++){
                 UserPower userPower=new UserPower();
                 userPower.setUserId(getListid.get(0).getId());
                 userPower.setZeng("");

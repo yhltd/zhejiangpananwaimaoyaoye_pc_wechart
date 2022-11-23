@@ -20,7 +20,7 @@ public class PaymentImpl extends ServiceImpl<PaymentMapper, Payment> implements 
 
     @Override
     public List<Payment> getList(String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return paymentMapper.getList();
         } else {
             return paymentMapper.getListByName(name);
@@ -29,7 +29,7 @@ public class PaymentImpl extends ServiceImpl<PaymentMapper, Payment> implements 
 
     @Override
     public List<Payment> getKanban(String riqi,String riqi1, String riqi2,String name,String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return paymentMapper.getKanban(riqi);
         } else {
             return paymentMapper.getKanbanByName(riqi1,riqi2,name);
@@ -38,7 +38,7 @@ public class PaymentImpl extends ServiceImpl<PaymentMapper, Payment> implements 
 
     @Override
     public List<Payment> queryList(String customer, String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return paymentMapper.queryList(customer);
         } else {
             return paymentMapper.queryListByName(customer, name);
@@ -47,7 +47,7 @@ public class PaymentImpl extends ServiceImpl<PaymentMapper, Payment> implements 
 
     @Override
     public List<Payment> kanbanList(String riqi,String riqi1,String riqi2, String name, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return paymentMapper.kanbanList(riqi);
         } else {
             return paymentMapper.kanbanListByName(riqi1,riqi2,name);

@@ -84,10 +84,9 @@ public class ChukuController {
     public ResultInfo getList_kanban(HttpSession session,String riqi,String customer,String salesman,String type) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
-        if (!powerUtil.isSelect("出库") && !userInfo.getPower().equals("管理员")) {
-            return ResultInfo.error(401, "无权限");
-        }
-
+//        if (!powerUtil.isSelect("出库") && !userInfo.getPower().equals("管理员")) {
+//            return ResultInfo.error(401, "无权限");
+//        }
         try {
             List<Sale> getList = chukuService.getList_kanban(riqi,customer,salesman,type);
             return ResultInfo.success("获取成功", getList);
@@ -243,9 +242,9 @@ public class ChukuController {
         try {
             sale = DecodeUtil.decodeToJson(updateJson, Sale.class);
             if (sale.getChukuState().equals("审核通过") && !userInfo.getPower().equals("管理员")) {
-//                if (!userInfo.getStateUpd().equals("是")) {
-//                    return ResultInfo.error(401, "审核已通过，无修改权限");
-//                }
+                if (!userInfo.getStateUpd().equals("是")) {
+                    return ResultInfo.error(401, "审核已通过，无修改权限");
+                }
             } else {
                 if (!powerUtil.isUpdate("出库") && !userInfo.getPower().equals("管理员")) {
                     return ResultInfo.error(401, "无权限");
@@ -299,7 +298,7 @@ public class ChukuController {
     @RequestMapping("/updateState")
     public ResultInfo updateState(String chukuState, int id, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
-        if (!userInfo.getPower().equals("管理员")) {
+        if (userInfo.getPower().equals("其他")) {
             return ResultInfo.success("无权限");
         }
         try {
@@ -311,6 +310,28 @@ public class ChukuController {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("审核失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
+     * 发货
+     */
+    @RequestMapping("/updateFahuo")
+    public ResultInfo updateFahuo(int id,String pihao,String express,String wuliuOrder, HttpSession session) {
+        UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+        if (userInfo.getPower().equals("其他")) {
+            return ResultInfo.success("无权限");
+        }
+        try {
+            if (chukuService.updateFahuo(id,pihao,express,wuliuOrder)) {
+                return ResultInfo.success("发货成功");
+            } else {
+                return ResultInfo.success("发货失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("发货失败：{}", e.getMessage());
             return ResultInfo.error("错误!");
         }
     }

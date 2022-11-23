@@ -20,7 +20,7 @@ public class RukuImpl extends ServiceImpl<RukuMapper, Ruku> implements RukuServi
 
     @Override
     public List<Ruku> getList(String staff, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return rukuMapper.getList();
         } else {
             return rukuMapper.getListByName(staff);
@@ -34,7 +34,7 @@ public class RukuImpl extends ServiceImpl<RukuMapper, Ruku> implements RukuServi
 
     @Override
     public List<Ruku> getList_shenhezhong(String staff, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return rukuMapper.getList_shenhezhong();
         } else {
             return rukuMapper.getListByName_shenhezhong(staff);
@@ -43,7 +43,7 @@ public class RukuImpl extends ServiceImpl<RukuMapper, Ruku> implements RukuServi
 
     @Override
     public List<Ruku> getList_tongguo(String staff, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return rukuMapper.getList_tongguo();
         } else {
             return rukuMapper.getListByName_tongguo(staff);
@@ -52,7 +52,7 @@ public class RukuImpl extends ServiceImpl<RukuMapper, Ruku> implements RukuServi
 
     @Override
     public List<Ruku> getList_weitongguo(String staff, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return rukuMapper.getList_weitongguo();
         } else {
             return rukuMapper.getListByName_weitongguo(staff);
@@ -61,7 +61,7 @@ public class RukuImpl extends ServiceImpl<RukuMapper, Ruku> implements RukuServi
 
     @Override
     public List<Ruku> queryList(String ks, String js, String product, String pihao, String staff, String power) {
-        if (power.equals("管理员")) {
+        if (power.equals("管理员") || power.equals("审核人")) {
             return rukuMapper.queryList(ks, js, product, pihao);
         } else {
             return rukuMapper.queryListByName(ks, js, product, pihao, staff);

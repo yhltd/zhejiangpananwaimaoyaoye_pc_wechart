@@ -41,7 +41,6 @@ public class AssayController {
         if (!powerUtil.isSelect("化验明细") && !userInfo.getPower().equals("管理员")) {
             return ResultInfo.error(401, "无权限");
         }
-
         try {
             List<Assay> getList = assayService.getList();
             return ResultInfo.success("获取成功", getList);

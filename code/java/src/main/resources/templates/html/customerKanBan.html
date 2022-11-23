@@ -30,7 +30,9 @@
 <body class="pt-2">
 <div class="top-toolbar row">
     <div class="col-md-3 mb-2">
-        <select id="customerId" class="form-control"></select>
+        <input id="customerId" name="customerId" type="hidden">
+        <input id="customer" type="text" placeholder="客户名称" class="form-control" autocomplete="off"
+               readonly="readonly">
     </div>
     <div class="col-md-2 mb-2">
         <button id="select-btn" class="btn btn-primary">
@@ -52,6 +54,31 @@
 
 <div class="table-div border-top">
     <table id="zsTable"></table>
+</div>
+
+<!--    查询客户窗体-->
+<div id="show-customer-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择客户</div>
+            </div>
+            <div class="modal-body">
+                <input id="showCustomerId" type="hidden"/>
+                <table id="show-table-customer"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="customer-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="customer-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
