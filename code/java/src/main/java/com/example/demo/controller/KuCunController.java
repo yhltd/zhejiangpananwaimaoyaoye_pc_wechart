@@ -48,15 +48,15 @@ public class KuCunController {
             List<Product> getSale = kuCunService.getSale();
             List<Product> kuCun = new ArrayList<>();
 
-            for(int i=0;i<getRuku.size();i++){
+            for (int i = 0; i < getRuku.size(); i++) {
                 boolean panduan = false;
                 Product product = new Product();
-                for(int j=0;j<kuCun.size();j++){
-                    if(getRuku.get(i).getId()==kuCun.get(j).getId() && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getRuku.get(i).getPihao().equals(kuCun.get(j).getPihao())){
+                for (int j = 0; j < kuCun.size(); j++) {
+                    if (getRuku.get(i).getId().equals(kuCun.get(j).getId()) && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getRuku.get(i).getPihao().equals(kuCun.get(j).getPihao())) {
                         panduan = true;
                     }
                 }
-                if(panduan != true){
+                if (!panduan) {
                     product.setId(getRuku.get(i).getId());
                     product.setWarehouse(getRuku.get(i).getWarehouse());
                     product.setPihao(getRuku.get(i).getPihao());
@@ -74,15 +74,15 @@ public class KuCunController {
 
             }
 
-            for(int i=0;i<getSale.size();i++){
+            for (int i = 0; i < getSale.size(); i++) {
                 boolean panduan = false;
                 Product product = new Product();
-                for(int j=0;j<kuCun.size();j++){
-                    if(getSale.get(i).getId()==kuCun.get(j).getId() && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getSale.get(i).getPihao().equals(kuCun.get(j).getPihao())){
+                for (int j = 0; j < kuCun.size(); j++) {
+                    if (getSale.get(i).getId().equals(kuCun.get(j).getId()) && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getSale.get(i).getPihao().equals(kuCun.get(j).getPihao())) {
                         panduan = true;
                     }
                 }
-                if(panduan != true){
+                if (!panduan) {
                     product.setId(getSale.get(i).getId());
                     product.setWarehouse(getSale.get(i).getWarehouse());
                     product.setPihao(getSale.get(i).getPihao());
@@ -99,23 +99,30 @@ public class KuCunController {
 
             }
 
-            for(int i=0;i<kuCun.size();i++){
-                for(int j=0;j<getRuku.size();j++){
-                    if(kuCun.get(i).getId()==getRuku.get(j).getId() && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getRuku.get(j).getPihao())){
-                        kuCun.get(i).setNum(kuCun.get(i).getNum()+getRuku.get(j).getNum());
+            for (int i = 0; i < kuCun.size(); i++) {
+                for (int j = 0; j < getRuku.size(); j++) {
+                    if (kuCun.get(i).getId().equals(getRuku.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getRuku.get(j).getPihao())) {
+                        kuCun.get(i).setNum(kuCun.get(i).getNum() + getRuku.get(j).getNum());
                     }
                 }
             }
 
-            for(int i=0;i<kuCun.size();i++){
-                for(int j=0;j<getSale.size();j++){
-                    if(kuCun.get(i).getId()==getSale.get(j).getId() && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getSale.get(j).getPihao())){
-                        kuCun.get(i).setNum(kuCun.get(i).getNum()-getSale.get(j).getNum());
+            for (int i = 0; i < kuCun.size(); i++) {
+                for (int j = 0; j < getSale.size(); j++) {
+                    if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getSale.get(j).getPihao())) {
+                        kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
                     }
                 }
             }
 
-            return ResultInfo.success("获取成功", kuCun);
+            List<Product> new_kucun = new ArrayList<>();
+            for (Product kucun : kuCun) {
+                if (kucun.getNum() != 0) {
+                    new_kucun.add(kucun);
+                }
+            }
+
+            return ResultInfo.success("获取成功", new_kucun);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("获取失败：{}", e.getMessage());
@@ -129,7 +136,7 @@ public class KuCunController {
      * @return ResultInfo
      */
     @RequestMapping("/queryList")
-    public ResultInfo queryList(String warehouse,String pihao,String product,HttpSession session) {
+    public ResultInfo queryList(String warehouse, String pihao, String product, HttpSession session) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
         PowerUtil powerUtil = PowerUtil.getPowerUtil(session);
         if (!powerUtil.isSelect("库存") && !userInfo.getPower().equals("管理员")) {
@@ -137,85 +144,92 @@ public class KuCunController {
         }
 
         try {
-            List<Product> getRuku = kuCunService.queryRuku(warehouse,pihao,product);
-            List<Product> getSale = kuCunService.querySale(warehouse,pihao,product);
+            List<Product> getRuku = kuCunService.queryRuku(warehouse, pihao, product);
+            List<Product> getSale = kuCunService.querySale(warehouse, pihao, product);
 
             List<Product> kuCun = new ArrayList<>();
 
-            for(int i=0;i<getRuku.size();i++){
+            for (int i = 0; i < getRuku.size(); i++) {
                 boolean panduan = false;
-                Product productItem = new Product();
-                for(int j=0;j<kuCun.size();j++){
-                    if(getRuku.get(i).getId()==kuCun.get(j).getId() && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getRuku.get(i).getPihao().equals(kuCun.get(j).getPihao())){
+                Product product1 = new Product();
+                for (int j = 0; j < kuCun.size(); j++) {
+                    if (getRuku.get(i).getId().equals(kuCun.get(j).getId()) && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getRuku.get(i).getPihao().equals(kuCun.get(j).getPihao())) {
                         panduan = true;
                     }
                 }
-                if(panduan != true){
-                    productItem.setId(getRuku.get(i).getId());
-                    productItem.setWarehouse(getRuku.get(i).getWarehouse());
-                    productItem.setPihao(getRuku.get(i).getPihao());
-                    productItem.setSpec(getRuku.get(i).getSpec());
-                    productItem.setUnit(getRuku.get(i).getUnit());
-                    productItem.setPrice(getRuku.get(i).getPrice());
-                    productItem.setPinyin(getRuku.get(i).getPinyin());
-                    productItem.setProductName(getRuku.get(i).getProductName());
-                    productItem.setPinhao(getRuku.get(i).getPinhao());
-                    productItem.setAttribute(getRuku.get(i).getAttribute());
-                    productItem.setProductName(getRuku.get(i).getProductName());
-                    productItem.setNum(0);
-                    kuCun.add(productItem);
+                if (!panduan) {
+                    product1.setId(getRuku.get(i).getId());
+                    product1.setWarehouse(getRuku.get(i).getWarehouse());
+                    product1.setPihao(getRuku.get(i).getPihao());
+                    product1.setSpec(getRuku.get(i).getSpec());
+                    product1.setUnit(getRuku.get(i).getUnit());
+                    product1.setPrice(getRuku.get(i).getPrice());
+                    product1.setPinyin(getRuku.get(i).getPinyin());
+                    product1.setProductName(getRuku.get(i).getProductName());
+                    product1.setPinhao(getRuku.get(i).getPinhao());
+                    product1.setAttribute(getRuku.get(i).getAttribute());
+                    product1.setProductName(getRuku.get(i).getProductName());
+                    product1.setNum(0);
+                    kuCun.add(product1);
                 }
 
             }
 
-            for(int i=0;i<getSale.size();i++){
+            for (int i = 0; i < getSale.size(); i++) {
                 boolean panduan = false;
-                Product productItem = new Product();
-                for(int j=0;j<kuCun.size();j++){
-                    if(getSale.get(i).getId()==kuCun.get(j).getId() && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getSale.get(i).getPihao().equals(kuCun.get(j).getPihao())){
+                Product product1 = new Product();
+                for (int j = 0; j < kuCun.size(); j++) {
+                    if (getSale.get(i).getId().equals(kuCun.get(j).getId()) && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getSale.get(i).getPihao().equals(kuCun.get(j).getPihao())) {
                         panduan = true;
                     }
                 }
-                if(panduan != true){
-                    productItem.setId(getSale.get(i).getId());
-                    productItem.setWarehouse(getSale.get(i).getWarehouse());
-                    productItem.setPihao(getSale.get(i).getPihao());
-                    productItem.setSpec(getSale.get(i).getSpec());
-                    productItem.setUnit(getSale.get(i).getUnit());
-                    productItem.setPrice(getSale.get(i).getPrice());
-                    productItem.setPinyin(getSale.get(i).getPinyin());
-                    productItem.setProductName(getSale.get(i).getProductName());
-                    productItem.setPinhao(getRuku.get(i).getPinhao());
-                    productItem.setAttribute(getRuku.get(i).getAttribute());
-                    productItem.setNum(0);
-                    kuCun.add(productItem);
+                if (!panduan) {
+                    product1.setId(getSale.get(i).getId());
+                    product1.setWarehouse(getSale.get(i).getWarehouse());
+                    product1.setPihao(getSale.get(i).getPihao());
+                    product1.setSpec(getSale.get(i).getSpec());
+                    product1.setUnit(getSale.get(i).getUnit());
+                    product1.setPrice(getSale.get(i).getPrice());
+                    product1.setPinyin(getSale.get(i).getPinyin());
+                    product1.setProductName(getSale.get(i).getProductName());
+                    product1.setPinhao(getRuku.get(i).getPinhao());
+                    product1.setAttribute(getRuku.get(i).getAttribute());
+                    product1.setNum(0);
+                    kuCun.add(product1);
                 }
 
             }
 
-            for(int i=0;i<kuCun.size();i++){
-                for(int j=0;j<getRuku.size();j++){
-                    if(getRuku.get(j).getId()==kuCun.get(i).getId() && getRuku.get(j).getWarehouse().equals(kuCun.get(i).getWarehouse()) && getRuku.get(j).getPihao().equals(kuCun.get(i).getPihao())){
-                        kuCun.get(i).setNum(kuCun.get(i).getNum()+getRuku.get(j).getNum());
+            for (int i = 0; i < kuCun.size(); i++) {
+                for (int j = 0; j < getRuku.size(); j++) {
+                    if (kuCun.get(i).getId().equals(getRuku.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getRuku.get(j).getPihao())) {
+                        kuCun.get(i).setNum(kuCun.get(i).getNum() + getRuku.get(j).getNum());
                     }
                 }
             }
 
-            for(int i=0;i<kuCun.size();i++){
-                for(int j=0;j<getSale.size();j++){
-                    if(getSale.get(j).getId()==kuCun.get(i).getId() && getSale.get(j).getWarehouse().equals(kuCun.get(i).getWarehouse()) && getSale.get(j).getPihao().equals(kuCun.get(i).getPihao())){
-                        kuCun.get(i).setNum(kuCun.get(i).getNum()-getSale.get(j).getNum());
+            for (int i = 0; i < kuCun.size(); i++) {
+                for (int j = 0; j < getSale.size(); j++) {
+                    if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getSale.get(j).getPihao())) {
+                        kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
                     }
                 }
             }
-            return ResultInfo.success("获取成功", getRuku);
+
+            List<Product> new_kucun = new ArrayList<>();
+            for (Product kucun : kuCun) {
+                if (kucun.getNum() != 0) {
+                    new_kucun.add(kucun);
+                }
+            }
+
+            return ResultInfo.success("获取成功", new_kucun);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("获取失败：{}", e.getMessage());
             return ResultInfo.error("错误!");
         }
     }
-
 
 
     /**
@@ -230,15 +244,15 @@ public class KuCunController {
             List<Product> getSale = kuCunService.getSale();
             List<Product> kuCun = new ArrayList<>();
 
-            for(int i=0;i<getRuku.size();i++){
+            for (int i = 0; i < getRuku.size(); i++) {
                 boolean panduan = false;
                 Product product = new Product();
-                for(int j=0;j<kuCun.size();j++){
-                    if(getRuku.get(i).getId()==kuCun.get(j).getId() && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse())){
+                for (int j = 0; j < kuCun.size(); j++) {
+                    if (getRuku.get(i).getId() == kuCun.get(j).getId() && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse())) {
                         panduan = true;
                     }
                 }
-                if(panduan != true){
+                if (panduan != true) {
                     product.setId(getRuku.get(i).getId());
                     product.setWarehouse(getRuku.get(i).getWarehouse());
                     product.setPihao(getRuku.get(i).getPihao());
@@ -255,15 +269,15 @@ public class KuCunController {
 
             }
 
-            for(int i=0;i<getSale.size();i++){
+            for (int i = 0; i < getSale.size(); i++) {
                 boolean panduan = false;
                 Product product = new Product();
-                for(int j=0;j<kuCun.size();j++){
-                    if(getSale.get(i).getId()==kuCun.get(j).getId() && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse())){
+                for (int j = 0; j < kuCun.size(); j++) {
+                    if (getSale.get(i).getId() == kuCun.get(j).getId() && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse())) {
                         panduan = true;
                     }
                 }
-                if(panduan != true){
+                if (panduan != true) {
                     product.setId(getSale.get(i).getId());
                     product.setWarehouse(getSale.get(i).getWarehouse());
                     product.setPihao(getSale.get(i).getPihao());
@@ -280,23 +294,31 @@ public class KuCunController {
 
             }
 
-            for(int i=0;i<kuCun.size();i++){
-                for(int j=0;j<getRuku.size();j++){
-                    if(kuCun.get(i).getId()==getRuku.get(j).getId() && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse())){
-                        kuCun.get(i).setNum(kuCun.get(i).getNum()+getRuku.get(j).getNum());
+            for (int i = 0; i < kuCun.size(); i++) {
+                for (int j = 0; j < getRuku.size(); j++) {
+                    if (kuCun.get(i).getId() == getRuku.get(j).getId() && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse())) {
+                        kuCun.get(i).setNum(kuCun.get(i).getNum() + getRuku.get(j).getNum());
                     }
                 }
             }
 
-            for(int i=0;i<kuCun.size();i++){
-                for(int j=0;j<getSale.size();j++){
-                    if(kuCun.get(i).getId()==getSale.get(j).getId() && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())){
-                        kuCun.get(i).setNum(kuCun.get(i).getNum()-getSale.get(j).getNum());
+            for (int i = 0; i < kuCun.size(); i++) {
+                for (int j = 0; j < getSale.size(); j++) {
+                    if (kuCun.get(i).getId() == getSale.get(j).getId() && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())) {
+                        kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
                     }
                 }
             }
 
-            return ResultInfo.success("获取成功", kuCun);
+            List<Product> new_kucun = new ArrayList<>();
+            for (Product kucun : kuCun) {
+                if (kucun.getNum() != 0) {
+                    new_kucun.add(kucun);
+                }
+            }
+
+
+            return ResultInfo.success("获取成功", new_kucun);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("获取失败：{}", e.getMessage());

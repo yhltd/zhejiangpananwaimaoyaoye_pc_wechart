@@ -3,9 +3,10 @@ let productList = [];
 let opt = "";
 let cangku = "";
 
-let sale_list = []
-let state_list = []
-let saleSubmit_list = []
+let sale_list = [];
+let state_list = [];
+let saleSubmit_list = [];
+let linshi_data = [];
 
 function getList() {
     $('#product').val("");
@@ -115,20 +116,20 @@ function getCustomer() {
     })
 }
 
-function kanbanSelect(){
+function kanbanSelect() {
     var tiaojian = $.session.get('kanban_goto');
     console.log(tiaojian)
-    if(tiaojian != undefined){
+    if (tiaojian != undefined) {
         var riqi = tiaojian.split("`")[0]
-        if(riqi == '' || riqi == 'null' || riqi == null){
+        if (riqi == '' || riqi == 'null' || riqi == null) {
             riqi = ''
         }
         var customer = tiaojian.split("`")[1]
-        if(customer == '' || customer == 'null' || customer == null){
+        if (customer == '' || customer == 'null' || customer == null) {
             customer = ''
         }
         var salesman = tiaojian.split("`")[2]
-        if(salesman == '' || salesman == 'null' || salesman == null){
+        if (salesman == '' || salesman == 'null' || salesman == null) {
             salesman = ''
         }
         var type = tiaojian.split("`")[3]
@@ -147,14 +148,14 @@ function kanbanSelect(){
                 setTable(res.data);
             }
         })
-    }else{
+    } else {
         $('#refresh-btn').trigger('click');
     }
 
 }
 
 
-window.onload = function(){
+window.onload = function () {
     kanbanSelect();
 };
 
@@ -256,6 +257,8 @@ $(function () {
         var month = ("0" + (time.getMonth() + 1)).slice(-2);
         var today = time.getFullYear() + "-" + (month) + "-" + (day);
         $('#add-riqi').val(today);
+        getProductAdd();
+        linshi_data = [];
         $('#add-modal').modal('show');
     });
 
@@ -277,21 +280,25 @@ $(function () {
             swal("未选择产品！");
             return;
         }
-
+        var cishu=1;
         $.each(productList, function (index, row) {
             $ajax({
                 type: 'post',
                 url: '/chuku/insert',
-                async:false,
+                async: false,
                 data: {
                     riqi: $('#add-riqi').val(),
-                    productId: row.data.id,
+                    productId: row.id,
                     saleType: row.saleType,
                     price: row.price,
                     num: row.num,
                     remarks: row.remarks,
                 },
             }, false, '', function (res) {
+                if (cishu==1){
+                    swal(res.msg);
+                    cishu=cishu+1;
+                }
             })
         });
 
@@ -317,7 +324,7 @@ $(function () {
             $ajax({
                 type: 'post',
                 url: '/chuku/updateState',
-                async:false,
+                async: false,
                 data: {
                     id: row.id,
                     chukuState: '审核通过'
@@ -344,7 +351,7 @@ $(function () {
             $ajax({
                 type: 'post',
                 url: '/chuku/updateState',
-                async:false,
+                async: false,
                 data: {
                     id: row.id,
                     chukuState: '审核未通过'
@@ -478,20 +485,20 @@ $(function () {
             var express = $("#fahuo-express").val();
             var wuliuOrder = $("#fahuo-wuliuOrder").val();
             var params = {
-                id:id,
-                pihao:pihao,
-                express:express,
-                wuliuOrder:wuliuOrder
+                id: id,
+                pihao: pihao,
+                express: express,
+                wuliuOrder: wuliuOrder
             }
 
             $ajax({
                 type: 'post',
                 url: '/chuku/updateFahuo',
                 data: {
-                    id:id,
-                    pihao:pihao,
-                    express:express,
-                    wuliuOrder:wuliuOrder
+                    id: id,
+                    pihao: pihao,
+                    express: express,
+                    wuliuOrder: wuliuOrder
                 },
             }, false, '', function (res) {
                 if (res.code == 200) {
@@ -711,7 +718,7 @@ $(function () {
                 }
             })
         }
-    })
+    });
 
     //打印
     //按指定格式导出excel
@@ -789,19 +796,19 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
-            },{
+            }, {
                 field: 'area',
                 title: '区域',
                 align: 'center',
                 sortable: true,
                 width: 100,
-            },{
+            }, {
                 field: 'leibie',
                 title: '类别',
                 align: 'center',
                 sortable: true,
                 width: 100,
-            },{
+            }, {
                 field: 'shStaff',
                 title: '收货人员',
                 align: 'center',
@@ -874,7 +881,7 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 200,
-            },{
+            }, {
                 field: 'attribute',
                 title: '产品属性',
                 align: 'center',
@@ -918,16 +925,17 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             },
+            // {
+            //     field: 'chukuState',
+            //     title: '出库审核状态',
+            //     align: 'center',
+            //     sortable: true,
+            //     width: 150,
+            //     formatter: function (value, row, index) {
+            //         return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='" + row.id + "' style='text-decoration:underline;' onclick='javascript:state_select(" + row.id + ")'>" + value + "</span></div>";
+            //     }
+            // },
             {
-                field: 'chukuState',
-                title: '出库审核状态',
-                align: 'center',
-                sortable: true,
-                width: 150,
-                formatter: function (value, row, index) {
-                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='" + row.id + "' style='text-decoration:underline;' onclick='javascript:state_select(" + row.id + ")'>" + value + "</span></div>";
-                }
-            }, {
                 field: 'fahuo',
                 title: '发货状态',
                 align: 'center',
@@ -1255,7 +1263,7 @@ function setProductTable_Add(data) {
         pagination: true,
         search: true,
         searchAlign: 'left',
-        pageSize: 10,//单页记录数
+        pageSize: 5,//单页记录数
         clickToSelect: false,
         locale: 'zh-CN',
         columns: [
@@ -1276,7 +1284,7 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return getXiaLa();
+                    return getXiaLa(row.id);
                 },
             }, {
                 field: 'productName',
@@ -1309,7 +1317,14 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input type="number" name="price" class="form-control" value="' + value + '" />'
+                    var price = value;
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            price = val.price
+                        }
+                    });
+
+                    return '<input type="number" name="price" id="price' + row.id + '" class="form-control" value="' + price + '" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')" />'
                 }
             }, {
                 field: '',
@@ -1318,7 +1333,14 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input type="number" name="num" class="form-control" value="' + value + '" />'
+                    var num = "";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            num = val.num
+                        }
+                    });
+
+                    return '<input type="number" name="num" id="num' + row.id + '" class="form-control" value="' + num + '" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')" />'
                 }
             }, {
                 field: '',
@@ -1327,7 +1349,14 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input type="text" name="remarks" class="form-control" />'
+                    var remarks = "";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            remarks = val.remarks
+                        }
+                    });
+
+                    return '<input type="text" name="remarks" id="remarks' + row.id + '" class="form-control" value="' + remarks + '" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')" />'
                 }
             }
         ],
@@ -1371,6 +1400,37 @@ function state_select(index) {
     $('#state-modal').modal('show');
 }
 
+function getLinshiData(id) {
+    var pd = false;
+    var productId = id;
+    var saleType = $("#saleType" + productId).val();
+    var price = $("#price" + productId).val();
+    var num = $("#num" + productId).val();
+    var remarks = $("#remarks" + productId).val();
+
+    var obj = {
+        "id": productId,
+        "saleType": saleType,
+        "price": price,
+        "num": num,
+        "remarks": remarks,
+    };
+
+    $(linshi_data).each(function (index, val) {
+        if (productId == val.id) {
+            pd = true;
+            linshi_data[index].saleType = saleType;
+            linshi_data[index].price = price;
+            linshi_data[index].num = num;
+            linshi_data[index].remarks = remarks;
+        }
+    });
+    if (!pd) {
+        linshi_data.push(obj);
+    }
+
+}
+
 function fahuo_update(index) {
     state_list = []
     var this_id = ""
@@ -1393,12 +1453,12 @@ function fahuo_update(index) {
         }
     }
 
-    if(this_chuku_state != '审核通过'){
-        swal('此产品未审核通过，不能发货。')
-        return;
-    }
+    // if(this_chuku_state != '审核通过'){
+    //     swal('此产品未审核通过，不能发货。')
+    //     return;
+    // }
 
-    if(this_fahuo == '已发货'){
+    if (this_fahuo == '已发货') {
         swal('此产品无需再次发货')
         return;
     }
@@ -1416,30 +1476,53 @@ function fahuo_update(index) {
 function getRows(tableEl) {
     let result = [];
     let tableData = $(tableEl).bootstrapTable('getData');
-    $(tableEl + ' tr').each(function (i, tr) {
-        let saleType = $(tr).children().eq(2).children().val();
-        let price = $(tr).children().eq(7).children().val();
-        let num = $(tr).children().eq(8).children().val();
-        let remarks = $(tr).children().eq(9).children().val();
-        let index = $(tr).data('index');
-        if (index != undefined) {
-            if ($(tr).hasClass('selected')) {
-                result.push({
-                    index: index,
-                    data: tableData[index],
-                    saleType: saleType,
-                    price: price,
-                    num: num,
-                    remarks: remarks,
-                    riqi: '',
-                    customerId: '',
-                    shStaff: '',
-                    pick: '',
-                    type: '',
-                })
+    for (var i = 0; i < tableData.length; i++) {
+        if (tableData[i][0] == true) {
+            for (var j = 0; j < linshi_data.length; j++) {
+                if (tableData[i].id == linshi_data[j].id) {
+                    result.push({
+                        id: linshi_data[j].id,
+                        saleType: linshi_data[j].saleType,
+                        price: linshi_data[j].price,
+                        num: linshi_data[j].num,
+                        remarks: linshi_data[j].remarks,
+                        riqi: '',
+                        customerId: '',
+                        shStaff: '',
+                        pick: '',
+                        type: '',
+                    })
+                }
             }
         }
-    });
+    }
+
+
+
+    // $(tableEl + ' tr').each(function (i, tr) {
+    //     let saleType = $(tr).children().eq(2).children().val();
+    //     let price = $(tr).children().eq(7).children().val();
+    //     let num = $(tr).children().eq(8).children().val();
+    //     let remarks = $(tr).children().eq(9).children().val();
+    //     let index = $(tr).data('index');
+    //     if (index != undefined) {
+    //         if ($(tr).hasClass('selected')) {
+    //             result.push({
+    //                 index: index,
+    //                 data: tableData[index],
+    //                 saleType: saleType,
+    //                 price: price,
+    //                 num: num,
+    //                 remarks: remarks,
+    //                 riqi: '',
+    //                 customerId: '',
+    //                 shStaff: '',
+    //                 pick: '',
+    //                 type: '',
+    //             })
+    //         }
+    //     }
+    // });
     return result;
 }
 
@@ -1469,8 +1552,8 @@ function getData(tableEl) {
 }
 
 
-function getXiaLa() {
-    var select = "<select name=\"saleType\" class=\"form-control\" >";
+function getXiaLa(id) {
+    var select = "<select name=\"saleType\" class=\"form-control\" id='saleType" + id + "' onchange=\"javascript:getLinshiData(" + id + ")\" style='font-size: 13px' >";
     select = select + opt;
     select = select + "<select/>";
     return select;

@@ -220,6 +220,7 @@ public class ChukuController {
             sale.setSaleState("审核通过");
             sale.setChukuState("审核中");
             sale.setChukuInsert("1");
+            sale.setFahuo("未发货");
             sale.setXiaoji((Double.parseDouble(num) * Double.parseDouble(price)) + "");
             sale = chukuService.add(sale);
             return ResultInfo.success("添加成功", sale);
@@ -348,7 +349,7 @@ public class ChukuController {
             List<Sale> nlist = GsonUtil.toList(gsonUtil.get("list"), Sale.class);
 
             List<Sale> list=new ArrayList<>();
-            if(nlist != null){
+            if(nlist != null && nlist.size()!=0){
                 list= chukuService.getListByIdRiqi(nlist.get(0).getCustomerId(),nlist.get(0).getRiqi());
             }
 

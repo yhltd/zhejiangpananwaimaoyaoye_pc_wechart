@@ -134,7 +134,7 @@ function setTable(data) {
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style:'table-layout:fixed',
-        height: document.body.clientHeight * 0.85,
+        height: document.body.clientHeight * 0.83,
         columns: [
             {
                 field: 'type',

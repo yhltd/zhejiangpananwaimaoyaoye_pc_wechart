@@ -15,7 +15,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface CustomerKanBanMapper extends BaseMapper<CustomerKanBan> {
-    @Select("select isnull(sum(case when type='销售' then convert(float,xiaoji) else 0 end),0) as bqgh,isnull(sum(case when type='退货' then convert(float,xiaoji) else 0 end),0) as bqth from sale where customer_id=#{customerId} and sale_state = '审核通过' and chuku_state = '审核通过' and fahuo = '已发货'")
+    @Select("select isnull(sum(case when type='销售' then convert(float,xiaoji) else 0 end),0) as bqgh,isnull(sum(case when type='退货' then convert(float,xiaoji) else 0 end),0) as bqth from sale where customer_id=#{customerId} and sale_state = '审核通过' and fahuo = '已发货'")
     List<CustomerKanBan> getSale(int customerId);
 
     @Select("select isnull(sum(convert(float,f_jine)),0) as yf,isnull(sum(convert(float,discount)),0) zhekou,isnull(sum(convert(float,r_jine)),0) as fkjine,isnull(sum(convert(float,quota)),0) as bqzs from payment where customer_id=#{customerId} and state = '审核通过'")

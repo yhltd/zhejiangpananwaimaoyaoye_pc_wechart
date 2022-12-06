@@ -2,10 +2,11 @@ let operation = "";
 let productList = [];
 let opt = "";
 let cangku = "";
-let kucun_list = []
-let sale_list = []
-let state_list = []
-let saleSubmit_list = []
+let kucun_list = [];
+let sale_list = [];
+let state_list = [];
+let saleSubmit_list = [];
+let linshi_data = [];
 
 function getList() {
     $('#product').val("");
@@ -29,10 +30,10 @@ function getList() {
                 resizeMode: 'fit'
             });
             var xiaoji_sum = 0
-            for(var i=0; i<res.data.length; i++){
-                if (res.data[i].type == '销售'){
+            for (var i = 0; i < res.data.length; i++) {
+                if (res.data[i].type == '销售') {
                     xiaoji_sum = xiaoji_sum + res.data[i].xiaoji * 1
-                }else{
+                } else {
                     xiaoji_sum = xiaoji_sum - res.data[i].xiaoji * 1
                 }
             }
@@ -129,22 +130,22 @@ function getCustomer() {
     })
 }
 
-function kanbanSelect(){
+function kanbanSelect() {
     var tiaojian = $.session.get('kanban_goto');
     $.session.remove('kanban_goto');
     console.log(tiaojian)
-    if(tiaojian != undefined){
-        if(tiaojian.split("`").length == 4){
+    if (tiaojian != undefined) {
+        if (tiaojian.split("`").length == 4) {
             var riqi = tiaojian.split("`")[0]
-            if(riqi == '' || riqi == 'null' || riqi == null){
+            if (riqi == '' || riqi == 'null' || riqi == null) {
                 riqi = ''
             }
             var customer = tiaojian.split("`")[1]
-            if(customer == '' || customer == 'null' || customer == null){
+            if (customer == '' || customer == 'null' || customer == null) {
                 customer = ''
             }
             var salesman = tiaojian.split("`")[2]
-            if(salesman == '' || salesman == 'null' || salesman == null){
+            if (salesman == '' || salesman == 'null' || salesman == null) {
                 salesman = ''
             }
             var type = tiaojian.split("`")[3]
@@ -163,7 +164,7 @@ function kanbanSelect(){
                     setTable(res.data);
                 }
             })
-        }else{
+        } else {
             $ajax({
                 type: 'post',
                 url: '/sale/getXiaoShou_kanban',
@@ -178,14 +179,14 @@ function kanbanSelect(){
                 }
             })
         }
-    }else{
+    } else {
         $('#refresh-btn').trigger('click');
     }
 
 }
 
 
-window.onload = function(){
+window.onload = function () {
     kanbanSelect();
 };
 
@@ -218,10 +219,10 @@ $(function () {
                 setTable(res.data);
                 getKuCun();
                 var xiaoji_sum = 0
-                for(var i=0; i<res.data.length; i++){
-                    if (res.data[i].type == '销售'){
+                for (var i = 0; i < res.data.length; i++) {
+                    if (res.data[i].type == '销售') {
                         xiaoji_sum = xiaoji_sum + res.data[i].xiaoji * 1
-                    }else{
+                    } else {
                         xiaoji_sum = xiaoji_sum - res.data[i].xiaoji * 1
                     }
                 }
@@ -299,6 +300,8 @@ $(function () {
         var month = ("0" + (time.getMonth() + 1)).slice(-2);
         var today = time.getFullYear() + "-" + (month) + "-" + (day);
         $('#add-riqi').val(today);
+        linshi_data = [];
+        getProductAdd();
         $('#add-modal').modal('show');
     });
 
@@ -322,28 +325,33 @@ $(function () {
             $('#add-customer').next().css('display', 'none');
         }
 
-        if(productList.length == 0){
+        if (productList.length == 0) {
             swal("未选择产品！");
             return;
         }
-
+        var cishu = 1;
         $.each(productList, function (index, row) {
             $ajax({
                 type: 'post',
                 url: '/sale/insert',
                 data: {
-                    riqi:$('#add-riqi').val(),
+                    riqi: $('#add-riqi').val(),
                     customerId: $('#add-customerId').val(),
-                    shStaff:$('#add-shStaff').val(),
+                    shStaff: $('#add-shStaff').val(),
                     pick: $('#add-pick').val(),
                     type: $('#add-type').val(),
-                    productId: row.data.id,
+                    productId: row.id,
                     saleType: row.saleType,
                     price: row.price,
                     num: row.num,
                     remarks: row.remarks,
                 },
-            }, false, '', function (res) {})
+            }, false, '', function (res) {
+                if (cishu == 1) {
+                    swal(res.msg);
+                    cishu = cishu + 1;
+                }
+            })
         });
 
         swal("", "新增成功！", "success");
@@ -360,12 +368,12 @@ $(function () {
     $("#state-tongguo-btn").click(function () {
         saleSubmit_list = getStateRows("#show-state-table");
         console.log(saleSubmit_list)
-        if(saleSubmit_list.length == 0){
+        if (saleSubmit_list.length == 0) {
             swal("无审核内容！");
             return;
         }
-        for(var i=0; i<saleSubmit_list.length; i++){
-            if(saleSubmit_list[i].warehouse == '' || saleSubmit_list[i].warehouse == null){
+        for (var i = 0; i < saleSubmit_list.length; i++) {
+            if (saleSubmit_list[i].warehouse == '' || saleSubmit_list[i].warehouse == null) {
                 swal("列表中的产品未选择仓库！");
                 return;
             }
@@ -374,13 +382,14 @@ $(function () {
             $ajax({
                 type: 'post',
                 url: '/sale/updateState',
-                async:false,
+                async: false,
                 data: {
                     id: row.id,
                     warehouse: row.warehouse,
-                    saleState:'审核通过'
+                    saleState: '审核通过'
                 },
-            }, false, '', function (res) {})
+            }, false, '', function (res) {
+            })
         });
 
         swal("", "审核成功！", "success");
@@ -393,7 +402,7 @@ $(function () {
     $("#state-weitongguo-btn").click(function () {
         saleSubmit_list = getStateRows("#show-state-table");
         console.log(saleSubmit_list)
-        if(saleSubmit_list.length == 0){
+        if (saleSubmit_list.length == 0) {
             swal("无审核内容！");
             return;
         }
@@ -401,13 +410,14 @@ $(function () {
             $ajax({
                 type: 'post',
                 url: '/sale/updateState',
-                async:false,
+                async: false,
                 data: {
                     id: row.id,
                     warehouse: row.warehouse,
-                    saleState:'审核未通过'
+                    saleState: '审核未通过'
                 },
-            }, false, '', function (res) {})
+            }, false, '', function (res) {
+            })
         });
 
         swal("", "审核成功！", "success");
@@ -544,7 +554,7 @@ $(function () {
         productList = getRows("#show-table-product-add");
         if (productList.length == 0) {
             swal('请选择要保存的数据！');
-        }else{
+        } else {
             $('#show-product-modal-add').modal('hide');
         }
     });
@@ -733,19 +743,19 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
-            },{
+            }, {
                 field: 'area',
                 title: '区域',
                 align: 'center',
                 sortable: true,
                 width: 100,
-            },{
+            }, {
                 field: 'leibie',
                 title: '类别',
                 align: 'center',
                 sortable: true,
                 width: 100,
-            },{
+            }, {
                 field: 'shStaff',
                 title: '收货人员',
                 align: 'center',
@@ -804,7 +814,7 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 200,
-            },{
+            }, {
                 field: 'attribute',
                 title: '产品属性',
                 align: 'center',
@@ -877,7 +887,7 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
                 formatter: function (value, row, index) {
-                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='"+ row.id +"' style='text-decoration:underline;' onclick='javascript:state_select("+ row.id +")'>"+ value +"</span></div>";
+                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='" + row.id + "' style='text-decoration:underline;' onclick='javascript:state_select(" + row.id + ")'>" + value + "</span></div>";
                 }
             },
         ],
@@ -918,8 +928,8 @@ function setStateTable(data) {
                 width: 150,
                 formatter: function (value, row, index) {
                     var cangku = ""
-                    for(var i=0; i<kucun_list.length; i++){
-                        if(kucun_list[i].id == row.productId && kucun_list[i].num * 1 >= row.num * 1){
+                    for (var i = 0; i < kucun_list.length; i++) {
+                        if (kucun_list[i].id == row.productId && kucun_list[i].num * 1 >= row.num * 1) {
                             cangku = cangku + "<option value=\"" + kucun_list[i].warehouse + "\">" + kucun_list[i].warehouse + "</option>";
                         }
                     }
@@ -1211,7 +1221,7 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 120,
                 formatter: function (value, row, index) {
-                    return getXiaLa();
+                    return getXiaLa(row.id);
                 },
             }, {
                 field: 'productName',
@@ -1244,7 +1254,14 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 100,
                 formatter: function (value, row, index) {
-                    return '<input type="number" name="price" class="form-control" value="' + value + '" />'
+                    var price = value;
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            price = val.price
+                        }
+                    });
+
+                    return '<input type="number" name="price" id="price' + row.id + '" class="form-control" value="' + price + '" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')" />'
                 }
             }, {
                 field: 'zhekou',
@@ -1253,7 +1270,14 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 120,
                 formatter: function (value, row, index) {
-                    return '<input type="number" name="zhekou" class="form-control" value="1.00" />'
+                    var zhekou = "1.00";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            zhekou = val.zhekou
+                        }
+                    });
+
+                    return '<input type="number" name="zhekou" id="zhekou' + row.id + '" class="form-control" value="' + zhekou + '" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')"/>'
                 }
             }, {
                 field: '',
@@ -1262,7 +1286,14 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 100,
                 formatter: function (value, row, index) {
-                    return '<input type="number" name="num" class="form-control" value="' + value + '" />'
+                    var num = "";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            num = val.num
+                        }
+                    });
+
+                    return '<input type="number" name="num" id="num' + row.id + '" class="form-control" value="' + num + '" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')"/>'
                 }
             }, {
                 field: '',
@@ -1271,14 +1302,21 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input type="text" name="remarks" class="form-control" />'
+                    var remarks = "";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            remarks = val.remarks
+                        }
+                    });
+
+                    return '<input type="text" name="remarks" id="remarks' + row.id + '" value="' + remarks + '" class="form-control" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')"/>'
                 }
             }
         ],
     })
 }
 
-function state_select(index){
+function state_select(index) {
     state_list = []
     var this_list = []
     var this_date = ""
@@ -1286,8 +1324,8 @@ function state_select(index){
     var this_state = ""
     let rows = sale_list
     console.log(rows)
-    for(let i=0;i<rows.length;i++){
-        if(rows[i].id == index){
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].id == index) {
             this_date = rows[i].riqi
             this_customer = rows[i].customerId
             this_state = rows[i].saleState
@@ -1298,12 +1336,12 @@ function state_select(index){
     console.log(this_customer)
     console.log(this_state)
 
-    if(this_state != '审核中'){
+    if (this_state != '审核中') {
         swal("此销售信息无需审核！")
         return;
     }
-    for(let i=0;i<rows.length;i++){
-        if(rows[i].riqi == this_date && rows[i].customerId == this_customer && rows[i].saleState == this_state){
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].riqi == this_date && rows[i].customerId == this_customer && rows[i].saleState == this_state) {
             this_list.push(rows[i])
         }
     }
@@ -1314,36 +1352,94 @@ function state_select(index){
     $('#state-modal').modal('show');
 }
 
+function getLinshiData(id) {
+    var pd = false;
+    var productId = id;
+    var saleType = $("#saleType" + productId).val();
+    var price = $("#price" + productId).val();
+    var zhekou = $("#zhekou" + productId).val();
+    var num = $("#num" + productId).val();
+    var remarks = $("#remarks" + productId).val();
+
+    var obj = {
+        "id": productId,
+        "saleType": saleType,
+        "price": price,
+        "zhekou": zhekou,
+        "num": num,
+        "remarks": remarks,
+    };
+
+    $(linshi_data).each(function (index, val) {
+        if (productId == val.id) {
+            pd = true;
+            linshi_data[index].saleType = saleType;
+            linshi_data[index].price = price;
+            linshi_data[index].zhekou = zhekou;
+            linshi_data[index].num = num;
+            linshi_data[index].remarks = remarks;
+        }
+    });
+    if (!pd) {
+        linshi_data.push(obj);
+    }
+
+}
+
 function getRows(tableEl) {
     let result = [];
     let tableData = $(tableEl).bootstrapTable('getData');
-    $(tableEl + ' tr').each(function (i, tr) {
-        let saleType = $(tr).children().eq(2).children().val();
-        let yuanjia = $(tr).children().eq(7).children().val();
-        let zhekou = $(tr).children().eq(8).children().val();
-        let price = yuanjia * zhekou;
-        price = Math.round(price * 100) / 100
-        let num = $(tr).children().eq(9).children().val();
-        let remarks = $(tr).children().eq(10).children().val();
-        let index = $(tr).data('index');
-        if (index != undefined) {
-            if ($(tr).hasClass('selected')) {
-                result.push({
-                    index: index,
-                    data: tableData[index],
-                    saleType:saleType,
-                    price: price,
-                    num: num,
-                    remarks: remarks,
-                    riqi:'',
-                    customerId:'',
-                    shStaff:'',
-                    pick:'',
-                    type:'',
-                })
+    for (var i = 0; i < tableData.length; i++) {
+        if (tableData[i][0] == true) {
+            for (var j = 0; j < linshi_data.length; j++) {
+                if (tableData[i].id == linshi_data[j].id) {
+                    let price = linshi_data[j].price * linshi_data[j].zhekou;
+                    price = Math.round(price * 100) / 100;
+                    result.push({
+                        id: linshi_data[j].id,
+                        saleType: linshi_data[j].saleType,
+                        price: price,
+                        num: linshi_data[j].num,
+                        remarks: linshi_data[j].remarks,
+                        riqi: '',
+                        customerId: '',
+                        shStaff: '',
+                        pick: '',
+                        type: '',
+                    })
+                }
             }
         }
-    });
+    }
+
+
+    // $(tableEl + ' tr').each(function (i, tr) {
+    //     let saleType = $(tr).children().eq(2).children().val();
+    //     let yuanjia = $(tr).children().eq(7).children().val();
+    //     let zhekou = $(tr).children().eq(8).children().val();
+    //     let price = yuanjia * zhekou;
+    //     price = Math.round(price * 100) / 100
+    //     let num = $(tr).children().eq(9).children().val();
+    //     let remarks = $(tr).children().eq(10).children().val();
+    //     let index = $(tr).data('index');
+    //     if (index != undefined) {
+    //         if ($(tr).hasClass('selected')) {
+    //             result.push({
+    //                 index: index,
+    //                 data: tableData[index],
+    //                 saleType: saleType,
+    //                 price: price,
+    //                 num: num,
+    //                 remarks: remarks,
+    //                 riqi: '',
+    //                 customerId: '',
+    //                 shStaff: '',
+    //                 pick: '',
+    //                 type: '',
+    //             })
+    //         }
+    //     }
+    // });
     return result;
 }
 
@@ -1360,14 +1456,14 @@ function getStateRows(tableEl) {
             })
         }
     });
-    for(var i=0; i<state_list.length; i++){
+    for (var i = 0; i < state_list.length; i++) {
         result[i].id = state_list[i].id
     }
     return result;
 }
 
-function getXiaLa() {
-    var select = "<select name=\"saleType\" class=\"form-control\" >";
+function getXiaLa(id) {
+    var select = "<select name=\"saleType\" id='saleType" + id + "' class=\"form-control\" style=\"font-size: 13px\" onchange=\"javascript:getLinshiData(" + id + ")\">";
     select = select + opt;
     select = select + "<select/>";
     return select;

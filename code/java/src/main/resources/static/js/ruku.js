@@ -1,5 +1,7 @@
 let operation = "";
 let opt = "";
+let ruku_data = [];
+let linshi_data = [];
 
 function getList() {
     $('#product').val("");
@@ -41,7 +43,6 @@ function getSelect() {
 }
 
 function getProduct() {
-
     $ajax({
         type: 'post',
         url: '/product/getSelect',
@@ -52,20 +53,18 @@ function getProduct() {
         }
         console.log(res)
     })
-
-
 }
 
-function kanbanSelect(){
+function kanbanSelect() {
     var tiaojian = $.session.get('kanban_goto');
-    console.log(tiaojian)
-    if(tiaojian != undefined){
-        var riqi = tiaojian.split("`")[0]
-        var salesman = tiaojian.split("`")[2]
-        var type = tiaojian.split("`")[3]
-        console.log(riqi)
-        console.log(salesman)
-        console.log(type)
+    console.log(tiaojian);
+    if (tiaojian != undefined) {
+        var riqi = tiaojian.split("`")[0];
+        var salesman = tiaojian.split("`")[2];
+        var type = tiaojian.split("`")[3];
+        console.log(riqi);
+        console.log(salesman);
+        console.log(type);
         $.session.remove('kanban_goto');
         $ajax({
             type: 'post',
@@ -85,7 +84,7 @@ function kanbanSelect(){
 }
 
 
-window.onload = function(){
+window.onload = function () {
     kanbanSelect();
 };
 
@@ -184,6 +183,7 @@ $(function () {
             url: '/product/getSelect',
         }, false, '', function (res) {
             if (res.code == 200) {
+                linshi_data = [];
                 setAddRuku(res.data);
                 $('#add-ruku-modal').modal('show');
             }
@@ -198,6 +198,7 @@ $(function () {
 
     //添加窗口点击添加
     $('#add-ruku-submit-btn').click(function () {
+        var cishu=1;
         let rows = getRows("#add-table-ruku");
         if (rows.length == 0) {
             alert('请选择要保存的数据！');
@@ -210,17 +211,20 @@ $(function () {
                 data: {
                     warehouse: row.warehouse,
                     productDate: row.productDate,
-                    productId: row.data.id,
+                    productId: row.id,
                     pihao: row.pihao,
                     num: row.num,
                     remarks: row.remarks,
                     validity: row.validity,
                 }
             }, false, '', function (res) {
-
+                if (cishu==1){
+                    swal(res.msg);
+                    cishu=cishu+1;
+                }
             })
         });
-        swal("新增成功！");
+        //swal("新增成功！");
         $('#add-ruku-modal').modal('hide');
         getList();
     });
@@ -410,7 +414,7 @@ $(function () {
         var url = null;
         if ($('#file').val() != '') {
             if ($('#file').val().substr(-5) == '.xlsx') {
-                var excel = document.getElementById("file").files[0]
+                var excel = document.getElementById("file").files[0];
                 var oFReader = new FileReader();
                 oFReader.readAsDataURL(excel);
                 oFReader.onloadend = function (oFRevent) {
@@ -430,11 +434,12 @@ $(function () {
                     })
                 }
             } else {
-                swal("请选择正确的Excel文件！")
+                swal("请选择正确的Excel文件！");
                 $('#file').val('');
             }
         }
-    })
+    });
+
 });
 
 function setTable(data) {
@@ -504,7 +509,7 @@ function setTable(data) {
                 title: '产品名称',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 150,
             }, {
                 field: 'pinhao',
                 title: '品号',
@@ -522,7 +527,7 @@ function setTable(data) {
                 title: '产品属性',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 200,
             }, {
                 field: 'pihao',
                 title: '批号',
@@ -570,7 +575,7 @@ function setTable(data) {
             } else {
                 $(el).addClass('selected')
             }
-        }
+        },
     })
 }
 
@@ -604,39 +609,93 @@ function refuse(id) {
     })
 }
 
-function getXiaLa() {
-    var select = "<select name=\"warehouse\" class=\"form-control\" >";
+function getXiaLa(id) {
+    var select = "<select name=\"warehouse\" id='warehouse" + id + "'  class=\"form-control\" style=\"font-size: 13px\"  onchange=\"javascript:getLinshiData(" + id + ")\" >";
     select = select + opt;
     select = select + "<select/>";
     return select;
 }
 
+function getLinshiData(id) {
+    var pd = false;
+    var productId = id;
+    var warehouse = $("#warehouse" + productId).val();
+    var num = $("#num" + productId).val();
+    var productDate = $("#today" + productId).val();
+    var pihao = $("#pihao" + productId).val();
+    var validity = $("#validity" + productId).val();
+    var remarks = $("#remarks" + productId).val();
+
+    var obj = {
+        "id": productId,
+        "warehouse": warehouse,
+        "num": num,
+        "productDate": productDate,
+        "pihao": pihao,
+        "validity": validity,
+        "remarks": remarks
+    };
+
+    $(linshi_data).each(function (index, val) {
+        if (productId == val.id) {
+            pd = true;
+            linshi_data[index].warehouse = warehouse;
+            linshi_data[index].num = num;
+            linshi_data[index].productDate = productDate;
+            linshi_data[index].pihao = pihao;
+            linshi_data[index].validity = validity;
+            linshi_data[index].remarks = remarks;
+        }
+    });
+    if (!pd) {
+        linshi_data.push(obj);
+    }
+
+}
+
 function getRows(tableEl) {
     let result = [];
     let tableData = $(tableEl).bootstrapTable('getData');
-    $(tableEl + ' tr').each(function (i, tr) {
-        let warehouse = $(tr).children().eq(2).children().val();
-        let productDate = $(tr).children().eq(3).children().val();
-        let num = $(tr).children().eq(4).children().val();
-        let pihao = $(tr).children().eq(5).children().val();
-        let validity = $(tr).children().eq(6).children().val();
-        let remarks = $(tr).children().eq(12).children().val();
-        let index = $(tr).data('index');
-        if (index != undefined) {
-            if ($(tr).hasClass('selected')) {
-                result.push({
-                    index: index,
-                    data: tableData[index],
-                    warehouse: warehouse,
-                    productDate: productDate,
-                    num: num,
-                    pihao: pihao,
-                    remarks: remarks,
-                    validity: validity,
-                })
+    for (var i = 0; i < tableData.length; i++) {
+        if (tableData[i][0] == true) {
+            for (var j = 0; j < linshi_data.length; j++) {
+                if (tableData[i].id == linshi_data[j].id) {
+                    result.push({
+                        id: linshi_data[j].id,
+                        warehouse: linshi_data[j].warehouse,
+                        productDate: linshi_data[j].productDate,
+                        num: linshi_data[j].num,
+                        pihao: linshi_data[j].pihao,
+                        remarks: linshi_data[j].remarks,
+                        validity: linshi_data[j].validity,
+                    })
+                }
             }
         }
-    });
+    }
+    // $(tableEl + ' tr').each(function (i, tr) {
+    //     let warehouse = $(tr).children().eq(2).children().val();
+    //     let productDate = $(tr).children().eq(3).children().val();
+    //     let num = $(tr).children().eq(4).children().val();
+    //     let pihao = $(tr).children().eq(5).children().val();
+    //     let validity = $(tr).children().eq(6).children().val();
+    //     let remarks = $(tr).children().eq(13).children().val();
+    //     let index = $(tr).data('index');
+    //     if (index != undefined) {
+    //         if ($(tr).hasClass('selected')) {
+    //             result.push({
+    //                 index: index,
+    //                 data: tableData[index],
+    //                 warehouse: warehouse,
+    //                 productDate: productDate,
+    //                 num: num,
+    //                 pihao: pihao,
+    //                 remarks: remarks,
+    //                 validity: validity,
+    //             })
+    //         }
+    //     }
+    // });
     return result;
 }
 
@@ -696,7 +755,7 @@ function setProductTable(data) {
             }
         ],
         onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected')
+            let isSelect = $(el).hasClass('selected');
             if (isSelect) {
                 $(el).removeClass('selected')
             } else {
@@ -721,10 +780,11 @@ function setAddRuku(data) {
         pageSize: 5,//单页记录数
         clickToSelect: false,
         locale: 'zh-CN',
+        //maintainSelected: true,//如果是客户端分页，这个设为 true 翻页后已经选中的复选框不会丢失
         columns: [
             {
-                checkbox: true
-            }, {
+                checkbox: true,
+            },{
                 field: '',
                 title: '序号',
                 align: 'center',
@@ -739,7 +799,15 @@ function setAddRuku(data) {
                 sortable: true,
                 width: 170,
                 formatter: function (value, row, index) {
-                    return getXiaLa();
+                    var warehouse = "";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            warehouse = val.warehouse
+                        }
+                    });
+                    $('#warehouse' + row.id).val(warehouse);
+
+                    return getXiaLa(row.id);
                 },
             }, {
                 field: 'productDate',
@@ -751,8 +819,16 @@ function setAddRuku(data) {
                     var time = new Date();
                     var day = ("0" + time.getDate()).slice(-2);
                     var month = ("0" + (time.getMonth() + 1)).slice(-2);
-                    var today = time.getFullYear() + "-" + (month) + "-" + (day);
-                    return '<input type="date" value="'+ today +'" class="form-control" name="productDate" />'
+                    var productDate = time.getFullYear() + "-" + (month) + "-" + (day);
+
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            productDate = val.productDate
+                        }
+                    });
+
+                    return '<input type="date" value="' + productDate + '" id="today' + row.id + '" class="form-control" name="productDate" style="font-size: 13px"  onchange="javascript:getLinshiData(' + row.id + ')" />'
+
                 }
             }, {
                 field: '',
@@ -761,7 +837,13 @@ function setAddRuku(data) {
                 sortable: true,
                 width: 100,
                 formatter: function (value, row, index) {
-                    return '<input type="number" name="num" class="form-control" value="' + value + '" />'
+                    var num = "";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            num = val.num
+                        }
+                    });
+                    return '<input type="number" name="num" id="num' + row.id + '" class="form-control" value="' + num + '" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')" />'
                 }
             }, {
                 field: 'pihao',
@@ -770,7 +852,14 @@ function setAddRuku(data) {
                 sortable: true,
                 width: 100,
                 formatter: function (value, row, index) {
-                    return '<input type="text" name="pihao" class="form-control" />'
+                    var pihao = "";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            pihao = val.pihao
+                        }
+                    });
+
+                    return '<input type="text" name="pihao" id="pihao' + row.id + '" value="' + pihao + '" class="form-control" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')" />'
                 }
             }, {
                 field: 'validity',
@@ -782,8 +871,15 @@ function setAddRuku(data) {
                     var time = new Date();
                     var day = ("0" + time.getDate()).slice(-2);
                     var month = ("0" + (time.getMonth() + 1)).slice(-2);
-                    var today = time.getFullYear() + "-" + (month) + "-" + (day);
-                    return '<input type="date" value="'+ today +'" class="form-control" name="productDate" />'
+                    var validity = time.getFullYear() + "-" + (month) + "-" + (day);
+
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            validity = val.validity
+                        }
+                    });
+
+                    return '<input type="date" value="' + validity + '" id="validity' + row.id + '" class="form-control" name="productDate" style="font-size: 13px" onchange="javascript:getLinshiData(' + row.id + ')" />'
                 }
             }, {
                 field: 'productName',
@@ -794,6 +890,12 @@ function setAddRuku(data) {
             }, {
                 field: 'spec',
                 title: '规格',
+                align: 'left',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'attribute',
+                title: '产品属性',
                 align: 'left',
                 sortable: true,
                 width: 200,
@@ -809,8 +911,7 @@ function setAddRuku(data) {
                 align: 'left',
                 sortable: true,
                 width: 80,
-            }
-            , {
+            }, {
                 field: 'pinyin',
                 title: '拼音代码',
                 align: 'left',
@@ -823,17 +924,51 @@ function setAddRuku(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input type="text" name="remarks" class="form-control" />'
+                    var remarks = "";
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            remarks = val.remarks
+                        }
+                    });
+
+                    return '<input type="text" name="remarks" id="remarks' + row.id + '" value="' + remarks + '" class="form-control" style="font-size: 13px" oninput="javascript:getLinshiData(' + row.id + ')" />'
                 }
-            }
+            },
         ],
+        // onCheck: function (row) {
+        //     var warehouse = $('#warehouse' + row.id).val();
+        //     var num = $('#num' + row.id).val();
+        //     var productDate = $('#today' + row.id).val();
+        //     var pihao = $('#pihao' + row.id).val();
+        //     var remarks = $('#remarks' + row.id).val();
+        //     var validity = $('#validity' + row.id).val();
+        //
+        //     ruku_data.push({
+        //         num: num,
+        //         productDate: productDate,
+        //         pihao: pihao,
+        //         remarks: remarks,
+        //         validity: validity,
+        //         warehouse: warehouse,
+        //         productId: row.id,
+        //     });
+        // },
+        // onUncheck: function (row) {
+        //     for (var i = 0; i < ruku_data.length; i++) {
+        //         if (ruku_data[i].productId == row.id) {
+        //             ruku_data.splice(i, 1)
+        //         }
+        //     }
+        // },
         // onClickRow: function (row, el) {
-        //     let isSelect = $(el).hasClass('selected')
+        //     let isSelect = $(el).hasClass('selected');
         //     if (isSelect) {
         //         $(el).removeClass('selected')
         //     } else {
         //         $(el).addClass('selected')
         //     }
         // }
-    })
+    });
+
+
 }
