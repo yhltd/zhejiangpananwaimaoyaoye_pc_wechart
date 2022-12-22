@@ -761,6 +761,12 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+            },{
+                field: 'address',
+                title: '收货地址',
+                align: 'center',
+                sortable: true,
+                width: 100,
             },
             // {
             //     field: 'express',
@@ -956,6 +962,13 @@ function setStateTable(data) {
             }, {
                 field: 'shStaff',
                 title: '收货人员',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },
+            {
+                field: 'address',
+                title: '收货地址',
                 align: 'center',
                 sortable: true,
                 width: 100,

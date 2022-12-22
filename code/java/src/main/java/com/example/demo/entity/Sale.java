@@ -97,6 +97,11 @@ public class Sale {
     private String customer;
 
     /**
+     *  收货地址
+     */
+    private String address;
+
+    /**
      *  产品名
      */
     private String productName;
@@ -167,5 +172,13 @@ public class Sale {
      */
     private String leibie;
 
+    /**
+     *  客户类别
+     */
+    private String product_date;
 
+    /**
+     *  客户类别
+     */
+    private String validity;
 }

@@ -298,7 +298,7 @@ $(function () {
                     swal("", res.msg, "error");
                 }
                 var fileInput = document.getElementById('file');
-                fileInput.outerHTML = fileInput.outerHTML;
+                fileInput.value = '';
             })
         };
     });
