@@ -44,4 +44,25 @@ public class Print {
      */
     private String phone;
 
+    /**
+     * 产地
+     */
+    private String chandi;
+
+    /**
+     * 企业
+     */
+    private String qiye;
+
+    /**
+     * 箱量
+     */
+    private String xiangliang;
+
+    /**
+     * 单位
+     */
+    private String danwei2;
+
+
 }

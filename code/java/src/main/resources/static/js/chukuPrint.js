@@ -1,5 +1,9 @@
 let xiala_list = []
-
+let this_kuan = ""
+let p_chandi = ""
+let p_qiye = ""
+let p_xiangliang = ""
+let p_danwei = ""
 function getXiala() {
     $ajax({
         type: 'post',
@@ -18,6 +22,31 @@ function getXiala() {
                     $("#shouhuo").append(item);
                 }
             }
+
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].chandi != '' && list[i].chandi != null) {
+                    p_chandi = list[i].chandi
+                    break;
+                }
+            }
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].qiye != '' && list[i].qiye != null) {
+                    p_qiye = list[i].qiye
+                    break;
+                }
+            }
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].xiangliang != '' && list[i].xiangliang != null) {
+                    p_xiangliang = list[i].xiangliang
+                    break;
+                }
+            }
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].danwei2 != '' && list[i].danwei2 != null) {
+                    p_danwei = list[i].danwei2
+                    break;
+                }
+            }
         }
     })
 }
@@ -25,12 +54,15 @@ function getXiala() {
 
 $(function () {
     //重新加载页面
+    this_kuan = $('table').width();
     getXiala();
     $('#clear-btn').click(function () {
         history.go(0);
     });
     //打印
     $('#print-btn').click(function () {
+        $('table').width(this_kuan)
+        $('.table-div').width(this_kuan)
         var newstr = window.document.getElementById("div").innerHTML;
         var oldstr = window.document.body.innerHTML;
         document.body.innerHTML = newstr;
@@ -147,10 +179,10 @@ $(function () {
                             "<td>" + j + "</td>" +
                             "<td>" + res.data[i].productName + "</td>" +
                             "<td>" + res.data[i].spec + "</td>" +
-                            "<td><input onchange=\"javascript:inputChange('" + idd + "')\" type='text' id='idd" + i + "'  class='form-control' style='height:25px;border: none' /></td>" +
-                            "<td><input onchange=\"javascript:inputChange('" + idd1 + "')\" type='text' id='idd1" + i + "'  class='form-control' style='height:25px;border: none' /></td>" +
-                            "<td><input onchange=\"javascript:inputChange('" + idd2 + "')\" type='text' id='idd2" + i + "'  class='form-control' style='height:25px;border: none' /></td>" +
-                            "<td><input onchange=\"javascript:inputChange('" + idd3 + "')\" type='text' id='idd3" + i + "'  class='form-control' style='height:25px;border: none' /></td>" +
+                            "<td><input onchange=\"javascript:inputChange('" + idd + "')\" type='text' id='idd" + i + "'  class='form-control' style='height:25px;border: none' value='"+ p_chandi +"' /></td>" +
+                            "<td><input onchange=\"javascript:inputChange('" + idd1 + "')\" type='text' id='idd1" + i + "'  class='form-control' style='height:25px;border: none' value='"+ p_qiye +"' /></td>" +
+                            "<td><input onchange=\"javascript:inputChange('" + idd2 + "')\" type='text' id='idd2" + i + "'  class='form-control' style='height:25px;border: none' value='"+ p_xiangliang +"' /></td>" +
+                            "<td><input onchange=\"javascript:inputChange('" + idd3 + "')\" type='text' id='idd3" + i + "'  class='form-control' style='height:25px;border: none' value='"+ p_danwei +"' /></td>" +
                             "<td>" + res.data[i].num + "</td>" +
                             "<td>" + res.data[i].unit + "</td>" +
                             "<td>" + res.data[i].price + "</td>" +
@@ -158,14 +190,17 @@ $(function () {
                             "<td><input onchange=\"javascript:inputChange('" + idd5 + "')\" type='text' id='idd5" + i + "'   class='form-control' style='height:25px;border: none' /></td>" +
                             "<td><input onchange=\"javascript:inputChange('" + idd6 + "')\" type='text' id='idd6" + i + "'   class='form-control' style='height:25px;border: none' /></td>" +
                             "<td>" + res.data[i].pihao + "</td>" +
-                            "<td>" + res.data[i].product_date + "</td>" +
+                            "<td>" + res.data[i].productDate + "</td>" +
                             "<td>" + res.data[i].validity + "</td>" +
                             // "<td><input onchange=\"javascript:inputChange('" + idd7 + "')\" type='text' id='idd7" + i + "'   class='form-control' style='height:25px;border: none' /></td>" +
                             // "<td><input onchange=\"javascript:inputChange('" + idd8 + "')\" type='text' id='idd8" + i + "'   class='form-control' style='height:25px;border: none' /></td>" +
                             "</tr>";
+
                         $("#data").append(tr);
                         $('#chuku-modal').modal('hide');
                     }
+                    $('table').width(this_kuan * 2)
+                    $('.table-div').width(this_kuan * 2)
                 }
             })
         }

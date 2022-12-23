@@ -215,6 +215,30 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 150,
+            }, {
+                field: 'chandi',
+                title: '产地',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'qiye',
+                title: '企业',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'xiangliang',
+                title: '箱量',
+                align: 'center',
+                sortable: true,
+                width: 150,
+            }, {
+                field: 'danwei',
+                title: '单位',
+                align: 'center',
+                sortable: true,
+                width: 150,
             }
         ],
         onClickRow: function (row, el) {

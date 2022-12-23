@@ -175,7 +175,7 @@ public class Sale {
     /**
      *  客户类别
      */
-    private String product_date;
+    private String productDate;
 
     /**
      *  客户类别
