@@ -12,6 +12,8 @@ $(function () {
             }, false, '', function (res) {
                 if (res.code > 0) {
                     swal("", res.msg, "success");
+                    console.log(res.data)
+                    $.session.set('power', res.data)
                     setTimeout(function () {
                         window.location.href = "html/main.html";
                     }, 1500);

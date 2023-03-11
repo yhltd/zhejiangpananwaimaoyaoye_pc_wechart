@@ -47,6 +47,11 @@ public class UserInfoImpl extends ServiceImpl<UserInfoMapper, UserInfo> implemen
             Map<String, Object> map = new HashMap<>();
             map.put("token", data);
             map.put("power",powerList);
+            String this_power = "";
+            if(userInfo.getMoneySel() != null){
+                this_power = userInfo.getMoneySel();
+            }
+            map.put("selPower",this_power);
             return map;
         }
         return null;

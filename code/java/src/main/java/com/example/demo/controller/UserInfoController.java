@@ -48,7 +48,7 @@ public class UserInfoController {
             } else {
                 SessionUtil.setToken(session, map.get("token").toString());
                 SessionUtil.setPower(session, StringUtils.cast(map.get("power")));
-                return ResultInfo.success("登陆成功", null);
+                return ResultInfo.success("登陆成功", map.get("selPower").toString());
             }
         } catch (Exception e) {
             log.error("登陆失败：{}", e.getMessage());

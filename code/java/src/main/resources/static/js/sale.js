@@ -7,6 +7,7 @@ let sale_list = [];
 let state_list = [];
 let saleSubmit_list = [];
 let linshi_data = [];
+let moneySel = ""
 
 function getList() {
     $('#product').val("");
@@ -14,7 +15,15 @@ function getList() {
     $('#pihao').val("");
     $('#ks').val("");
     $('#js').val("");
-
+    moneySel = $.session.get('power');
+    if(moneySel == null || moneySel == undefined){
+        moneySel = false
+    }
+    else if(moneySel == "是"){
+        moneySel = true
+    }else{
+        moneySel = false
+    }
     $ajax({
         type: 'post',
         url: '/sale/getList',
@@ -846,6 +855,7 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+                visible:moneySel
             }, {
                 field: 'num',
                 title: '销售数量',
@@ -858,6 +868,7 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+                visible:moneySel
             },
             // {
             //     field: 'warehouse',
@@ -1017,6 +1028,7 @@ function setStateTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+                visible:moneySel
             }, {
                 field: 'num',
                 title: '销售数量',
@@ -1029,6 +1041,7 @@ function setStateTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+                visible:moneySel
             },
             {
                 field: 'remarks',

@@ -131,6 +131,7 @@ $(function () {
         $('#update-power').val(rows[0].data.power);
         $('#update-department').val(rows[0].data.department);
         $('#update-stateUpd').val(rows[0].data.stateUpd);
+        $('#update-moneySel').val(rows[0].data.moneySel);
     });
 
     //修改弹窗点击关闭按钮
@@ -232,25 +233,25 @@ function setTable(data) {
                 title: '用户名',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 80,
             }, {
                 field: 'password',
                 title: '密码',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 80,
             }, {
                 field: 'power',
                 title: '权限',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 80,
             }, {
                 field: 'name',
                 title: '姓名',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 80,
             }, {
                 field: 'department',
                 title: '部门',
@@ -262,7 +263,13 @@ function setTable(data) {
                 title: '能否修改审核通过数据',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 180,
+            }, {
+                field: 'moneySel',
+                title: '能否查看销售单价金额',
+                align: 'center',
+                sortable: true,
+                width: 180,
             }
         ],
         onClickRow: function (row, el) {

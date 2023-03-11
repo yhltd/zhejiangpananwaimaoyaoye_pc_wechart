@@ -41,4 +41,8 @@ public class UserInfo {
      * 审核后是否能修改和删除
      */
     private String stateUpd;
+    /**
+     * 能否查看销售单价金额
+     */
+    private String moneySel;
 }
