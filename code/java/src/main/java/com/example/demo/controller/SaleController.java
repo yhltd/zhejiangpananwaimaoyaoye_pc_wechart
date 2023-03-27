@@ -269,6 +269,7 @@ public class SaleController {
 
         try {
             Sale sale = new Sale();
+            Double xiaoji = Double.parseDouble(num) * Double.parseDouble(price);
             sale.setRiqi(riqi);
             sale.setCustomerId(customerId);
             sale.setShStaff(shStaff);
@@ -280,7 +281,7 @@ public class SaleController {
             sale.setSaleType(saleType);
             sale.setPrice(price);
             sale.setSaleState("审核中");
-            sale.setXiaoji((Double.parseDouble(num) * Double.parseDouble(price)) + "");
+            sale.setXiaoji(xiaoji.toString());
             sale = saleService.add(sale);
             return ResultInfo.success("添加成功", sale);
         } catch (Exception e) {

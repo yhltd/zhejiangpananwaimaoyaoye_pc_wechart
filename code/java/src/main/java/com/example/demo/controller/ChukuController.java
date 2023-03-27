@@ -211,6 +211,7 @@ public class ChukuController {
 
         try {
             Sale sale = new Sale();
+            Double xiaoji = Double.parseDouble(num) * Double.parseDouble(price);
             sale.setRiqi(riqi);
             sale.setNum(num);
             sale.setRemarks(remarks);
@@ -221,7 +222,7 @@ public class ChukuController {
             sale.setChukuState("审核中");
             sale.setChukuInsert("1");
             sale.setFahuo("未发货");
-            sale.setXiaoji((Double.parseDouble(num) * Double.parseDouble(price)) + "");
+            sale.setXiaoji(xiaoji.toString());
             sale = chukuService.add(sale);
             return ResultInfo.success("添加成功", sale);
         } catch (Exception e) {
