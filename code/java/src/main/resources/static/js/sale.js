@@ -742,15 +742,7 @@ function setTable(data) {
             return '';
         },
         columns: [
-            {
-                field: '',
-                title: '序号',
-                align: 'center',
-                width: 50,
-                formatter: function (value, row, index) {
-                    return index + 1;
-                }
-            }, {
+             {
                 field: 'riqi',
                 title: '日期',
                 align: 'center',
@@ -763,6 +755,121 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
+                field: 'saleState',
+                title: '审核状态',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
+                field: '',
+                title: '操作',
+                align: 'center',
+                width: 100,
+                formatter: function (value, row, index) {
+                    if(row.saleState == "审核中"){
+                        return '<button onclick="javascript:pass(' + row.id + ')" class="btn-sm btn-primary">通过</button> <button onclick="javascript:refuse(' + row.id + ')" class="btn-sm btn-primary">拒绝</button>'
+                    }else{
+                        return '<button disabled="disabled" onclick="javascript:pass(' + row.id + ')" class="btn-sm btn-primary">通过</button> <button disabled="disabled" onclick="javascript:refuse(' + row.id + ')" class="btn-sm btn-primary">拒绝</button>'
+                    }
+
+                }
+            },{
+                field: 'warehouse',
+                title: '仓库',
+                align: 'center',
+                sortable: true,
+                width: 200,
+                formatter: function (value, row, index) {
+                    if(row.saleState != '审核中'){
+                        return value;
+                    }else{
+                        if(row.type != "退货"){
+                            var this_cangku = ""
+                            for (var i = 0; i < kucun_list.length; i++) {
+                                if (kucun_list[i].id == row.productId && kucun_list[i].num * 1 >= row.num * 1) {
+                                    this_cangku = this_cangku + "<option value=\"" + kucun_list[i].warehouse + "\">" + kucun_list[i].warehouse + "</option>";
+                                }
+                            }
+
+                            var select = "<select id=\"warehouse" + row.id + "\" name=\"warehouse\" class=\"form-control\" >";
+                            select = select + this_cangku;
+                            select = select + "<select/>";
+
+                            return select;
+                        }else{
+                            var select = "<select id=\"warehouse" + row.id + "\" name=\"warehouse\" class=\"form-control\" >";
+                            select = select + cangku;
+                            select = select + "<select/>";
+
+                            return select;
+                        }
+
+                    }
+                }
+            },{
+                field: id,
+                title: '序号',
+                align: 'center',
+                width: 50,
+            },{
+                field: 'productName',
+                title: '产品名称',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'spec',
+                title: '规格',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'attribute',
+                title: '产品属性',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            },{
+                field: 'price',
+                title: '销售单价',
+                align: 'center',
+                sortable: true,
+                width: 100,
+                visible:moneySel
+            }, {
+                field: 'num',
+                title: '销售数量',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            }, {
+                field: 'xiaoji',
+                title: '小计',
+                align: 'center',
+                sortable: true,
+                width: 100,
+                visible:moneySel
+            },
+            // {
+            //     field: 'warehouse',
+            //     title: '仓库',
+            //     align: 'center',
+            //     sortable: true,
+            //     width: 100,
+            // },
+            {
+                field: 'remarks',
+                title: '备注',
+                align: 'center',
+                sortable: true,
+                width: 200,
+            }, {
+                field: 'type',
+                title: '类型',
+                align: 'center',
+                sortable: true,
+                width: 100,
+            },{
                 field: 'customerNum',
                 title: '客户号',
                 align: 'center',
@@ -812,6 +919,12 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+            },{
+                field: 'pinhao',
+                title: '品号',
+                align: 'center',
+                sortable: true,
+                width: 200,
             },
             // {
             //     field: 'wuliuOrder',
@@ -827,31 +940,7 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             },
-            {
-                field: 'productName',
-                title: '产品名称',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'pinhao',
-                title: '品号',
-                align: 'center',
-                sortable: true,
-                width: 200,
-            }, {
-                field: 'spec',
-                title: '规格',
-                align: 'center',
-                sortable: true,
-                width: 200,
-            }, {
-                field: 'attribute',
-                title: '产品属性',
-                align: 'center',
-                sortable: true,
-                width: 200,
-            },
+
             // {
             //     field: 'pihao',
             //     title: '批号',
@@ -865,46 +954,6 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
-            }, {
-                field: 'price',
-                title: '销售单价',
-                align: 'center',
-                sortable: true,
-                width: 100,
-                visible:moneySel
-            }, {
-                field: 'num',
-                title: '销售数量',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'xiaoji',
-                title: '小计',
-                align: 'center',
-                sortable: true,
-                width: 100,
-                visible:moneySel
-            },
-            // {
-            //     field: 'warehouse',
-            //     title: '仓库',
-            //     align: 'center',
-            //     sortable: true,
-            //     width: 100,
-            // },
-            {
-                field: 'remarks',
-                title: '备注',
-                align: 'center',
-                sortable: true,
-                width: 200,
-            }, {
-                field: 'type',
-                title: '类型',
-                align: 'center',
-                sortable: true,
-                width: 100,
             },
             // {
             //     field: 'fahuo',
@@ -913,59 +962,7 @@ function setTable(data) {
             //     sortable: true,
             //     width: 100,
             // }
-            {
-                field: 'saleState',
-                title: '审核状态',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            },{
-                field: 'warehouse',
-                title: '仓库',
-                align: 'center',
-                sortable: true,
-                width: 200,
-                formatter: function (value, row, index) {
-                    if(row.saleState != '审核中'){
-                        return value;
-                    }else{
-                        if(row.type != "退货"){
-                            var this_cangku = ""
-                            for (var i = 0; i < kucun_list.length; i++) {
-                                if (kucun_list[i].id == row.productId && kucun_list[i].num * 1 >= row.num * 1) {
-                                    this_cangku = this_cangku + "<option value=\"" + kucun_list[i].warehouse + "\">" + kucun_list[i].warehouse + "</option>";
-                                }
-                            }
 
-                            var select = "<select id=\"warehouse" + row.id + "\" name=\"warehouse\" class=\"form-control\" >";
-                            select = select + this_cangku;
-                            select = select + "<select/>";
-
-                            return select;
-                        }else{
-                            var select = "<select id=\"warehouse" + row.id + "\" name=\"warehouse\" class=\"form-control\" >";
-                            select = select + cangku;
-                            select = select + "<select/>";
-
-                            return select;
-                        }
-
-                    }
-                }
-            },{
-                field: '',
-                title: '操作',
-                align: 'center',
-                width: 100,
-                formatter: function (value, row, index) {
-                    if(row.saleState == "审核中"){
-                        return '<button onclick="javascript:pass(' + row.id + ')" class="btn-sm btn-primary">通过</button> <button onclick="javascript:refuse(' + row.id + ')" class="btn-sm btn-primary">拒绝</button>'
-                    }else{
-                        return '<button disabled="disabled" onclick="javascript:pass(' + row.id + ')" class="btn-sm btn-primary">通过</button> <button disabled="disabled" onclick="javascript:refuse(' + row.id + ')" class="btn-sm btn-primary">拒绝</button>'
-                    }
-
-                }
-            }
         ],
         onClickRow: function (row, el) {
             let isSelect = $(el).hasClass('selected');
