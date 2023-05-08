@@ -90,7 +90,7 @@
             导入Excel
         </button>
         <button id="export-btn" class="btn btn-primary"
-                onClick="$('#saleTable').tableExport({ type: 'excel', escape: 'false' })">
+                onClick="toExcel()">
             <i class="bi bi-file-earmark-spreadsheet"></i>
             导出Excel
         </button>
@@ -98,6 +98,7 @@
         <a id="xiaoji_sum" class="btn btn-primary" style="color: white;padding-top: 8px">小计汇总：0</a>
     </div>
 </div>
+<input type="file" id="file" hidden="hidden">
 
 <div class="table-div border-top">
     <table id="saleTable"></table>
@@ -393,11 +394,7 @@
             <div class="border-top" style="padding: 15px;">
                 <button id="state-tongguo-btn" type="button" class="btn btn-primary">
                     <i class="bi bi-arrow-bar-up icon"></i>
-                    审核通过
-                </button>
-                <button id="state-weitongguo-btn" type="button" class="btn btn-primary">
-                    <i class="bi bi-arrow-bar-up icon"></i>
-                    审核未通过
+                    保存
                 </button>
                 <button id="state-close-btn" type="button" class="btn btn-primary left-margin">
                     <i class="bi bi-x-circle icon"></i>

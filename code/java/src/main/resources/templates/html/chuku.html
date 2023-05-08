@@ -77,15 +77,15 @@
 <!--            <i class="bi bi-arrow-clockwise icon"></i>-->
 <!--            审核中-->
 <!--        </button>-->
-<!--        <button id="tongguo-btn" class="btn btn-primary">-->
-<!--            <i class="bi bi-arrow-clockwise icon"></i>-->
-<!--            审核通过-->
-<!--        </button>-->
-<!--        <button id="weitongguo-btn" class="btn btn-primary">-->
-<!--            <i class="bi bi-arrow-clockwise icon"></i>-->
-<!--            审核未通过-->
-<!--        </button>-->
-        <button id="export-btn" class="btn btn-primary" onClick ="$('#chukuTable').tableExport({ type: 'excel', escape: 'false' })">
+        <button id="tongguo-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            已发货
+        </button>
+        <button id="weitongguo-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            未发货
+        </button>
+        <button id="export-btn" class="btn btn-primary" onClick ="toExcel()">
             <i class="bi bi-file-earmark-spreadsheet"></i>
             导出Excel
         </button>

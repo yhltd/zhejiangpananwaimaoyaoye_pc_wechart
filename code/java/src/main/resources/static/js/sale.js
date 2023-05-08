@@ -55,6 +55,7 @@ function getSelect() {
     $ajax({
         type: 'post',
         url: '/general/getSelect',
+        async: false,
     }, false, '', function (res) {
         if (res.code == 200) {
             var item = "";
@@ -66,6 +67,7 @@ function getSelect() {
             $("#update-pick option").remove();
             $("#add-saleType option").remove();
             $("#update-saleType option").remove();
+
             for (var i = 0; i < res.data.length; i++) {
                 if (res.data[i].warehouse != null && res.data[i].warehouse != "") {
                     item = "<option value=\"" + res.data[i].warehouse + "\">" + res.data[i].warehouse + "</option>"
@@ -105,6 +107,7 @@ function getKuCun() {
     $ajax({
         type: 'post',
         url: '/kucun/getKuCun',
+        async: false,
     }, false, '', function (res) {
         if (res.code == 200) {
             kucun_list = res.data
@@ -200,10 +203,10 @@ window.onload = function () {
 };
 
 $(function () {
+    getKuCun();
     getList();
     getSelect();
     getProductAdd();
-    getKuCun();
 
     $('#select-btn').click(function () {
         var ks = $('#ks').val();
@@ -242,10 +245,10 @@ $(function () {
 
     //刷新
     $("#refresh-btn").click(function () {
+        getKuCun();
         getList();
         getSelect();
         getProductAdd();
-        getKuCun();
     });
 
     //审核中
@@ -338,6 +341,46 @@ $(function () {
             swal("未选择产品！");
             return;
         }
+        console.log(productList)
+        setStateTable(productList)
+        $('#state-modal').modal('show');
+        // var cishu = 1;
+        // $.each(productList, function (index, row) {
+        //     $ajax({
+        //         type: 'post',
+        //         url: '/sale/insert',
+        //         data: {
+        //             riqi: $('#add-riqi').val(),
+        //             customerId: $('#add-customerId').val(),
+        //             shStaff: $('#add-shStaff').val(),
+        //             pick: $('#add-pick').val(),
+        //             type: $('#add-type').val(),
+        //             productId: row.id,
+        //             saleType: row.saleType,
+        //             price: row.price,
+        //             num: row.num,
+        //             remarks: row.remarks,
+        //         },
+        //     }, false, '', function (res) {
+        //         if (cishu == 1) {
+        //             swal(res.msg);
+        //             cishu = cishu + 1;
+        //         }
+        //     })
+        // });
+        //
+        // swal("", "新增成功！", "success");
+        // $('#add-customer').next().css('display', 'none');
+        //
+        // getList();
+        // getProductAdd();
+        // $('#add-close-btn').click();
+
+    });
+
+
+    //审核弹窗里点击审核通过按钮
+    $("#state-tongguo-btn").click(function () {
         var cishu = 1;
         $.each(productList, function (index, row) {
             $ajax({
@@ -366,45 +409,10 @@ $(function () {
         swal("", "新增成功！", "success");
         $('#add-customer').next().css('display', 'none');
 
-        getList();
-        getProductAdd();
-        $('#add-close-btn').click();
-
-    });
-
-
-    //审核弹窗里点击审核通过按钮
-    $("#state-tongguo-btn").click(function () {
-        saleSubmit_list = getStateRows("#show-state-table");
-        console.log(saleSubmit_list)
-        if (saleSubmit_list.length == 0) {
-            swal("无审核内容！");
-            return;
-        }
-        for (var i = 0; i < saleSubmit_list.length; i++) {
-            if (saleSubmit_list[i].warehouse == '' || saleSubmit_list[i].warehouse == null) {
-                swal("列表中的产品未选择仓库！");
-                return;
-            }
-        }
-        $.each(saleSubmit_list, function (index, row) {
-            $ajax({
-                type: 'post',
-                url: '/sale/updateState',
-                async: false,
-                data: {
-                    id: row.id,
-                    warehouse: row.warehouse,
-                    saleState: '审核通过'
-                },
-            }, false, '', function (res) {
-            })
-        });
-
-        swal("", "审核成功！", "success");
-        getList();
-        getProductAdd();
         $('#state-close-btn').click();
+        $('#add-close-btn').click();
+        getList();
+        getProductAdd();
     });
 
     //审核弹窗里点击审核未通过按钮
@@ -725,6 +733,14 @@ function setTable(data) {
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
         height: document.body.clientHeight * 0.8,
+
+        rowStyle: function(row, index) {
+            var state = row.saleState;
+            if(state === "审核未通过"){
+                return {css:{'color':'#FF0033'}};
+            }
+            return '';
+        },
         columns: [
             {
                 field: '',
@@ -903,10 +919,53 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+            },{
+                field: 'warehouse',
+                title: '仓库',
+                align: 'center',
+                sortable: true,
+                width: 200,
                 formatter: function (value, row, index) {
-                    return "<div title='" + value + "'; style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width: 100%;word-wrap:break-all;word-break:break-all;' href='javascript:edit(\"" + row.id + "\",true)'><span id='" + row.id + "' style='text-decoration:underline;' onclick='javascript:state_select(" + row.id + ")'>" + value + "</span></div>";
+                    if(row.saleState != '审核中'){
+                        return value;
+                    }else{
+                        if(row.type != "退货"){
+                            var this_cangku = ""
+                            for (var i = 0; i < kucun_list.length; i++) {
+                                if (kucun_list[i].id == row.productId && kucun_list[i].num * 1 >= row.num * 1) {
+                                    this_cangku = this_cangku + "<option value=\"" + kucun_list[i].warehouse + "\">" + kucun_list[i].warehouse + "</option>";
+                                }
+                            }
+
+                            var select = "<select id=\"warehouse" + row.id + "\" name=\"warehouse\" class=\"form-control\" >";
+                            select = select + this_cangku;
+                            select = select + "<select/>";
+
+                            return select;
+                        }else{
+                            var select = "<select id=\"warehouse" + row.id + "\" name=\"warehouse\" class=\"form-control\" >";
+                            select = select + cangku;
+                            select = select + "<select/>";
+
+                            return select;
+                        }
+
+                    }
                 }
-            },
+            },{
+                field: '',
+                title: '操作',
+                align: 'center',
+                width: 100,
+                formatter: function (value, row, index) {
+                    if(row.saleState == "审核中"){
+                        return '<button onclick="javascript:pass(' + row.id + ')" class="btn-sm btn-primary">通过</button> <button onclick="javascript:refuse(' + row.id + ')" class="btn-sm btn-primary">拒绝</button>'
+                    }else{
+                        return '<button disabled="disabled" onclick="javascript:pass(' + row.id + ')" class="btn-sm btn-primary">通过</button> <button disabled="disabled" onclick="javascript:refuse(' + row.id + ')" class="btn-sm btn-primary">拒绝</button>'
+                    }
+
+                }
+            }
         ],
         onClickRow: function (row, el) {
             let isSelect = $(el).hasClass('selected');
@@ -938,130 +997,62 @@ function setStateTable(data) {
         locale: 'zh-CN',
         columns: [
             {
-                field: 'warehouse',
-                title: '仓库',
-                align: 'left',
-                sortable: true,
-                width: 150,
+                field: '',
+                title: '序号',
+                align: 'center',
+                width: 50,
                 formatter: function (value, row, index) {
-                    var cangku = ""
-                    for (var i = 0; i < kucun_list.length; i++) {
-                        if (kucun_list[i].id == row.productId && kucun_list[i].num * 1 >= row.num * 1) {
-                            cangku = cangku + "<option value=\"" + kucun_list[i].warehouse + "\">" + kucun_list[i].warehouse + "</option>";
-                        }
-                    }
-
-                    var select = "<select name=\"warehouse\" class=\"form-control\" >";
-                    select = select + cangku;
-                    select = select + "<select/>";
-
-                    return select;
-                },
-            },
-            {
-                field: 'riqi',
-                title: '日期',
-                align: 'center',
-                sortable: true,
-                width: 100,
+                    return index + 1;
+                }
             }, {
-                field: 'customer',
-                title: '客户名称',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'shStaff',
-                title: '收货人员',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            },
-            {
-                field: 'address',
-                title: '收货地址',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            },
-            {
-                field: 'salesman',
-                title: '业务员',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'pick',
-                title: '拿货方式',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            },
-            {
                 field: 'saleType',
                 title: '发货类型',
-                align: 'center',
+                align: 'left',
                 sortable: true,
-                width: 100,
-            },
-            {
+                width: 120,
+            }, {
                 field: 'productName',
                 title: '产品名称',
-                align: 'center',
+                align: 'left',
                 sortable: true,
-                width: 100,
+                width: 250,
             }, {
                 field: 'spec',
                 title: '规格',
-                align: 'center',
+                align: 'left',
                 sortable: true,
                 width: 200,
+            }, {
+                field: 'attribute',
+                title: '产品属性',
+                align: 'center',
+                sortable: true,
+                width: 150,
             }, {
                 field: 'unit',
                 title: '单位',
-                align: 'center',
+                align: 'left',
                 sortable: true,
-                width: 100,
+                width: 80,
             }, {
                 field: 'price',
-                title: '销售单价',
-                align: 'center',
+                title: '价格',
+                align: 'left',
                 sortable: true,
                 width: 100,
-                visible:moneySel
             }, {
                 field: 'num',
-                title: '销售数量',
-                align: 'center',
+                title: '数量',
+                align: 'left',
                 sortable: true,
                 width: 100,
             }, {
-                field: 'xiaoji',
-                title: '小计',
-                align: 'center',
-                sortable: true,
-                width: 100,
-                visible:moneySel
-            },
-            {
                 field: 'remarks',
                 title: '备注',
-                align: 'center',
+                align: 'left',
                 sortable: true,
-                width: 200,
-            }, {
-                field: 'type',
-                title: '类型',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'saleState',
-                title: '审核状态',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            },
+                width: 150,
+            }
         ],
         // onClickRow: function (row, el) {
         //     let isSelect = $(el).hasClass('selected');
@@ -1415,6 +1406,7 @@ function getLinshiData(id) {
 function getRows(tableEl) {
     let result = [];
     let tableData = $(tableEl).bootstrapTable('getData');
+    console.log(tableData)
     for (var i = 0; i < tableData.length; i++) {
         if (tableData[i][0] == true) {
             for (var j = 0; j < linshi_data.length; j++) {
@@ -1432,6 +1424,11 @@ function getRows(tableEl) {
                         shStaff: '',
                         pick: '',
                         type: '',
+                        productName: tableData[i].productName,
+                        spec: tableData[i].spec,
+                        attribute: tableData[i].attribute,
+                        unit: tableData[i].unit,
+                        zhekou: tableData[i].zhekou,
                     })
                 }
             }
@@ -1500,4 +1497,241 @@ function getCangKuXiaLa() {
     select = select + cangku;
     select = select + "<select/>";
     return select;
+}
+
+
+function toExcel() {
+
+    var ks = $('#ks').val();
+    var js = $('#js').val();
+    var customer = $('#customer').val();
+    var product = $('#product').val();
+    var pihao = $('#pihao').val();
+    var saleType = $('#saleType').val();
+    $ajax({
+        type: 'post',
+        url: '/sale/queryList',
+        data: {
+            ks: ks,
+            js: js,
+            customer: customer,
+            product: product,
+            pihao: pihao,
+            saleType: saleType,
+        }
+    }, true, '', function (res) {
+        if (res.code == 200) {
+            setTable(res.data);
+            console.log(res.data)
+            var array = res.data
+            var header = []
+            var title = []
+            if(moneySel){
+                for (var i = 0; i < array.length; i++) {
+                    var body = {
+                        riqi: array[i].riqi,
+                        customer: array[i].customer,
+                        customerNum:array[i].customerNum,
+                        area: array[i].area,
+                        leibie: array[i].leibie,
+                        shStaff: array[i].shStaff,
+                        address: array[i].address,
+                        salesman: array[i].salesman,
+                        pick: array[i].pick,
+                        saleType: array[i].saleType,
+                        productName: array[i].productName,
+                        pinhao: array[i].pinhao,
+                        spec: array[i].spec,
+                        attribute: array[i].attribute,
+                        unit: array[i].unit,
+                        price: array[i].price,
+                        num: array[i].num,
+                        xiaoji: array[i].xiaoji,
+                        remarks: array[i].remarks,
+                        type: array[i].type,
+                        saleState: array[i].saleState,
+                    }
+                    header.push(body)
+                }
+                console.log(header)
+                title = ['日期','客户名称','客户号', '区域', '类别', '收货人员', '收货地址', '业务员', '拿货方式', '发货类型', '产品名称', '品号', '规格', '产品属性', '单位', '销售单价', '销售数量', '小计', '备注', '类型', '审核状态']
+            }else{
+                for (var i = 0; i < array.length; i++) {
+                    var body = {
+                        riqi: array[i].riqi,
+                        customer: array[i].customer,
+                        customerNum:array[i].customerNum,
+                        area: array[i].area,
+                        leibie: array[i].leibie,
+                        shStaff: array[i].shStaff,
+                        address: array[i].address,
+                        salesman: array[i].salesman,
+                        pick: array[i].pick,
+                        saleType: array[i].saleType,
+                        productName: array[i].productName,
+                        pinhao: array[i].pinhao,
+                        spec: array[i].spec,
+                        attribute: array[i].attribute,
+                        unit: array[i].unit,
+                        num: array[i].num,
+                        remarks: array[i].remarks,
+                        type: array[i].type,
+                        saleState: array[i].saleState,
+                    }
+                    header.push(body)
+                }
+                console.log(header)
+                title = ['日期','客户名称','客户号', '区域', '类别', '收货人员', '收货地址', '业务员', '拿货方式', '发货类型', '产品名称', '品号', '规格', '产品属性', '单位', '销售数量', '备注', '类型', '审核状态']
+            }
+
+            JSONToExcelConvertor(header, "销售", title)
+
+        }
+    })
+
+}
+
+
+function pass(id) {
+
+    var warehouse = document.getElementById('warehouse' + id).value
+    console.log(warehouse)
+    if(warehouse == ''){
+        swal("", "未选择仓库", "error");
+    }else{
+        $ajax({
+            type: 'post',
+            url: '/sale/updateState',
+            async: false,
+            data: {
+                id: id,
+                warehouse: warehouse,
+                saleState: '审核通过'
+            },
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                swal("", res.msg, "success");
+                $('#update-close-btn').click();
+                $('#update-modal').modal('hide');
+                getList();
+            } else {
+                swal("", res.msg, "error");
+            }
+        })
+    }
+
+}
+
+function refuse(id) {
+    $ajax({
+        type: 'post',
+        url: '/sale/updateState',
+        async: false,
+        data: {
+            id: id,
+            warehouse: "",
+            saleState: '审核未通过'
+        },
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            swal("", res.msg, "success");
+            $('#update-close-btn').click();
+            $('#update-modal').modal('hide');
+            getList();
+        } else {
+            swal("", res.msg, "error");
+        }
+    })
+}
+
+
+function JSONToExcelConvertor(JSONData, FileName, title, filter) {
+    if (!JSONData)
+        return;
+    //转化json为object
+    var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+    var excel = "<table>";
+
+    //设置表头
+    var row = "<tr>";
+
+    if (title) {
+        //使用标题项
+        for (var i in title) {
+            row += "<th align='center'>" + title[i] + '</th>';
+        }
+
+    }
+    else {
+        //不使用标题项
+        for (var i in arrData[0]) {
+            row += "<th align='center'>" + i + '</th>';
+        }
+    }
+
+    excel += row + "</tr>";
+
+    //设置数据
+    for (var i = 0; i < arrData.length; i++) {
+        var row = "<tr>";
+
+        for (var index in arrData[i]) {
+            //判断是否有过滤行
+            if (filter) {
+                if (filter.indexOf(index) == -1) {
+                    var value = arrData[i][index] == null ? "" : arrData[i][index];
+                    row += '<td>' + value + '</td>';
+                }
+            }
+            else {
+                var value = arrData[i][index] == null ? "" : arrData[i][index];
+                row += "<td align='center'>" + value + "</td>";
+            }
+        }
+
+        excel += row + "</tr>";
+    }
+
+    excel += "</table>";
+
+    var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
+    excelFile += '<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';
+    excelFile += '<meta http-equiv="content-type" content="application/vnd.ms-excel';
+    excelFile += '; charset=UTF-8">';
+    excelFile += "<head>";
+    excelFile += "<!--[if gte mso 9]>";
+    excelFile += "<xml>";
+    excelFile += "<x:ExcelWorkbook>";
+    excelFile += "<x:ExcelWorksheets>";
+    excelFile += "<x:ExcelWorksheet>";
+    excelFile += "<x:Name>";
+    excelFile += "{worksheet}";
+    excelFile += "</x:Name>";
+    excelFile += "<x:WorksheetOptions>";
+    excelFile += "<x:DisplayGridlines/>";
+    excelFile += "</x:WorksheetOptions>";
+    excelFile += "</x:ExcelWorksheet>";
+    excelFile += "</x:ExcelWorksheets>";
+    excelFile += "</x:ExcelWorkbook>";
+    excelFile += "</xml>";
+    excelFile += "<![endif]-->";
+    excelFile += "</head>";
+    excelFile += "<body>";
+    excelFile += excel;
+    excelFile += "</body>";
+    excelFile += "</html>";
+
+
+    var uri = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(excelFile);
+
+    var link = document.createElement("a");
+    link.href = uri;
+
+    link.style = "visibility:hidden";
+    link.download = FileName + ".xls";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }

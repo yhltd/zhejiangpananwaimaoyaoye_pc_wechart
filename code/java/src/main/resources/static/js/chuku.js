@@ -15,6 +15,16 @@ function getList() {
     $('#ks').val("");
     $('#js').val("");
 
+    moneySel = $.session.get('power');
+    if(moneySel == null || moneySel == undefined){
+        moneySel = false
+    }
+    else if(moneySel == "是"){
+        moneySel = true
+    }else{
+        moneySel = false
+    }
+
     $ajax({
         type: 'post',
         url: '/chuku/getList',
@@ -196,25 +206,25 @@ $(function () {
         getProductAdd();
     });
 
-    //审核中
-    $("#shenhezhong-btn").click(function () {
-        $ajax({
-            type: 'post',
-            url: '/chuku/getList_shenhezhong',
-        }, false, '', function (res) {
-            if (res.code == 200) {
-                setTable(res.data);
-                $("#rukuTable").colResizable({
-                    liveDrag: true,
-                    gripInnerHtml: "<div class='grip'></div>",
-                    draggingClass: "dragging",
-                    resizeMode: 'fit'
-                });
-            }
-        })
-    });
+    // //审核中
+    // $("#shenhezhong-btn").click(function () {
+    //     $ajax({
+    //         type: 'post',
+    //         url: '/chuku/getList_shenhezhong',
+    //     }, false, '', function (res) {
+    //         if (res.code == 200) {
+    //             setTable(res.data);
+    //             $("#rukuTable").colResizable({
+    //                 liveDrag: true,
+    //                 gripInnerHtml: "<div class='grip'></div>",
+    //                 draggingClass: "dragging",
+    //                 resizeMode: 'fit'
+    //             });
+    //         }
+    //     })
+    // });
 
-    //审核通过
+    //已发货
     $("#tongguo-btn").click(function () {
         $ajax({
             type: 'post',
@@ -232,7 +242,7 @@ $(function () {
         })
     });
 
-    //审核未通过
+    //未发货
     $("#weitongguo-btn").click(function () {
         $ajax({
             type: 'post',
@@ -905,6 +915,7 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+                visible:moneySel
             }, {
                 field: 'num',
                 title: '销售数量',
@@ -917,6 +928,7 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 100,
+                visible:moneySel
             },
             {
                 field: 'remarks',
@@ -1651,4 +1663,196 @@ function base64ToBlob(code) {
         uInt8Array[i] = raw.charCodeAt(i)
     }
     return new Blob([uInt8Array], {type: 'application/pdf'})
+}
+
+
+function toExcel() {
+
+    var ks = $('#ks').val();
+    var js = $('#js').val();
+    var customer = $('#customer').val();
+    var product = $('#product').val();
+    var pihao = $('#pihao').val();
+    var saleType = $('#saleType').val();
+    $ajax({
+        type: 'post',
+        url: '/chuku/queryList',
+        data: {
+            ks: ks,
+            js: js,
+            customer: customer,
+            product: product,
+            pihao: pihao,
+            saleType: saleType,
+        }
+    }, true, '', function (res) {
+        if (res.code == 200) {
+            setTable(res.data);
+            console.log(res.data)
+            var array = res.data
+            var header = []
+            var title = []
+            if(moneySel){
+                for (var i = 0; i < array.length; i++) {
+                    var body = {
+                        riqi: array[i].riqi,
+                        customer: array[i].customer,
+                        customerNum:array[i].customerNum,
+                        area: array[i].area,
+                        leibie: array[i].leibie,
+                        shStaff: array[i].shStaff,
+                        address: array[i].address,
+                        salesman: array[i].salesman,
+                        pick: array[i].pick,
+                        warehouse: array[i].warehouse,
+                        express: array[i].express,
+                        wuliuOrder: array[i].wuliuOrder,
+                        saleType: array[i].saleType,
+                        pihao: array[i].pihao,
+                        productName: array[i].productName,
+                        pinhao: array[i].pinhao,
+                        spec: array[i].spec,
+                        attribute: array[i].attribute,
+                        unit: array[i].unit,
+                        price: array[i].price,
+                        num: array[i].num,
+                        xiaoji: array[i].xiaoji,
+                        remarks: array[i].remarks,
+                        type: array[i].type,
+                        fahuo: array[i].fahuo,
+                    }
+                    header.push(body)
+                }
+                console.log(header)
+                title = ['日期','客户名称','客户号', '区域', '类别', '收货人员', '收货地址', '业务员', '拿货方式','仓库','快递公司','物流单号', '发货类型','批号', '产品名称', '品号', '规格', '产品属性', '单位', '销售单价', '销售数量', '小计', '备注', '类型', '发货状态']
+            }else{
+                for (var i = 0; i < array.length; i++) {
+                    var body = {
+                        riqi: array[i].riqi,
+                        customer: array[i].customer,
+                        customerNum:array[i].customerNum,
+                        area: array[i].area,
+                        leibie: array[i].leibie,
+                        shStaff: array[i].shStaff,
+                        address: array[i].address,
+                        salesman: array[i].salesman,
+                        pick: array[i].pick,
+                        warehouse: array[i].warehouse,
+                        express: array[i].express,
+                        wuliuOrder: array[i].wuliuOrder,
+                        saleType: array[i].saleType,
+                        pihao: array[i].pihao,
+                        productName: array[i].productName,
+                        pinhao: array[i].pinhao,
+                        spec: array[i].spec,
+                        attribute: array[i].attribute,
+                        unit: array[i].unit,
+                        num: array[i].num,
+                        remarks: array[i].remarks,
+                        type: array[i].type,
+                        fahuo: array[i].fahuo,
+                    }
+                    header.push(body)
+                }
+                console.log(header)
+                title = ['日期','客户名称','客户号', '区域', '类别', '收货人员', '收货地址', '业务员', '拿货方式','仓库','快递公司','物流单号', '发货类型','批号', '产品名称', '品号', '规格', '产品属性', '单位', '销售数量', '备注', '类型', '发货状态']
+            }
+
+            JSONToExcelConvertor(header, "出库", title)
+
+        }
+    })
+
+}
+
+
+function JSONToExcelConvertor(JSONData, FileName, title, filter) {
+    if (!JSONData)
+        return;
+    //转化json为object
+    var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+    var excel = "<table>";
+
+    //设置表头
+    var row = "<tr>";
+
+    if (title) {
+        //使用标题项
+        for (var i in title) {
+            row += "<th align='center'>" + title[i] + '</th>';
+        }
+
+    }
+    else {
+        //不使用标题项
+        for (var i in arrData[0]) {
+            row += "<th align='center'>" + i + '</th>';
+        }
+    }
+
+    excel += row + "</tr>";
+
+    //设置数据
+    for (var i = 0; i < arrData.length; i++) {
+        var row = "<tr>";
+
+        for (var index in arrData[i]) {
+            //判断是否有过滤行
+            if (filter) {
+                if (filter.indexOf(index) == -1) {
+                    var value = arrData[i][index] == null ? "" : arrData[i][index];
+                    row += '<td>' + value + '</td>';
+                }
+            }
+            else {
+                var value = arrData[i][index] == null ? "" : arrData[i][index];
+                row += "<td align='center'>" + value + "</td>";
+            }
+        }
+
+        excel += row + "</tr>";
+    }
+
+    excel += "</table>";
+
+    var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
+    excelFile += '<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';
+    excelFile += '<meta http-equiv="content-type" content="application/vnd.ms-excel';
+    excelFile += '; charset=UTF-8">';
+    excelFile += "<head>";
+    excelFile += "<!--[if gte mso 9]>";
+    excelFile += "<xml>";
+    excelFile += "<x:ExcelWorkbook>";
+    excelFile += "<x:ExcelWorksheets>";
+    excelFile += "<x:ExcelWorksheet>";
+    excelFile += "<x:Name>";
+    excelFile += "{worksheet}";
+    excelFile += "</x:Name>";
+    excelFile += "<x:WorksheetOptions>";
+    excelFile += "<x:DisplayGridlines/>";
+    excelFile += "</x:WorksheetOptions>";
+    excelFile += "</x:ExcelWorksheet>";
+    excelFile += "</x:ExcelWorksheets>";
+    excelFile += "</x:ExcelWorkbook>";
+    excelFile += "</xml>";
+    excelFile += "<![endif]-->";
+    excelFile += "</head>";
+    excelFile += "<body>";
+    excelFile += excel;
+    excelFile += "</body>";
+    excelFile += "</html>";
+
+
+    var uri = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(excelFile);
+
+    var link = document.createElement("a");
+    link.href = uri;
+
+    link.style = "visibility:hidden";
+    link.download = FileName + ".xls";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
