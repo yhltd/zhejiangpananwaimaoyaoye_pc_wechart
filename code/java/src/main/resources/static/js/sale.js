@@ -8,6 +8,7 @@ let state_list = [];
 let saleSubmit_list = [];
 let linshi_data = [];
 let moneySel = ""
+let select_list = [];
 
 function getList() {
     $('#product').val("");
@@ -61,6 +62,7 @@ function getSelect() {
             var item = "";
             cangku = "";
             opt = "";
+            select_list = res.data;
             $("#add-warehouse option").remove();
             $("#update-warehouse option").remove();
             $("#add-pick option").remove();
@@ -786,7 +788,7 @@ function setTable(data) {
                         if(row.type != "退货"){
                             var this_cangku = ""
                             for (var i = 0; i < kucun_list.length; i++) {
-                                if (kucun_list[i].id == row.productId && kucun_list[i].num * 1 >= row.num * 1) {
+                                if (kucun_list[i].id == row.productId && kucun_list[i].numsum * 1 >= row.num * 1) {
                                     this_cangku = this_cangku + "<option value=\"" + kucun_list[i].warehouse + "\">" + kucun_list[i].warehouse + "</option>";
                                 }
                             }
@@ -807,7 +809,7 @@ function setTable(data) {
                     }
                 }
             },{
-                field: id,
+                field: 'id',
                 title: '序号',
                 align: 'center',
                 width: 50,
@@ -1217,6 +1219,7 @@ function setProductTable_Add(data) {
         searchAlign: 'left',
         clickToSelect: false,
         locale: 'zh-CN',
+        maintainSelected :true,
         columns: [
             {
                 checkbox: true
@@ -1235,7 +1238,32 @@ function setProductTable_Add(data) {
                 sortable: true,
                 width: 120,
                 formatter: function (value, row, index) {
-                    return getXiaLa(row.id);
+                    var panduan = false;
+                    var select = ""
+                    $(linshi_data).each(function (index, val) {
+                        if (row.id == val.id) {
+                            var saleType = val.saleType
+                            var saleTypeStr = ""
+                            for(var i=0; i<select_list.length; i++){
+                                if (select_list[i].saleType != null && select_list[i].saleType != "") {
+                                    if(select_list[i].saleType == saleType){
+                                        saleTypeStr = saleTypeStr + "<option value=\"" + select_list[i].saleType + "\" selected=\"selected\">" + select_list[i].saleType + "</option>";
+                                    }else{
+                                        saleTypeStr = saleTypeStr + "<option value=\"" + select_list[i].saleType + "\">" + select_list[i].saleType + "</option>";
+                                    }
+                                }
+                            }
+                            select = "<select name=\"saleType\" id='saleType" + row.id + "' class=\"form-control\" style=\"font-size: 13px\" onchange=\"javascript:getLinshiData(" + row.id + ")\">";
+                            select = select + saleTypeStr;
+                            select = select + "<select/>";
+                            panduan = true;
+                        }
+                    });
+                    if(panduan != true){
+                        return getXiaLa(row.id);
+                    }else{
+                        return select;
+                    }
                 },
             }, {
                 field: 'productName',
@@ -1596,6 +1624,41 @@ function pass(id) {
     if(warehouse == ''){
         swal("", "未选择仓库", "error");
     }else{
+        for(var i=0; i<sale_list.length; i++){
+            if(sale_list[i].id == id && sale_list[i].type == '退货'){
+                console.log(i)
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+                month = (month > 9) ? month : ("0" + month);
+                day = (day < 10) ? ("0" + day) : day;
+                var params = {
+                    customerId: sale_list[i].customerId,
+                    fJine: sale_list[i].xiaoji,
+                    pay: '退货',
+                    remarks: '退货',
+                    riqi: year + "-" + month + "-" + day,
+                }
+                $ajax({
+                    type: 'post',
+                    url: '/payment/add',
+                    data: JSON.stringify({
+                        addInfo: params
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8'
+                }, false, '', function (res) {
+                    if (res.code == 200) {
+                        console.log("payment add success!");
+                    } else {
+                        console.log("payment add error!");
+                    }
+                })
+                break;
+            }
+        }
+
         $ajax({
             type: 'post',
             url: '/sale/updateState',

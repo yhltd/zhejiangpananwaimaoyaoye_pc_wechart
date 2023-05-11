@@ -158,6 +158,12 @@ function setTable(data) {
                 align: 'center',
                 sortable: true,
                 width: 120,
+            }, {
+                field: 'numsum',
+                title: '库存总数',
+                align: 'center',
+                sortable: true,
+                width: 120,
             }
         ],
         onClickRow: function (row, el) {
@@ -204,11 +210,12 @@ function toExcel() {
                         unit: array[i].unit,
                         price: array[i].price,
                         num: array[i].num,
+                        numsum: array[i].numsum,
                     }
                     header.push(body)
                 }
                 console.log(header)
-                title = ['仓库','批号','产品名称', '品号', '规格', '产品属性', '单位', '单价', '数量']
+                title = ['仓库','批号','产品名称', '品号', '规格', '产品属性', '单位', '单价', '数量','库存总数']
             }else{
                 for (var i = 0; i < array.length; i++) {
                     var body = {

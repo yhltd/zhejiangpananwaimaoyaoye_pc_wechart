@@ -69,31 +69,7 @@ public class KuCunController {
                     product.setAttribute(getRuku.get(i).getAttribute());
                     product.setProductName(getRuku.get(i).getProductName());
                     product.setNum(0);
-                    kuCun.add(product);
-                }
-
-            }
-
-            for (int i = 0; i < getSale.size(); i++) {
-                boolean panduan = false;
-                Product product = new Product();
-                for (int j = 0; j < kuCun.size(); j++) {
-                    if (getSale.get(i).getId().equals(kuCun.get(j).getId()) && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getSale.get(i).getPihao().equals(kuCun.get(j).getPihao())) {
-                        panduan = true;
-                    }
-                }
-                if (!panduan) {
-                    product.setId(getSale.get(i).getId());
-                    product.setWarehouse(getSale.get(i).getWarehouse());
-                    product.setPihao(getSale.get(i).getPihao());
-                    product.setSpec(getSale.get(i).getSpec());
-                    product.setUnit(getSale.get(i).getUnit());
-                    product.setPrice(getSale.get(i).getPrice());
-                    product.setPinyin(getSale.get(i).getPinyin());
-                    product.setProductName(getSale.get(i).getProductName());
-                    product.setPinhao(getRuku.get(i).getPinhao());
-                    product.setAttribute(getRuku.get(i).getAttribute());
-                    product.setNum(0);
+                    product.setNumsum(0);
                     kuCun.add(product);
                 }
 
@@ -104,13 +80,23 @@ public class KuCunController {
                     if (kuCun.get(i).getId().equals(getRuku.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getRuku.get(j).getPihao())) {
                         kuCun.get(i).setNum(kuCun.get(i).getNum() + getRuku.get(j).getNum());
                     }
+                    if (kuCun.get(i).getId().equals(getRuku.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse())){
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() + getRuku.get(j).getNum());
+                    }
                 }
             }
 
             for (int i = 0; i < kuCun.size(); i++) {
                 for (int j = 0; j < getSale.size(); j++) {
-                    if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getSale.get(j).getPihao())) {
-                        kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
+                    if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())) {
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSale.get(j).getNum());
+                        if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() >= getSale.get(j).getNum()){
+                            kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
+                            getSale.get(j).setNum(0);
+                        }else{
+                            getSale.get(j).setNum(getSale.get(j).getNum() - kuCun.get(i).getNum());
+                            kuCun.get(i).setNum(0);
+                        }
                     }
                 }
             }
@@ -170,31 +156,7 @@ public class KuCunController {
                     product1.setAttribute(getRuku.get(i).getAttribute());
                     product1.setProductName(getRuku.get(i).getProductName());
                     product1.setNum(0);
-                    kuCun.add(product1);
-                }
-
-            }
-
-            for (int i = 0; i < getSale.size(); i++) {
-                boolean panduan = false;
-                Product product1 = new Product();
-                for (int j = 0; j < kuCun.size(); j++) {
-                    if (getSale.get(i).getId().equals(kuCun.get(j).getId()) && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getSale.get(i).getPihao().equals(kuCun.get(j).getPihao())) {
-                        panduan = true;
-                    }
-                }
-                if (!panduan) {
-                    product1.setId(getSale.get(i).getId());
-                    product1.setWarehouse(getSale.get(i).getWarehouse());
-                    product1.setPihao(getSale.get(i).getPihao());
-                    product1.setSpec(getSale.get(i).getSpec());
-                    product1.setUnit(getSale.get(i).getUnit());
-                    product1.setPrice(getSale.get(i).getPrice());
-                    product1.setPinyin(getSale.get(i).getPinyin());
-                    product1.setProductName(getSale.get(i).getProductName());
-                    product1.setPinhao(getRuku.get(i).getPinhao());
-                    product1.setAttribute(getRuku.get(i).getAttribute());
-                    product1.setNum(0);
+                    product1.setNumsum(0);
                     kuCun.add(product1);
                 }
 
@@ -205,13 +167,23 @@ public class KuCunController {
                     if (kuCun.get(i).getId().equals(getRuku.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getRuku.get(j).getPihao())) {
                         kuCun.get(i).setNum(kuCun.get(i).getNum() + getRuku.get(j).getNum());
                     }
+                    if (kuCun.get(i).getId().equals(getRuku.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse())){
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() + getRuku.get(j).getNum());
+                    }
                 }
             }
 
             for (int i = 0; i < kuCun.size(); i++) {
                 for (int j = 0; j < getSale.size(); j++) {
-                    if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getSale.get(j).getPihao())) {
-                        kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
+                    if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())) {
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSale.get(j).getNum());
+                        if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() >= getSale.get(j).getNum()){
+                            kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
+                            getSale.get(j).setNum(0);
+                        }else{
+                            getSale.get(j).setNum(getSale.get(j).getNum() - kuCun.get(i).getNum());
+                            kuCun.get(i).setNum(0);
+                        }
                     }
                 }
             }
@@ -269,43 +241,28 @@ public class KuCunController {
 
             }
 
-            for (int i = 0; i < getSale.size(); i++) {
-                boolean panduan = false;
-                Product product = new Product();
-                for (int j = 0; j < kuCun.size(); j++) {
-                    if (getSale.get(i).getId() == kuCun.get(j).getId() && getSale.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse())) {
-                        panduan = true;
-                    }
-                }
-                if (panduan != true) {
-                    product.setId(getSale.get(i).getId());
-                    product.setWarehouse(getSale.get(i).getWarehouse());
-                    product.setPihao(getSale.get(i).getPihao());
-                    product.setSpec(getSale.get(i).getSpec());
-                    product.setPihao(getSale.get(i).getPihao());
-                    product.setAttribute(getSale.get(i).getAttribute());
-                    product.setUnit(getSale.get(i).getUnit());
-                    product.setPrice(getSale.get(i).getPrice());
-                    product.setPinyin(getSale.get(i).getPinyin());
-                    product.setProductName(getSale.get(i).getProductName());
-                    product.setNum(0);
-                    kuCun.add(product);
-                }
-
-            }
-
             for (int i = 0; i < kuCun.size(); i++) {
                 for (int j = 0; j < getRuku.size(); j++) {
-                    if (kuCun.get(i).getId() == getRuku.get(j).getId() && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse())) {
+                    if (kuCun.get(i).getId().equals(getRuku.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse()) && kuCun.get(i).getPihao().equals(getRuku.get(j).getPihao())) {
                         kuCun.get(i).setNum(kuCun.get(i).getNum() + getRuku.get(j).getNum());
+                    }
+                    if (kuCun.get(i).getId().equals(getRuku.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getRuku.get(j).getWarehouse())){
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() + getRuku.get(j).getNum());
                     }
                 }
             }
 
             for (int i = 0; i < kuCun.size(); i++) {
                 for (int j = 0; j < getSale.size(); j++) {
-                    if (kuCun.get(i).getId() == getSale.get(j).getId() && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())) {
-                        kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
+                    if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())) {
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSale.get(j).getNum());
+                        if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() >= getSale.get(j).getNum()){
+                            kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
+                            getSale.get(j).setNum(0);
+                        }else{
+                            getSale.get(j).setNum(getSale.get(j).getNum() - kuCun.get(i).getNum());
+                            kuCun.get(i).setNum(0);
+                        }
                     }
                 }
             }
