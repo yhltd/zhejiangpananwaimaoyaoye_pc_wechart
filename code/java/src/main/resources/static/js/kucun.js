@@ -227,11 +227,12 @@ function toExcel() {
                         attribute: array[i].attribute,
                         unit: array[i].unit,
                         num: array[i].num,
+                        numsum: array[i].numsum,
                     }
                     header.push(body)
                 }
                 console.log(header)
-                title = ['仓库','批号','产品名称', '品号', '规格', '产品属性', '单位', '数量']
+                title = ['仓库','批号','产品名称', '品号', '规格', '产品属性', '单位', '数量','库存总数']
             }
 
             JSONToExcelConvertor(header, "库存", title)
