@@ -46,6 +46,7 @@ public class KuCunController {
         try {
             List<Product> getRuku = kuCunService.getRuku();
             List<Product> getSale = kuCunService.getSale();
+            List<Product> getSaleNum = kuCunService.getSale();
             List<Product> kuCun = new ArrayList<>();
 
             for (int i = 0; i < getRuku.size(); i++) {
@@ -89,11 +90,11 @@ public class KuCunController {
             for (int i = 0; i < kuCun.size(); i++) {
                 for (int j = 0; j < getSale.size(); j++) {
                     if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())) {
-                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSale.get(j).getNum());
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSaleNum.get(j).getNum());
                         if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() >= getSale.get(j).getNum()){
                             kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
                             getSale.get(j).setNum(0);
-                        }else{
+                        }else if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() < getSale.get(j).getNum()){
                             getSale.get(j).setNum(getSale.get(j).getNum() - kuCun.get(i).getNum());
                             kuCun.get(i).setNum(0);
                         }
@@ -130,9 +131,9 @@ public class KuCunController {
         }
 
         try {
-            List<Product> getRuku = kuCunService.queryRuku(warehouse, pihao, product);
-            List<Product> getSale = kuCunService.querySale(warehouse, pihao, product);
-
+            List<Product> getRuku = kuCunService.getRuku();
+            List<Product> getSale = kuCunService.getSale();
+            List<Product> getSaleNum = kuCunService.getSale();
             List<Product> kuCun = new ArrayList<>();
 
             for (int i = 0; i < getRuku.size(); i++) {
@@ -176,11 +177,11 @@ public class KuCunController {
             for (int i = 0; i < kuCun.size(); i++) {
                 for (int j = 0; j < getSale.size(); j++) {
                     if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())) {
-                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSale.get(j).getNum());
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSaleNum.get(j).getNum());
                         if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() >= getSale.get(j).getNum()){
                             kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
                             getSale.get(j).setNum(0);
-                        }else{
+                        }else if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() < getSale.get(j).getNum()){
                             getSale.get(j).setNum(getSale.get(j).getNum() - kuCun.get(i).getNum());
                             kuCun.get(i).setNum(0);
                         }
@@ -191,7 +192,25 @@ public class KuCunController {
             List<Product> new_kucun = new ArrayList<>();
             for (Product kucun : kuCun) {
                 if (kucun.getNum() != 0) {
-                    new_kucun.add(kucun);
+                    boolean panduan = true;
+                    if(!warehouse.equals("")){
+                        if(kucun.getWarehouse().indexOf(warehouse) == -1){
+                            panduan = false;
+                        }
+                    }
+                    if(!pihao.equals("")){
+                        if(kucun.getPihao().indexOf(pihao) == -1){
+                            panduan = false;
+                        }
+                    }
+                    if(!product.equals("")){
+                        if(kucun.getProductName().indexOf(product) == -1){
+                            panduan = false;
+                        }
+                    }
+                    if(panduan){
+                        new_kucun.add(kucun);
+                    }
                 }
             }
 
@@ -214,13 +233,14 @@ public class KuCunController {
         try {
             List<Product> getRuku = kuCunService.getRuku();
             List<Product> getSale = kuCunService.getSale();
+            List<Product> getSaleNum = kuCunService.getSale();
             List<Product> kuCun = new ArrayList<>();
 
             for (int i = 0; i < getRuku.size(); i++) {
                 boolean panduan = false;
                 Product product = new Product();
                 for (int j = 0; j < kuCun.size(); j++) {
-                    if (getRuku.get(i).getId() == kuCun.get(j).getId() && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse())) {
+                    if (getRuku.get(i).getId().equals(kuCun.get(j).getId()) && getRuku.get(i).getWarehouse().equals(kuCun.get(j).getWarehouse()) && getRuku.get(i).getPihao().equals(kuCun.get(j).getPihao())) {
                         panduan = true;
                     }
                 }
@@ -255,11 +275,11 @@ public class KuCunController {
             for (int i = 0; i < kuCun.size(); i++) {
                 for (int j = 0; j < getSale.size(); j++) {
                     if (kuCun.get(i).getId().equals(getSale.get(j).getId()) && kuCun.get(i).getWarehouse().equals(getSale.get(j).getWarehouse())) {
-                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSale.get(j).getNum());
+                        kuCun.get(i).setNumsum(kuCun.get(i).getNumsum() - getSaleNum.get(j).getNum());
                         if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() >= getSale.get(j).getNum()){
                             kuCun.get(i).setNum(kuCun.get(i).getNum() - getSale.get(j).getNum());
                             getSale.get(j).setNum(0);
-                        }else{
+                        }else if(getSale.get(j).getNum() > 0 && kuCun.get(i).getNum() < getSale.get(j).getNum()){
                             getSale.get(j).setNum(getSale.get(j).getNum() - kuCun.get(i).getNum());
                             kuCun.get(i).setNum(0);
                         }
