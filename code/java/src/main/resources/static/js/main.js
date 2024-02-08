@@ -35,6 +35,7 @@ function $ajax(options, isLoading, loadingEl, success) {
             success(res);
         },
         error: err => {
+            console.log(err)
             if(err.responseText == 'loseToken'){
                 alert('身份验证已过期，请重新登录');
                 window.location.href = '/';

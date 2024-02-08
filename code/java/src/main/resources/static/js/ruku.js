@@ -54,7 +54,7 @@ function getProduct() {
             $('#show-product-modal').modal('show');
         }
         console.log(res)
-    })=
+    })
 }
 
 function kanbanSelect() {
